@@ -14,15 +14,15 @@
 		444511C21B541935008B7E13 /* AAPLAssetGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444511C11B541935008B7E13 /* AAPLAssetGridViewController.m */; };
 		444511C51B541A7C008B7E13 /* AAPLAssetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444511C41B541A7C008B7E13 /* AAPLAssetViewController.m */; };
 		444511C81B541D63008B7E13 /* AAPLGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 444511C71B541D63008B7E13 /* AAPLGridViewCell.m */; };
-		44511BC51B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png in Resources */ = {isa = PBXBuildFile; fileRef = 44511BC41B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png */; };
-		44511BCB1B55CE120002A3CF /* Testfile1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44511BC71B55CE120002A3CF /* Testfile1.txt */; };
-		44511BCC1B55CE120002A3CF /* Testfile2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44511BC81B55CE120002A3CF /* Testfile2.txt */; };
-		44511BCD1B55CE120002A3CF /* Testfile3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44511BC91B55CE120002A3CF /* Testfile3.txt */; };
-		44511BCE1B55CE120002A3CF /* Testfile4.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44511BCA1B55CE120002A3CF /* Testfile4.txt */; };
 		44511BD51B56B6670002A3CF /* DownloadPicturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BD41B56B6670002A3CF /* DownloadPicturesViewController.m */; };
 		44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BD71B56D8380002A3CF /* D8iOSUISplitViewController.m */; };
 		44511BDD1B56FF7B0002A3CF /* ViewArticlesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BDC1B56FF7B0002A3CF /* ViewArticlesTableViewController.m */; };
 		44511BE01B56FFE20002A3CF /* DownloadPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BDF1B56FFE20002A3CF /* DownloadPictureViewController.m */; };
+		446286921B5D547B00FEF960 /* Testfile1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4462868E1B5D547B00FEF960 /* Testfile1.txt */; };
+		446286931B5D547B00FEF960 /* Testfile2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4462868F1B5D547B00FEF960 /* Testfile2.txt */; };
+		446286941B5D547B00FEF960 /* Testfile3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 446286901B5D547B00FEF960 /* Testfile3.txt */; };
+		446286951B5D547B00FEF960 /* Testfile4.txt in Resources */ = {isa = PBXBuildFile; fileRef = 446286911B5D547B00FEF960 /* Testfile4.txt */; };
+		446286981B5D55C700FEF960 /* drupal 8 logo CMYK 72.png in Resources */ = {isa = PBXBuildFile; fileRef = 446286971B5D55C700FEF960 /* drupal 8 logo CMYK 72.png */; };
 		44CF1DE81B51D97C00FC66EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1DE71B51D97C00FC66EE /* main.m */; };
 		44CF1DEB1B51D97C00FC66EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1DEA1B51D97C00FC66EE /* AppDelegate.m */; };
 		44CF1DEE1B51D97C00FC66EE /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1DED1B51D97C00FC66EE /* MasterViewController.m */; };
@@ -64,11 +64,6 @@
 		444511C41B541A7C008B7E13 /* AAPLAssetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLAssetViewController.m; sourceTree = "<group>"; };
 		444511C61B541D63008B7E13 /* AAPLGridViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLGridViewCell.h; sourceTree = "<group>"; };
 		444511C71B541D63008B7E13 /* AAPLGridViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLGridViewCell.m; sourceTree = "<group>"; };
-		44511BC41B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "drupal 8 logo CMYK 72.png"; path = "../../../../Pictures/drupal 8 logo CMYK 72.png"; sourceTree = "<group>"; };
-		44511BC71B55CE120002A3CF /* Testfile1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Testfile1.txt; path = ../../../Testfile1.txt; sourceTree = "<group>"; };
-		44511BC81B55CE120002A3CF /* Testfile2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Testfile2.txt; path = ../../../Testfile2.txt; sourceTree = "<group>"; };
-		44511BC91B55CE120002A3CF /* Testfile3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Testfile3.txt; path = ../../../Testfile3.txt; sourceTree = "<group>"; };
-		44511BCA1B55CE120002A3CF /* Testfile4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Testfile4.txt; path = ../../../Testfile4.txt; sourceTree = "<group>"; };
 		44511BD31B56B6670002A3CF /* DownloadPicturesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadPicturesViewController.h; sourceTree = "<group>"; };
 		44511BD41B56B6670002A3CF /* DownloadPicturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadPicturesViewController.m; sourceTree = "<group>"; };
 		44511BD61B56D8380002A3CF /* D8iOSUISplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = D8iOSUISplitViewController.h; sourceTree = "<group>"; };
@@ -78,6 +73,11 @@
 		44511BDC1B56FF7B0002A3CF /* ViewArticlesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewArticlesTableViewController.m; sourceTree = "<group>"; };
 		44511BDE1B56FFE20002A3CF /* DownloadPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadPictureViewController.h; sourceTree = "<group>"; };
 		44511BDF1B56FFE20002A3CF /* DownloadPictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadPictureViewController.m; sourceTree = "<group>"; };
+		4462868E1B5D547B00FEF960 /* Testfile1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile1.txt; sourceTree = "<group>"; };
+		4462868F1B5D547B00FEF960 /* Testfile2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile2.txt; sourceTree = "<group>"; };
+		446286901B5D547B00FEF960 /* Testfile3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile3.txt; sourceTree = "<group>"; };
+		446286911B5D547B00FEF960 /* Testfile4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile4.txt; sourceTree = "<group>"; };
+		446286971B5D55C700FEF960 /* drupal 8 logo CMYK 72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drupal 8 logo CMYK 72.png"; sourceTree = "<group>"; };
 		44CF1DE21B51D97B00FC66EE /* Drupal8iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drupal8iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44CF1DE61B51D97B00FC66EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44CF1DE71B51D97C00FC66EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -127,6 +127,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		446286961B5D549900FEF960 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
+			sourceTree = "<group>";
+		};
 		44CF1DD91B51D97B00FC66EE = {
 			isa = PBXGroup;
 			children = (
@@ -201,13 +208,14 @@
 			isa = PBXGroup;
 			children = (
 				4417362C1B570BD500C984B5 /* LICENSE.TXT */,
-				44511BC71B55CE120002A3CF /* Testfile1.txt */,
-				44511BC81B55CE120002A3CF /* Testfile2.txt */,
-				44511BC91B55CE120002A3CF /* Testfile3.txt */,
-				44511BCA1B55CE120002A3CF /* Testfile4.txt */,
+				4462868E1B5D547B00FEF960 /* Testfile1.txt */,
+				4462868F1B5D547B00FEF960 /* Testfile2.txt */,
+				446286901B5D547B00FEF960 /* Testfile3.txt */,
+				446286911B5D547B00FEF960 /* Testfile4.txt */,
+				446286961B5D549900FEF960 /* New Group */,
 				44CF1DE61B51D97B00FC66EE /* Info.plist */,
 				44CF1DE71B51D97C00FC66EE /* main.m */,
-				44511BC41B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png */,
+				446286971B5D55C700FEF960 /* drupal 8 logo CMYK 72.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -311,13 +319,13 @@
 			files = (
 				4417362D1B570BD500C984B5 /* LICENSE.TXT in Resources */,
 				44CF1DF41B51D97C00FC66EE /* Main.storyboard in Resources */,
+				446286951B5D547B00FEF960 /* Testfile4.txt in Resources */,
+				446286941B5D547B00FEF960 /* Testfile3.txt in Resources */,
+				446286981B5D55C700FEF960 /* drupal 8 logo CMYK 72.png in Resources */,
+				446286921B5D547B00FEF960 /* Testfile1.txt in Resources */,
 				44CF1DF91B51D97C00FC66EE /* LaunchScreen.xib in Resources */,
-				44511BCB1B55CE120002A3CF /* Testfile1.txt in Resources */,
-				44511BC51B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png in Resources */,
 				44CF1DF61B51D97C00FC66EE /* Images.xcassets in Resources */,
-				44511BCC1B55CE120002A3CF /* Testfile2.txt in Resources */,
-				44511BCD1B55CE120002A3CF /* Testfile3.txt in Resources */,
-				44511BCE1B55CE120002A3CF /* Testfile4.txt in Resources */,
+				446286931B5D547B00FEF960 /* Testfile2.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
