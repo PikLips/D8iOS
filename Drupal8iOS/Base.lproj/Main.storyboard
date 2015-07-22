@@ -263,7 +263,7 @@
                     <navigationItem key="navigationItem" id="pTX-jJ-YT7">
                         <nil key="title"/>
                         <progressView key="titleView" hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.5" id="IwM-GJ-Crg">
-                            <rect key="frame" x="16" y="21" width="532" height="3"/>
+                            <rect key="frame" x="20" y="21" width="524" height="3"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </progressView>
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="UiV-yF-myc">
