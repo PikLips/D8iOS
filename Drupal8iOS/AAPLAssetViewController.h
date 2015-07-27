@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
 
-@interface AAPLAssetViewController : UIViewController
+@interface AAPLAssetViewController : UIViewController < UIGestureRecognizerDelegate, // MAS: added delegate
+    UIAlertViewDelegate> // RSR: added delegate for alertView
 
 @property (strong) PHAsset *asset;
 @property (strong) PHAssetCollection *assetCollection;

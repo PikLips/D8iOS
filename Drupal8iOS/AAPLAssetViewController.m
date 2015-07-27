@@ -44,8 +44,20 @@
 @property (strong) IBOutlet UIBarButtonItem *trashButton;
 @property (strong) IBOutlet UIBarButtonItem *editButton;
 @property (strong) IBOutlet UIProgressView *progressView;
+// RSR: add uploadPictureButton
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadPictureButton;
+// RSR: end
+
 @property (strong) AVPlayerLayer *playerLayer;
 @property (assign) CGSize lastImageViewSize;
+
+@property (nonatomic, strong) UIPinchGestureRecognizer *pinchGestureRecognizer; //MAS: for pinchMe zoom
+@property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer; //MAS: for panMe
+@property (nonatomic, strong) UIRotationGestureRecognizer *rotationGestureRecognizer; //MAS: for rotateMe zoom
+// RSR:
+@property (nonatomic, strong) UITapGestureRecognizer *doubleTapGestureRecognizer;
+// RS: end
+
 @end
 
 
@@ -62,16 +74,51 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
 {
     [super viewDidLoad];
     [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
+    /* MAS: Now that the still image can be bigger than the video framesize, we should be able to zoom in on it in the viewer.
+     */
+    if ( self.pinchGestureRecognizer == nil) {
+        self.pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchMe:)];
+        
+        [self.imageView addGestureRecognizer:[self pinchGestureRecognizer]];
+    }
+    if ( self.panGestureRecognizer == nil) {
+        self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panMe:)];
+        
+        [self.imageView addGestureRecognizer:[self panGestureRecognizer]];
+    }
+    if ( self.rotationGestureRecognizer == nil) {
+        self.rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotateMe:)];
+        [self.imageView addGestureRecognizer:[self rotationGestureRecognizer]];
+    }
+    
+    // RSR: for doubleTap -
+    if (self.doubleTapGestureRecognizer == nil) {
+        self.doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapMe:)];
+        self.doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+        [self.imageView addGestureRecognizer:[self doubleTapGestureRecognizer]];
+    }
+    // RSR:end
+    
+    self.pinchGestureRecognizer.delegate = self;
+    self.panGestureRecognizer.delegate = self;
+    self.rotationGestureRecognizer.delegate = self;
+    
+    self.imageView.userInteractionEnabled = YES;
+    /* MAS:
+     */
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
+    [self.navigationController setToolbarHidden:NO animated:YES];  // MAS: added to expose buttons
+    
     if (self.asset.mediaType == PHAssetMediaTypeVideo) {
-        self.toolbarItems = @[self.playButton, self.space, self.trashButton];
+        self.toolbarItems = @[self.playButton, self.space, self.uploadPictureButton, self.space, self.trashButton]; // RSR: added code to put uploadButton in
     } else {
-        self.toolbarItems = @[self.space, self.trashButton];
+        self.toolbarItems = @[self.space, self.uploadPictureButton, self.space, self.trashButton]; // RSR: added code to put uploadButton in
     }
     
     BOOL isEditable = ([self.asset canPerformEditOperation:PHAssetEditOperationProperties] || [self.asset canPerformEditOperation:PHAssetEditOperationContent]);
@@ -151,8 +198,61 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
 
 #pragma mark - Actions
 
+/* MAS: Gesture Recognizers
+ *      Allow the still image to be zoomed --
+ */
+- (void) pinchMe: (UIPinchGestureRecognizer *) pinchGestureRecognizer {
+    
+    CGFloat scale = [pinchGestureRecognizer scale];
+    
+    //self.imageView.transform = CGAffineTransformScale(self.imageView.transform, scale, scale);
+    [self.imageView setTransform:(CGAffineTransformScale(self.imageView.transform, scale, scale))];
+    pinchGestureRecognizer.scale = 1.0;
+    
+}
+/* MAS: and rotated --
+ */
+-(void)rotateMe:(UIRotationGestureRecognizer *)rotationGestureRecognizer{
+    
+    [self.imageView setTransform:(CGAffineTransformRotate(self.imageView.transform, rotationGestureRecognizer.rotation))];
+    
+    rotationGestureRecognizer.rotation = 0.0;
+}
+/* MAS: and panned
+ */
+-(void)panMe:(UIPanGestureRecognizer *)panGestureRecognizer {
+    
+    CGPoint touchLocation = [panGestureRecognizer translationInView:self.view];
+    CGPoint currentImageCenter = self.imageView.center;
+    currentImageCenter.x += touchLocation.x;
+    currentImageCenter.y += touchLocation.y;
+    
+    self.imageView.center = currentImageCenter;
+    
+    [panGestureRecognizer setTranslation:CGPointZero inView:self.view];
+}
+
+/* RSR: handle doubleTap
+ *      This resets the image in the viewer to its original position.
+ */
+- (void) doubleTapMe:(UITapGestureRecognizer *) doubleTapGestureRecognizer {
+    
+    [self.imageView setCenter:CGPointMake(CGRectGetMidX([self.view bounds]), CGRectGetMidX([self.view bounds]))];
+    [self.imageView setTransform:CGAffineTransformIdentity];
+    [self.imageView.superview addSubview:self.imageView];
+}
+/* RSR: do three things at once
+ *      This allows the panMe, rotateME, and pinchME methods to work simultaneously.
+ */
+- (BOOL) gestureRecognizer:(nonnull UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+/* RSR
+ */
+
 - (void)applyFilterWithName:(NSString *)filterName
 {
+    
     PHContentEditingInputRequestOptions *options = [[PHContentEditingInputRequestOptions alloc] init];
     [options setCanHandleAdjustmentData:^BOOL(PHAdjustmentData *adjustmentData) {
         return [adjustmentData.formatIdentifier isEqualToString:AdjustmentFormatIdentifier] && [adjustmentData.formatVersion isEqualToString:@"1.0"];
@@ -183,7 +283,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
             request.contentEditingOutput = contentEditingOutput;
         } completionHandler:^(BOOL success, NSError *error) {
             if (!success) {
-                NSLog(@"Error: %@", error);
+                D8E(@"Error: %@", error.localizedDescription);
             }
         }];
     }];
@@ -202,7 +302,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                 [request setFavorite:![self.asset isFavorite]];
             } completionHandler:^(BOOL success, NSError *error) {
                 if (!success) {
-                    NSLog(@"Error: %@", error);
+                    D8E(@"Error: %@", error.localizedDescription);
                 }
             }];
         }]];
@@ -222,7 +322,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                 [request revertAssetContentToOriginal];
             } completionHandler:^(BOOL success, NSError *error) {
                 if (!success) {
-                    NSLog(@"Error: %@", error);
+                    D8E(@"Error: %@", error.localizedDescription);
                 }
             }];
         }]];
@@ -241,7 +341,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                 [[self navigationController] popViewControllerAnimated:YES];
             });
         } else {
-            NSLog(@"Error: %@", error);
+            D8E(@"Error: %@", error.localizedDescription);
         }
     };
     
@@ -286,6 +386,57 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
     }
     
 }
+
+// RSR: method to handle upload button pressed
+- (IBAction)handleUploadPictureButton:(id)sender {
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm upload" message:@"Vivek - use alertView delegate method to upload picture to Drupal" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    
+    [alert show];
+    
+}
+
+- (void)alertView:(nonnull UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if (buttonIndex == 0) {
+        
+ 
+    // RSR: request image from library
+        __block UIImage *uploadImage = nil;
+        
+        [[PHImageManager defaultManager] requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFit options:NULL resultHandler:^(UIImage *result, NSDictionary *info) {
+            if (result) {
+                uploadImage = result;
+            }
+        }];
+        
+        // RSR: save image to file to test
+        NSArray * paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString * basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+        if (basePath == nil) {
+            D8E(@"Path not found");
+        }
+
+        NSError *err = nil;
+        NSData * binaryImageData = UIImagePNGRepresentation(uploadImage);
+        
+        [binaryImageData writeToFile:[basePath stringByAppendingPathComponent:@"myfile.png"] options:NSDataWritingAtomic error:&err];
+        
+        D8D(@"%@",[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject]);
+        
+        // end copy
+        
+        /******* Vivek! *******/
+        /* put code here to   */
+        /* upload file named: */
+        /*  uploadImage       */
+        /**********************/
+        
+        
+    }
+    
+}
+// RSR: end
 
 @end
 

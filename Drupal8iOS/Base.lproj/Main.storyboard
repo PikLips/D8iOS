@@ -254,6 +254,12 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="mPI-AP-Wvd"/>
+                        <barButtonItem systemItem="action" id="uhL-dw-qdb">
+                            <connections>
+                                <action selector="handleUploadPictureButton:" destination="Zi9-Pn-yxb" id="Krs-qz-QDY"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="sdX-3C-V7S"/>
                         <barButtonItem systemItem="trash" id="FoR-Rk-eWE">
                             <connections>
                                 <action selector="handleTrashButtonItem:" destination="Zi9-Pn-yxb" id="JvV-pu-EZh"/>
@@ -280,6 +286,7 @@
                         <outlet property="progressView" destination="IwM-GJ-Crg" id="xGJ-1K-ILh"/>
                         <outlet property="space" destination="mPI-AP-Wvd" id="tXx-Uc-lYa"/>
                         <outlet property="trashButton" destination="FoR-Rk-eWE" id="Hxi-6n-Crp"/>
+                        <outlet property="uploadPictureButton" destination="uhL-dw-qdb" id="jtz-I4-RPj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F56-ic-qli" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -840,7 +847,7 @@
         <image name="drupal 8 logo CMYK 72.png" width="220" height="226"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Tll-UG-LXB"/>
+        <segue reference="6S0-TO-JiA"/>
         <segue reference="FBI-dd-ecC"/>
     </inferredMetricsTieBreakers>
 </document>
