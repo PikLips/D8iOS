@@ -14,11 +14,6 @@
 		444511C21B541935008B7E13 /* AAPLAssetGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444511C11B541935008B7E13 /* AAPLAssetGridViewController.m */; };
 		444511C51B541A7C008B7E13 /* AAPLAssetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444511C41B541A7C008B7E13 /* AAPLAssetViewController.m */; };
 		444511C81B541D63008B7E13 /* AAPLGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 444511C71B541D63008B7E13 /* AAPLGridViewCell.m */; };
-		44511BC51B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png in Resources */ = {isa = PBXBuildFile; fileRef = 44511BC41B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png */; };
-		44511BCB1B55CE120002A3CF /* Testfile1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44511BC71B55CE120002A3CF /* Testfile1.txt */; };
-		44511BCC1B55CE120002A3CF /* Testfile2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44511BC81B55CE120002A3CF /* Testfile2.txt */; };
-		44511BCD1B55CE120002A3CF /* Testfile3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44511BC91B55CE120002A3CF /* Testfile3.txt */; };
-		44511BCE1B55CE120002A3CF /* Testfile4.txt in Resources */ = {isa = PBXBuildFile; fileRef = 44511BCA1B55CE120002A3CF /* Testfile4.txt */; };
 		44511BD51B56B6670002A3CF /* DownloadPicturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BD41B56B6670002A3CF /* DownloadPicturesViewController.m */; };
 		44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BD71B56D8380002A3CF /* D8iOSUISplitViewController.m */; };
 		44511BDD1B56FF7B0002A3CF /* ViewArticlesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BDC1B56FF7B0002A3CF /* ViewArticlesTableViewController.m */; };
@@ -38,6 +33,17 @@
 		44CF1E1C1B5251FB00FC66EE /* ManageUserAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E1B1B5251FB00FC66EE /* ManageUserAccountViewController.m */; };
 		44CF1E221B525F8A00FC66EE /* DownloadFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E211B525F8A00FC66EE /* DownloadFileViewController.m */; };
 		44CF1E251B52619100FC66EE /* UploadFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E241B52619100FC66EE /* UploadFileViewController.m */; };
+		CF47B1E01B69F6ED00B7BDF3 /* SGKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CF47B1DF1B69F6ED00B7BDF3 /* SGKeychain.m */; };
+		CF553CB51B695A2E00B2D6D8 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = CF553CB41B695A2E00B2D6D8 /* User.m */; };
+		CF553CB81B695A5700B2D6D8 /* D8iOSHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */; };
+		CF65993B1B5BA536000AC0D7 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = CF65993A1B5BA536000AC0D7 /* Article.m */; };
+		CF65993E1B5BA5A7000AC0D7 /* JSONModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CF65993D1B5BA5A7000AC0D7 /* JSONModel.m */; };
+		CFE608161B580F550038F4E4 /* drupal 8 logo CMYK 72.png in Resources */ = {isa = PBXBuildFile; fileRef = CFE608111B580F550038F4E4 /* drupal 8 logo CMYK 72.png */; };
+		CFE608171B580F550038F4E4 /* Testfile1.txt in Resources */ = {isa = PBXBuildFile; fileRef = CFE608121B580F550038F4E4 /* Testfile1.txt */; };
+		CFE608181B580F550038F4E4 /* Testfile2.txt in Resources */ = {isa = PBXBuildFile; fileRef = CFE608131B580F550038F4E4 /* Testfile2.txt */; };
+		CFE608191B580F550038F4E4 /* Testfile3.txt in Resources */ = {isa = PBXBuildFile; fileRef = CFE608141B580F550038F4E4 /* Testfile3.txt */; };
+		CFE6081A1B580F550038F4E4 /* Testfile4.txt in Resources */ = {isa = PBXBuildFile; fileRef = CFE608151B580F550038F4E4 /* Testfile4.txt */; };
+		F5C84548F410DE342F4EE592 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A6EA9BB3BED6B0F02536D693 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,11 +70,6 @@
 		444511C41B541A7C008B7E13 /* AAPLAssetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLAssetViewController.m; sourceTree = "<group>"; };
 		444511C61B541D63008B7E13 /* AAPLGridViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLGridViewCell.h; sourceTree = "<group>"; };
 		444511C71B541D63008B7E13 /* AAPLGridViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLGridViewCell.m; sourceTree = "<group>"; };
-		44511BC41B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "drupal 8 logo CMYK 72.png"; path = "../../../../Pictures/drupal 8 logo CMYK 72.png"; sourceTree = "<group>"; };
-		44511BC71B55CE120002A3CF /* Testfile1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Testfile1.txt; path = ../../../Testfile1.txt; sourceTree = "<group>"; };
-		44511BC81B55CE120002A3CF /* Testfile2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Testfile2.txt; path = ../../../Testfile2.txt; sourceTree = "<group>"; };
-		44511BC91B55CE120002A3CF /* Testfile3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Testfile3.txt; path = ../../../Testfile3.txt; sourceTree = "<group>"; };
-		44511BCA1B55CE120002A3CF /* Testfile4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Testfile4.txt; path = ../../../Testfile4.txt; sourceTree = "<group>"; };
 		44511BD31B56B6670002A3CF /* DownloadPicturesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadPicturesViewController.h; sourceTree = "<group>"; };
 		44511BD41B56B6670002A3CF /* DownloadPicturesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadPicturesViewController.m; sourceTree = "<group>"; };
 		44511BD61B56D8380002A3CF /* D8iOSUISplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = D8iOSUISplitViewController.h; sourceTree = "<group>"; };
@@ -107,6 +108,24 @@
 		44CF1E211B525F8A00FC66EE /* DownloadFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadFileViewController.m; sourceTree = "<group>"; };
 		44CF1E231B52619100FC66EE /* UploadFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadFileViewController.h; sourceTree = "<group>"; };
 		44CF1E241B52619100FC66EE /* UploadFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadFileViewController.m; sourceTree = "<group>"; };
+		54A7EB5376FDEF676FC354FE /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		779ED5E60D48423481D03CDC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		A6EA9BB3BED6B0F02536D693 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF47B1DE1B69F6ED00B7BDF3 /* SGKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGKeychain.h; sourceTree = "<group>"; };
+		CF47B1DF1B69F6ED00B7BDF3 /* SGKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGKeychain.m; sourceTree = "<group>"; };
+		CF553CB31B695A2E00B2D6D8 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		CF553CB41B695A2E00B2D6D8 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		CF553CB61B695A5700B2D6D8 /* D8iOSHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = D8iOSHelper.h; sourceTree = "<group>"; };
+		CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = D8iOSHelper.m; sourceTree = "<group>"; };
+		CF6599391B5BA536000AC0D7 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
+		CF65993A1B5BA536000AC0D7 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
+		CF65993C1B5BA5A7000AC0D7 /* JSONModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONModel.h; sourceTree = "<group>"; };
+		CF65993D1B5BA5A7000AC0D7 /* JSONModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONModel.m; sourceTree = "<group>"; };
+		CFE608111B580F550038F4E4 /* drupal 8 logo CMYK 72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drupal 8 logo CMYK 72.png"; sourceTree = "<group>"; };
+		CFE608121B580F550038F4E4 /* Testfile1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile1.txt; sourceTree = "<group>"; };
+		CFE608131B580F550038F4E4 /* Testfile2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile2.txt; sourceTree = "<group>"; };
+		CFE608141B580F550038F4E4 /* Testfile3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile3.txt; sourceTree = "<group>"; };
+		CFE608151B580F550038F4E4 /* Testfile4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile4.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5C84548F410DE342F4EE592 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,12 +147,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		24D3BCD0D0335F17AE413C26 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				779ED5E60D48423481D03CDC /* Pods.debug.xcconfig */,
+				54A7EB5376FDEF676FC354FE /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		44CF1DD91B51D97B00FC66EE = {
 			isa = PBXGroup;
 			children = (
 				44CF1DE41B51D97B00FC66EE /* Drupal8iOS */,
 				44CF1E011B51D97C00FC66EE /* Drupal8iOSTests */,
 				44CF1DE31B51D97B00FC66EE /* Products */,
+				24D3BCD0D0335F17AE413C26 /* Pods */,
+				BB3E79CCE05F085402F44A0D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -148,16 +179,78 @@
 		44CF1DE41B51D97B00FC66EE /* Drupal8iOS */ = {
 			isa = PBXGroup;
 			children = (
+				CF47B1E11B69F6F300B7BDF3 /* SGKeyChain */,
+				CF6599381B5BA506000AC0D7 /* Model */,
 				44CF1DF21B51D97C00FC66EE /* Main.storyboard */,
-				44511BD61B56D8380002A3CF /* D8iOSUISplitViewController.h */,
-				44511BD71B56D8380002A3CF /* D8iOSUISplitViewController.m */,
 				44CF1DE91B51D97C00FC66EE /* AppDelegate.h */,
 				44CF1DEA1B51D97C00FC66EE /* AppDelegate.m */,
+				44511BDA1B56E8440002A3CF /* Developer.h */,
+				CF6599371B5BA4D1000AC0D7 /* ViewController */,
+				44CF1DF51B51D97C00FC66EE /* Images.xcassets */,
+				44CF1DF71B51D97C00FC66EE /* LaunchScreen.xib */,
+				44CF1DE51B51D97B00FC66EE /* Supporting Files */,
+			);
+			path = Drupal8iOS;
+			sourceTree = "<group>";
+		};
+		44CF1DE51B51D97B00FC66EE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4417362C1B570BD500C984B5 /* LICENSE.TXT */,
+				CFE608111B580F550038F4E4 /* drupal 8 logo CMYK 72.png */,
+				CFE608121B580F550038F4E4 /* Testfile1.txt */,
+				CFE608131B580F550038F4E4 /* Testfile2.txt */,
+				CFE608141B580F550038F4E4 /* Testfile3.txt */,
+				CFE608151B580F550038F4E4 /* Testfile4.txt */,
+				44CF1DE61B51D97B00FC66EE /* Info.plist */,
+				44CF1DE71B51D97C00FC66EE /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		44CF1E011B51D97C00FC66EE /* Drupal8iOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				44CF1E041B51D97C00FC66EE /* Drupal8iOSTests.m */,
+				44CF1E021B51D97C00FC66EE /* Supporting Files */,
+			);
+			path = Drupal8iOSTests;
+			sourceTree = "<group>";
+		};
+		44CF1E021B51D97C00FC66EE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				44CF1E031B51D97C00FC66EE /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BB3E79CCE05F085402F44A0D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A6EA9BB3BED6B0F02536D693 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CF47B1E11B69F6F300B7BDF3 /* SGKeyChain */ = {
+			isa = PBXGroup;
+			children = (
+				CF47B1DE1B69F6ED00B7BDF3 /* SGKeychain.h */,
+				CF47B1DF1B69F6ED00B7BDF3 /* SGKeychain.m */,
+			);
+			name = SGKeyChain;
+			sourceTree = "<group>";
+		};
+		CF6599371B5BA4D1000AC0D7 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				44511BD61B56D8380002A3CF /* D8iOSUISplitViewController.h */,
+				44511BD71B56D8380002A3CF /* D8iOSUISplitViewController.m */,
 				44CF1DEC1B51D97C00FC66EE /* MasterViewController.h */,
 				44CF1DED1B51D97C00FC66EE /* MasterViewController.m */,
 				44CF1DEF1B51D97C00FC66EE /* DetailViewController.h */,
 				44CF1DF01B51D97C00FC66EE /* DetailViewController.m */,
-				44511BDA1B56E8440002A3CF /* Developer.h */,
 				444511C61B541D63008B7E13 /* AAPLGridViewCell.h */,
 				444511C71B541D63008B7E13 /* AAPLGridViewCell.m */,
 				444511C31B541A7C008B7E13 /* AAPLAssetViewController.h */,
@@ -190,43 +283,23 @@
 				44CF1E241B52619100FC66EE /* UploadFileViewController.m */,
 				44511BDB1B56FF7B0002A3CF /* ViewArticlesTableViewController.h */,
 				44511BDC1B56FF7B0002A3CF /* ViewArticlesTableViewController.m */,
-				44CF1DF51B51D97C00FC66EE /* Images.xcassets */,
-				44CF1DF71B51D97C00FC66EE /* LaunchScreen.xib */,
-				44CF1DE51B51D97B00FC66EE /* Supporting Files */,
 			);
-			path = Drupal8iOS;
+			name = ViewController;
 			sourceTree = "<group>";
 		};
-		44CF1DE51B51D97B00FC66EE /* Supporting Files */ = {
+		CF6599381B5BA506000AC0D7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				4417362C1B570BD500C984B5 /* LICENSE.TXT */,
-				44511BC71B55CE120002A3CF /* Testfile1.txt */,
-				44511BC81B55CE120002A3CF /* Testfile2.txt */,
-				44511BC91B55CE120002A3CF /* Testfile3.txt */,
-				44511BCA1B55CE120002A3CF /* Testfile4.txt */,
-				44CF1DE61B51D97B00FC66EE /* Info.plist */,
-				44CF1DE71B51D97C00FC66EE /* main.m */,
-				44511BC41B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png */,
+				CF553CB61B695A5700B2D6D8 /* D8iOSHelper.h */,
+				CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */,
+				CF553CB31B695A2E00B2D6D8 /* User.h */,
+				CF553CB41B695A2E00B2D6D8 /* User.m */,
+				CF6599391B5BA536000AC0D7 /* Article.h */,
+				CF65993A1B5BA536000AC0D7 /* Article.m */,
+				CF65993C1B5BA5A7000AC0D7 /* JSONModel.h */,
+				CF65993D1B5BA5A7000AC0D7 /* JSONModel.m */,
 			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		44CF1E011B51D97C00FC66EE /* Drupal8iOSTests */ = {
-			isa = PBXGroup;
-			children = (
-				44CF1E041B51D97C00FC66EE /* Drupal8iOSTests.m */,
-				44CF1E021B51D97C00FC66EE /* Supporting Files */,
-			);
-			path = Drupal8iOSTests;
-			sourceTree = "<group>";
-		};
-		44CF1E021B51D97C00FC66EE /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				44CF1E031B51D97C00FC66EE /* Info.plist */,
-			);
-			name = "Supporting Files";
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,9 +309,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 44CF1E081B51D97C00FC66EE /* Build configuration list for PBXNativeTarget "Drupal8iOS" */;
 			buildPhases = (
+				6294D2EE65D7BB940B5466B8 /* Check Pods Manifest.lock */,
 				44CF1DDE1B51D97B00FC66EE /* Sources */,
 				44CF1DDF1B51D97B00FC66EE /* Frameworks */,
 				44CF1DE01B51D97B00FC66EE /* Resources */,
+				909FA56247C33357E761FF7E /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -312,12 +387,12 @@
 				4417362D1B570BD500C984B5 /* LICENSE.TXT in Resources */,
 				44CF1DF41B51D97C00FC66EE /* Main.storyboard in Resources */,
 				44CF1DF91B51D97C00FC66EE /* LaunchScreen.xib in Resources */,
-				44511BCB1B55CE120002A3CF /* Testfile1.txt in Resources */,
-				44511BC51B55BCBE0002A3CF /* drupal 8 logo CMYK 72.png in Resources */,
+				CFE608171B580F550038F4E4 /* Testfile1.txt in Resources */,
+				CFE6081A1B580F550038F4E4 /* Testfile4.txt in Resources */,
+				CFE608181B580F550038F4E4 /* Testfile2.txt in Resources */,
+				CFE608191B580F550038F4E4 /* Testfile3.txt in Resources */,
+				CFE608161B580F550038F4E4 /* drupal 8 logo CMYK 72.png in Resources */,
 				44CF1DF61B51D97C00FC66EE /* Images.xcassets in Resources */,
-				44511BCC1B55CE120002A3CF /* Testfile2.txt in Resources */,
-				44511BCD1B55CE120002A3CF /* Testfile3.txt in Resources */,
-				44511BCE1B55CE120002A3CF /* Testfile4.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,11 +405,45 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6294D2EE65D7BB940B5466B8 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		909FA56247C33357E761FF7E /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		44CF1DDE1B51D97B00FC66EE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF553CB51B695A2E00B2D6D8 /* User.m in Sources */,
 				44CF1DEB1B51D97C00FC66EE /* AppDelegate.m in Sources */,
 				44CF1DEE1B51D97C00FC66EE /* MasterViewController.m in Sources */,
 				44CF1E221B525F8A00FC66EE /* DownloadFileViewController.m in Sources */,
@@ -347,13 +456,17 @@
 				44CF1E131B523D5400FC66EE /* SetupDrupalAccountViewController.m in Sources */,
 				44CF1DE81B51D97C00FC66EE /* main.m in Sources */,
 				44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */,
+				CF553CB81B695A5700B2D6D8 /* D8iOSHelper.m in Sources */,
+				CF65993B1B5BA536000AC0D7 /* Article.m in Sources */,
 				444511BF1B5417EB008B7E13 /* AAPLRootListViewController.m in Sources */,
 				44CF1E161B524BA000FC66EE /* LoginViewController.m in Sources */,
 				44511BD51B56B6670002A3CF /* DownloadPicturesViewController.m in Sources */,
 				444511C81B541D63008B7E13 /* AAPLGridViewCell.m in Sources */,
 				44CF1DF11B51D97C00FC66EE /* DetailViewController.m in Sources */,
+				CF65993E1B5BA5A7000AC0D7 /* JSONModel.m in Sources */,
 				44CF1E101B51EAA700FC66EE /* SpecifyDrupalSiteViewController.m in Sources */,
 				44CF1E1C1B5251FB00FC66EE /* ManageUserAccountViewController.m in Sources */,
+				CF47B1E01B69F6ED00B7BDF3 /* SGKeychain.m in Sources */,
 				44511BDD1B56FF7B0002A3CF /* ViewArticlesTableViewController.m in Sources */,
 				44511BE01B56FFE20002A3CF /* DownloadPictureViewController.m in Sources */,
 			);
@@ -481,9 +594,11 @@
 		};
 		44CF1E091B51D97C00FC66EE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 779ED5E60D48423481D03CDC /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Drupal8iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -491,9 +606,11 @@
 		};
 		44CF1E0A1B51D97C00FC66EE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 54A7EB5376FDEF676FC354FE /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Drupal8iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

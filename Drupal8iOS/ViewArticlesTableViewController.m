@@ -7,12 +7,129 @@
 //
 
 #import "ViewArticlesTableViewController.h"
+#import "Article.h"
+#import <AFNetworking/AFNetworking.h>
+#import <UIAlertView+AFNetworking.h>
+#import "ViewArticleViewController.h"
+#import <DIOSSession.h>
+#import <DIOSView.h>
+#import "Developer.h"
 
 @interface ViewArticlesTableViewController ()
+
+@property (nonatomic,strong) NSMutableArray * articleList; // to hold NSDictionaries that are created with JSON Response and each NSDictionary represent article object i.e it will contain all the fields which you have enabled from RESTExport for the view
+
 
 @end
 
 @implementation ViewArticlesTableViewController
+
+-(NSMutableArray *)articleList{
+    if (!_articleList) {
+        _articleList = [[NSMutableArray alloc]init];
+        
+    }
+    return _articleList;
+
+}
+
+
+-(IBAction)getData{
+    
+    
+  //Request with pure AFNetworking
+//    AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
+//    
+//    [sessionManager setRequestSerializer:[AFHTTPRequestSerializer serializer]];
+//    [sessionManager setResponseSerializer:[AFJSONResponseSerializer serializer]];
+//    
+//    NSURLSessionDataTask *getTipData = [sessionManager GET:@"http://localhost/dr8b1211/articles" parameters:@{@"_format":@"json"} success:^(NSURLSessionDataTask *task, id responseObject) {
+//        
+//        
+//        
+//        
+//        
+//        
+//        [self.articleList removeAllObjects];
+//        for (NSMutableDictionary *article in responseObject)
+//        {
+//            Article *newTip = [[Article alloc]initWithDictionary:article];
+//            [self.articleList addObject:newTip];
+//            
+//        }
+//        [self.tableView reloadData];
+//        
+//        
+//        //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
+//        
+//        
+//        
+//        
+//        
+//        
+//        [self.refreshControl endRefreshing];
+//        
+//    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+//        
+//        [self.refreshControl endRefreshing];
+//        NSLog(@"%@",error.description);
+//        
+//        
+//        
+//    }];
+//    [ UIAlertView showAlertViewForTaskWithErrorOnCompletion:getTipData delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
+    
+    DIOSSession *sharedSession = [DIOSSession sharedSession];
+       sharedSession.baseURL = baseURL;
+    if (sharedSession.baseURL != nil) {
+        [DIOSView getViewWithPath:@"articles" params:@{@"_format":@"json"} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [self.articleList removeAllObjects];
+          
+                    for (NSMutableDictionary *article in responseObject)
+                    {
+                        Article *newTip = [[Article alloc]initWithDictionary:article];
+                        [self.articleList addObject:newTip];
+            
+                    }
+                    [self.tableView reloadData];
+            
+            
+                    //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
+                    
+                    
+                    
+                    
+                    
+                    
+                    [self.refreshControl endRefreshing];
+
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        
+        }];
+    
+        
+    }
+    else{
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+        [alert show];
+    }
+    
+    
+    
+    
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+  
+    [self getData];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,7 +139,10 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    [self.refreshControl addTarget:self action:@selector(getData) forControlEvents:UIControlEventValueChanged];
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -32,26 +152,33 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
+
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+
+    return [self.articleList count];
+    
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    // Configure the cell...
     
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"articleCell" forIndexPath:indexPath];
+    Article *articleObj = nil;
+    
+        articleObj = [self.articleList objectAtIndex:indexPath.row];
+    
+    
+    cell.textLabel.text = [articleObj valueForKeyPath:@"title"];
+    cell.detailTextLabel.text = [articleObj valueForKeyPath:@"changed"];
     return cell;
+    
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.
@@ -87,14 +214,30 @@
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    
+    
+    if ([sender isKindOfClass:[UITableViewCell class]]) {
+        
+        if ([segue.destinationViewController isKindOfClass:[ViewArticleViewController class]]) {
+            
+            if ([segue.identifier isEqualToString:@"showArticle"]) {
+                
+                ViewArticleViewController *newVC = (ViewArticleViewController *)segue.destinationViewController;
+                
+                
+                    newVC.article = [self.articleList objectAtIndex:[self.tableView indexPathForCell:sender].row];
+                
+                
+            }
+        }
+    }
+   
 }
-*/
+
 
 @end

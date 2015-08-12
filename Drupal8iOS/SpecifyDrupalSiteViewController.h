@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SpecifyDrupalSiteViewController : UIViewController
+@interface SpecifyDrupalSiteViewController : UIViewController <UIAlertViewDelegate>
 @property (nonatomic) NSURL *drupalSite; // MAS: used for session, may be changed to a different type, e.g., NSURLConnection, NSURLCredential, if necessary
 
 @end

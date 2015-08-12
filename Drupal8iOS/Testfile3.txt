@@ -1,0 +1,48 @@
+C basics
+=======================
+>	Local variables have more preference over global variables.
+>	Functional parameter or Formal parameter are treated as Local variable for function body so they have more preferences over global variables.
+
+>  Initialisation  <<<
+>	Local variables are not initialised by system but Global variables are initialised by system as follow
+
+	Data Type 		|	Initial Default Value
+	int		        |	0
+	char			|	'\0'
+	float			|	0.0
+	double			|	0.0
+	pointer 		|	NULL
+	
+> It is a good programming practice to initialize variables properly otherwise, your program may produce unexpected results
+  because uninitialized variables will take some garbage value already available at its memory location.
+> In computer programming, a static variable is a variable that has been allocated statically—whose lifetime or "extent" extends 
+  across the entire run of the program. This is in contrast to the more ephemeral automatic variables (local variables are generally automatic),\
+  whose storage is allocated and deallocated on the call stack; and in contrast to objects whose storage is dynamically allocated in heap memory.
+  
+> A static function can only be accessed inside the file which has declared it.
+> Static variables are auto-initialised  as global variables.
+> Static variables can only be initialised with constant expressions.
+> Static variables should be initialised before main().
+> if static is used within the function then variable will be alive through out the program but
+  if it is used in global way then other file which is linked with this file will not be able to access it.
+  see this http://www.noxeos.com/2011/07/29/c-const-static-keywords/  
+> Normally, the compiler determines what data is to be stored in the registers of the CPU at what times.
+  However, the C language provides the storage class register so that the programmer can ``suggest'' 
+  to the compiler that particular automatic variables should be allocated to CPU registers
+  if possible. Thus, register variables provide a certain control over efficiency of program execution. 
+  Variables which are used repeatedly or whose access times are critical, may be declared 
+  to be of storage class register.
+> Address of register variable cannot be determined in any way.
+
+
+
+> Extern Keyword
+ It extends visibility of variables and functions in C. In C by default 'extern' key word
+ is present in declaration or definition.
+	
+ Actually for C variables to declare  only  is 
+						'extern int a;'
+ With out extern it will allocate memory for it.
+ Extern will also increases scope of variable so it can be accessed in other file also.
+ use extern key word before main starts. -- advise
+

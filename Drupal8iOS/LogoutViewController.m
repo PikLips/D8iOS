@@ -8,6 +8,9 @@
 
 #import "LogoutViewController.h"
 #import "Developer.h"  // MAS: for development only, see which
+#import "User.h"
+#import "SGKeychain.h"
+#import <DIOSSession.h>
 
 @interface LogoutViewController ()
 
@@ -18,6 +21,11 @@
     /* MAS: Log user out of Drupal site
      *      This code should also be invoked when application terminates.
      */
+    
+    [self performLogout];
+    
+    
+    
 }
 
 - (void)viewDidLoad {
@@ -39,5 +47,20 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+-(void)performLogout{
+    
+    User *user = [User sharedInstance];
+    [user clearUserDetails];
+     NSError *deletePasswordError = nil;
+    
+    DIOSSession *session = [DIOSSession sharedSession];
+    
+    [session setSignRequests:NO];
+
+    [SGKeychain deletePasswordandUserNameForServiceName:@"Drupal 8" accessGroup:nil error:&deletePasswordError];
+    
+
+}
 
 @end

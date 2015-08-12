@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Article.h"
 
 @interface ViewArticleViewController : UIViewController
+@property (nonatomic,strong) Article* article;
 
 @end

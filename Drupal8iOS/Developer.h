@@ -27,3 +27,5 @@ extern int d8FlagLevel;     // MAS: a nasty global, gods of OOP forgive me
 #define D8P(FMT,...) if(d8FlagLevel == D8PRODUCTION) NSLog(@"D8iOS: " FMT, ##__VA_ARGS__)
 
 #endif
+
+#define DRUPAL8SITE @"drupal8site"
