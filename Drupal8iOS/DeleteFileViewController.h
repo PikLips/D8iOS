@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DeleteFileViewController : UIViewController
+@interface DeleteFileViewController : UITableViewController
 
 @end

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "Article.h"
+#import "MBProgressHUD.h"
 
-@interface ViewArticleViewController : UIViewController
+@interface ViewArticleViewController : UIViewController <MBProgressHUDDelegate>
 @property (nonatomic,strong) Article* article;
 
 @end

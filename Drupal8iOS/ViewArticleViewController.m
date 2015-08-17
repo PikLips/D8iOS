@@ -96,20 +96,34 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
-    
     sharedSession.baseURL = baseURL;
+    
+    
+    
+    
     if(sharedSession.baseURL != nil){
+        
+        MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:hud];
+        
+        hud.delegate = self;
+        hud.labelText = @"Loading article";
+        [hud show:YES];
         
         [DIOSNode getNodeWithID:self.article.nid success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSMutableDictionary *articleDict = (NSMutableDictionary *)responseObject;
             
             [self.titleLabel setText:self.article.title];
             [self.lastUpdatedLabel  setText:self.article.changed];
-            [self.contentWebView loadHTMLString:[[[articleDict objectForKey:@"body"]  objectAtIndex:0] objectForKey:@"value"] baseURL:[NSURL URLWithString:@"http://localhost"]];
-            
-            
+            [self.contentWebView loadHTMLString:[[[articleDict objectForKey:@"body"]  objectAtIndex:0] objectForKey:@"value"] baseURL:[baseURL URLByDeletingLastPathComponent]];
+            // need to check on specifying base URL
+            [hud hide:YES];
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [hud hide:YES];
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error while loading article with %@ ",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+            [alert show];
+            
             
         }];
         

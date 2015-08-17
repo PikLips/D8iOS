@@ -14,6 +14,8 @@
 #import <DIOSSession.h>
 #import <DIOSView.h>
 #import "Developer.h"
+#import "User.h"
+
 
 @interface ViewArticlesTableViewController ()
 
@@ -35,6 +37,13 @@
 
 
 -(IBAction)getData{
+    
+    MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:hud];
+    
+    hud.delegate = self;
+    hud.labelText = @"Loading the articles";
+    [hud show:YES];
     
     
   //Request with pure AFNetworking
@@ -85,8 +94,14 @@
     
     DIOSSession *sharedSession = [DIOSSession sharedSession];
        sharedSession.baseURL = baseURL;
+   
+    // Remove line given below once bug 2228141 is solved
+    // As currently RESTExport do not support authentication
+    sharedSession.signRequests = NO;
+    
+    
     if (sharedSession.baseURL != nil) {
-        [DIOSView getViewWithPath:@"articles" params:@{@"_format":@"json"} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [DIOSView getViewWithPath:@"articles" params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             [self.articleList removeAllObjects];
           
                     for (NSMutableDictionary *article in responseObject)
@@ -97,8 +112,7 @@
                     }
                     [self.tableView reloadData];
             
-            
-                    //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
+                                //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
                     
                     
                     
@@ -106,9 +120,42 @@
                     
                     
                     [self.refreshControl endRefreshing];
+            sharedSession.signRequests =YES;
+                    [hud hide:YES];
+
 
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [self.refreshControl endRefreshing];
+            [hud hide:YES];
+            sharedSession.signRequests =YES;
+
+            int statusCode = operation.response.statusCode;
+            // This can happen when GET is with out Authorization details
+            if (statusCode == 401) {
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                [alert show];
+            }
             
+            // Credentials sent with request is invalid
+            else if(statusCode == 403){
+                
+                sharedSession.signRequests = NO;
+                
+                User *sharedUser = [User sharedInstance];
+                [sharedUser clearUserDetails];
+                
+                
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                [alert show];
+                
+                
+                
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                [alert show];
+            
+            }
         
         }];
     

@@ -38,6 +38,10 @@
 		CF553CB81B695A5700B2D6D8 /* D8iOSHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */; };
 		CF65993B1B5BA536000AC0D7 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = CF65993A1B5BA536000AC0D7 /* Article.m */; };
 		CF65993E1B5BA5A7000AC0D7 /* JSONModel.m in Sources */ = {isa = PBXBuildFile; fileRef = CF65993D1B5BA5A7000AC0D7 /* JSONModel.m */; };
+		CFA9E7A31B7D1BCF00390843 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFA9E7A21B7D1BCF00390843 /* UIKit.framework */; };
+		CFA9E7A61B7D1C8900390843 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CFA9E7A51B7D1C8900390843 /* MBProgressHUD.m */; };
+		CFA9E7AA1B7D212600390843 /* 37x-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = CFA9E7A81B7D212600390843 /* 37x-Checkmark.png */; };
+		CFA9E7AB1B7D212600390843 /* 37x-Checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CFA9E7A91B7D212600390843 /* 37x-Checkmark@2x.png */; };
 		CFE608161B580F550038F4E4 /* drupal 8 logo CMYK 72.png in Resources */ = {isa = PBXBuildFile; fileRef = CFE608111B580F550038F4E4 /* drupal 8 logo CMYK 72.png */; };
 		CFE608171B580F550038F4E4 /* Testfile1.txt in Resources */ = {isa = PBXBuildFile; fileRef = CFE608121B580F550038F4E4 /* Testfile1.txt */; };
 		CFE608181B580F550038F4E4 /* Testfile2.txt in Resources */ = {isa = PBXBuildFile; fileRef = CFE608131B580F550038F4E4 /* Testfile2.txt */; };
@@ -121,6 +125,12 @@
 		CF65993A1B5BA536000AC0D7 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
 		CF65993C1B5BA5A7000AC0D7 /* JSONModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONModel.h; sourceTree = "<group>"; };
 		CF65993D1B5BA5A7000AC0D7 /* JSONModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONModel.m; sourceTree = "<group>"; };
+		CFA9E7A01B7D1BC700390843 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		CFA9E7A21B7D1BCF00390843 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		CFA9E7A41B7D1C8900390843 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		CFA9E7A51B7D1C8900390843 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		CFA9E7A81B7D212600390843 /* 37x-Checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark.png"; sourceTree = "<group>"; };
+		CFA9E7A91B7D212600390843 /* 37x-Checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark@2x.png"; sourceTree = "<group>"; };
 		CFE608111B580F550038F4E4 /* drupal 8 logo CMYK 72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drupal 8 logo CMYK 72.png"; sourceTree = "<group>"; };
 		CFE608121B580F550038F4E4 /* Testfile1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile1.txt; sourceTree = "<group>"; };
 		CFE608131B580F550038F4E4 /* Testfile2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Testfile2.txt; sourceTree = "<group>"; };
@@ -133,6 +143,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFA9E7A31B7D1BCF00390843 /* UIKit.framework in Frameworks */,
 				F5C84548F410DE342F4EE592 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -179,6 +190,7 @@
 		44CF1DE41B51D97B00FC66EE /* Drupal8iOS */ = {
 			isa = PBXGroup;
 			children = (
+				CFA9E7A71B7D1C9100390843 /* MBProgressHUD */,
 				CF47B1E11B69F6F300B7BDF3 /* SGKeyChain */,
 				CF6599381B5BA506000AC0D7 /* Model */,
 				44CF1DF21B51D97C00FC66EE /* Main.storyboard */,
@@ -196,6 +208,8 @@
 		44CF1DE51B51D97B00FC66EE /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				CFA9E7A81B7D212600390843 /* 37x-Checkmark.png */,
+				CFA9E7A91B7D212600390843 /* 37x-Checkmark@2x.png */,
 				4417362C1B570BD500C984B5 /* LICENSE.TXT */,
 				CFE608111B580F550038F4E4 /* drupal 8 logo CMYK 72.png */,
 				CFE608121B580F550038F4E4 /* Testfile1.txt */,
@@ -228,6 +242,8 @@
 		BB3E79CCE05F085402F44A0D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CFA9E7A21B7D1BCF00390843 /* UIKit.framework */,
+				CFA9E7A01B7D1BC700390843 /* CoreGraphics.framework */,
 				A6EA9BB3BED6B0F02536D693 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -300,6 +316,15 @@
 				CF65993D1B5BA5A7000AC0D7 /* JSONModel.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		CFA9E7A71B7D1C9100390843 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				CFA9E7A41B7D1C8900390843 /* MBProgressHUD.h */,
+				CFA9E7A51B7D1C8900390843 /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -386,8 +411,10 @@
 			files = (
 				4417362D1B570BD500C984B5 /* LICENSE.TXT in Resources */,
 				44CF1DF41B51D97C00FC66EE /* Main.storyboard in Resources */,
+				CFA9E7AB1B7D212600390843 /* 37x-Checkmark@2x.png in Resources */,
 				44CF1DF91B51D97C00FC66EE /* LaunchScreen.xib in Resources */,
 				CFE608171B580F550038F4E4 /* Testfile1.txt in Resources */,
+				CFA9E7AA1B7D212600390843 /* 37x-Checkmark.png in Resources */,
 				CFE6081A1B580F550038F4E4 /* Testfile4.txt in Resources */,
 				CFE608181B580F550038F4E4 /* Testfile2.txt in Resources */,
 				CFE608191B580F550038F4E4 /* Testfile3.txt in Resources */,
@@ -456,6 +483,7 @@
 				44CF1E131B523D5400FC66EE /* SetupDrupalAccountViewController.m in Sources */,
 				44CF1DE81B51D97C00FC66EE /* main.m in Sources */,
 				44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */,
+				CFA9E7A61B7D1C8900390843 /* MBProgressHUD.m in Sources */,
 				CF553CB81B695A5700B2D6D8 /* D8iOSHelper.m in Sources */,
 				CF65993B1B5BA536000AC0D7 /* Article.m in Sources */,
 				444511BF1B5417EB008B7E13 /* AAPLRootListViewController.m in Sources */,

@@ -11,7 +11,8 @@
  *************  We will tie the logic into the UI.              *********************/
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
-@interface LogoutViewController : UIViewController
+@interface LogoutViewController : UIViewController <MBProgressHUDDelegate>
 
 @end
