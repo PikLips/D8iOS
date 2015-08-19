@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
-@interface SpecifyDrupalSiteViewController : UIViewController
+@interface SpecifyDrupalSiteViewController : UIViewController <UIAlertViewDelegate,MBProgressHUDDelegate>
 @property (nonatomic) NSURL *drupalSite; // MAS: used for session, may be changed to a different type, e.g., NSURLConnection, NSURLCredential, if necessary
 
 @end

@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewArticlesTableViewController : UITableViewController
+#import "MBProgressHUD.h"
+
+
+@interface ViewArticlesTableViewController : UITableViewController <MBProgressHUDDelegate>
 
 @end

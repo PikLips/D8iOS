@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 #import "DetailViewController.h"
+#import "DIOSSession.h"
+#import "SGKeychain.h"
 #import "Developer.h"  // MAS: for development only, see which
 int d8FlagLevel = D8FLAGDEBUG; // MAS: highest level
 
@@ -20,6 +22,30 @@ int d8FlagLevel = D8FLAGDEBUG; // MAS: highest level
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    // Reading the Drupal 8 web site if already specified in NSUserDefaults
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    DIOSSession *sharedSession  = [DIOSSession sharedSession];
+    
+    [sharedSession setBaseURL:[NSURL URLWithString:[defaults objectForKey:@"drupal8site"]?:@""]];
+    
+    NSError *error = nil;
+    
+    NSArray *credentials  = [SGKeychain usernamePasswordForServiceName:@"Drupal 8" accessGroup:nil error:&error];
+   // Frist element of the array is user name
+    // Second element is the password
+   
+    
+    if (credentials !=nil && credentials[0] != nil) {
+        
+        // Here we can perform a network call and verify the credentials 
+        
+        [sharedSession setBasicAuthCredsWithUsername:credentials[0] andPassword:credentials[1]];
+        
+    }
+    
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
