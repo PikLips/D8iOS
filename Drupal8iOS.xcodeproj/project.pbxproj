@@ -33,6 +33,8 @@
 		44CF1E1C1B5251FB00FC66EE /* ManageUserAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E1B1B5251FB00FC66EE /* ManageUserAccountViewController.m */; };
 		44CF1E221B525F8A00FC66EE /* DownloadFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E211B525F8A00FC66EE /* DownloadFileViewController.m */; };
 		44CF1E251B52619100FC66EE /* UploadFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E241B52619100FC66EE /* UploadFileViewController.m */; };
+		CF195B111B84778F00003A2B /* FileJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = CF195B101B84778F00003A2B /* FileJSON.m */; };
+		CF195B141B847AD400003A2B /* FileDetailsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF195B131B847AD400003A2B /* FileDetailsTableViewCell.m */; };
 		CF47B1E01B69F6ED00B7BDF3 /* SGKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CF47B1DF1B69F6ED00B7BDF3 /* SGKeychain.m */; };
 		CF553CB51B695A2E00B2D6D8 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = CF553CB41B695A2E00B2D6D8 /* User.m */; };
 		CF553CB81B695A5700B2D6D8 /* D8iOSHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */; };
@@ -115,6 +117,10 @@
 		54A7EB5376FDEF676FC354FE /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		779ED5E60D48423481D03CDC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		A6EA9BB3BED6B0F02536D693 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF195B0F1B84778F00003A2B /* FileJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileJSON.h; sourceTree = "<group>"; };
+		CF195B101B84778F00003A2B /* FileJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileJSON.m; sourceTree = "<group>"; };
+		CF195B121B847AD400003A2B /* FileDetailsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDetailsTableViewCell.h; sourceTree = "<group>"; };
+		CF195B131B847AD400003A2B /* FileDetailsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDetailsTableViewCell.m; sourceTree = "<group>"; };
 		CF47B1DE1B69F6ED00B7BDF3 /* SGKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGKeychain.h; sourceTree = "<group>"; };
 		CF47B1DF1B69F6ED00B7BDF3 /* SGKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGKeychain.m; sourceTree = "<group>"; };
 		CF553CB31B695A2E00B2D6D8 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
@@ -299,6 +305,8 @@
 				44CF1E241B52619100FC66EE /* UploadFileViewController.m */,
 				44511BDB1B56FF7B0002A3CF /* ViewArticlesTableViewController.h */,
 				44511BDC1B56FF7B0002A3CF /* ViewArticlesTableViewController.m */,
+				CF195B121B847AD400003A2B /* FileDetailsTableViewCell.h */,
+				CF195B131B847AD400003A2B /* FileDetailsTableViewCell.m */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -314,6 +322,8 @@
 				CF65993A1B5BA536000AC0D7 /* Article.m */,
 				CF65993C1B5BA5A7000AC0D7 /* JSONModel.h */,
 				CF65993D1B5BA5A7000AC0D7 /* JSONModel.m */,
+				CF195B0F1B84778F00003A2B /* FileJSON.h */,
+				CF195B101B84778F00003A2B /* FileJSON.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -481,6 +491,7 @@
 				444511C21B541935008B7E13 /* AAPLAssetGridViewController.m in Sources */,
 				441736301B579EB700C984B5 /* DeleteFileViewController.m in Sources */,
 				44CF1E131B523D5400FC66EE /* SetupDrupalAccountViewController.m in Sources */,
+				CF195B141B847AD400003A2B /* FileDetailsTableViewCell.m in Sources */,
 				44CF1DE81B51D97C00FC66EE /* main.m in Sources */,
 				44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */,
 				CFA9E7A61B7D1C8900390843 /* MBProgressHUD.m in Sources */,
@@ -489,6 +500,7 @@
 				444511BF1B5417EB008B7E13 /* AAPLRootListViewController.m in Sources */,
 				44CF1E161B524BA000FC66EE /* LoginViewController.m in Sources */,
 				44511BD51B56B6670002A3CF /* DownloadPicturesViewController.m in Sources */,
+				CF195B111B84778F00003A2B /* FileJSON.m in Sources */,
 				444511C81B541D63008B7E13 /* AAPLGridViewCell.m in Sources */,
 				44CF1DF11B51D97C00FC66EE /* DetailViewController.m in Sources */,
 				CF65993E1B5BA5A7000AC0D7 /* JSONModel.m in Sources */,

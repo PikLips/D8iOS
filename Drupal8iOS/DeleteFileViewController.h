@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#include "MBProgressHUD.h"
 
-@interface DeleteFileViewController : UITableViewController
+@interface DeleteFileViewController : UITableViewController <MBProgressHUDDelegate>
 
 @end
