@@ -97,7 +97,8 @@
    
     // Remove line given below once bug 2228141 is solved
     // As currently RESTExport do not support authentication
-    sharedSession.signRequests = NO;
+    // When pushing this code to pantheon site set this to NO becuase it has not been patched with 2228141.patch 
+    sharedSession.signRequests = YES;
     
     
     if (sharedSession.baseURL != nil) {

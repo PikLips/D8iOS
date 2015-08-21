@@ -34,7 +34,8 @@
 + (void) deleteEntityWithEntityName:(NSString*)name andID:(NSString*)eid
                    success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
                    failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
-    NSString *path = [NSString stringWithFormat:@"%@/%@", name, eid];
+    // The path would be set to /%@/%@ once the bug 2293697 is solved
+    NSString *path = [NSString stringWithFormat:@"entity/%@/%@", name, eid];
     [[DIOSSession sharedSession] sendRequestWithPath:path method:@"DELETE" params:nil success:success failure:failure];
 }
 
