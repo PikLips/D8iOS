@@ -72,7 +72,7 @@
     DIOSSession *session = [DIOSSession sharedSession];
     
     [session setSignRequests:NO]; // request from drupal-ios-sdk will not send credential information
-
+    [session.requestSerializer clearAuthorizationHeader];
     // Also remove data form keychain storage
     [SGKeychain deletePasswordandUserNameForServiceName:@"Drupal 8" accessGroup:nil error:&deletePasswordError];
     

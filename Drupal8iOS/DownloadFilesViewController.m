@@ -1,29 +1,26 @@
 //
-//  DownloadPicturesViewController.m
+//  DownloadFilesViewController.m
 //  Drupal8iOS
 //
-//  Created by Michael Smith on 7/15/15.
-//  Copyright (c) 2015 PikLips. All rights reserved.
+//  Created by Vivek Pandya on 8/21/15.
+//  Copyright © 2015 PikLips. All rights reserved.
 //
-/* MAS:  Note, this is currently a placeholder
- */
 
-#import "DownloadPicturesViewController.h"
-#import "Developer.h"  // MAS: for development only, see which
+#import "DownloadFilesViewController.h"
 #import "User.h"
+#import "Developer.h"
 #import "DIOSSession.h"
 #import "DIOSView.h"
 #import "FileJSON.h"
-#import "FileDetailsTableViewCell.h"
-#import "DownloadPictureViewController.h"
+#import "DownloadFileTableViewCell.h"
 
 
-
-@interface DownloadPicturesViewController ()
-@property (nonatomic,strong) NSMutableArray * listOfFiles;
+@interface DownloadFilesViewController ()
+@property (nonatomic,strong) NSMutableArray *listOfFiles;
 @end
 
-@implementation DownloadPicturesViewController
+@implementation DownloadFilesViewController
+
 
 -(NSMutableArray *)listOfFiles{
     if (!_listOfFiles) {
@@ -48,7 +45,7 @@
         [self.navigationController.view addSubview:hud];
         
         hud.delegate = self;
-        hud.labelText = @"Loading the images";
+        hud.labelText = @"Loading the files";
         [hud show:YES];
         
         
@@ -66,7 +63,7 @@
         
         
         if (sharedSession.baseURL != nil) {
-            [DIOSView getViewWithPath:[NSString stringWithFormat:@"images/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [DIOSView getViewWithPath:[NSString stringWithFormat:@"files/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 [self.listOfFiles removeAllObjects];
                 
                 for (NSMutableDictionary *fileJSONDict in responseObject)
@@ -149,12 +146,8 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self getData];
-    
+
 }
-
-
-
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -174,33 +167,97 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
-    // Return the number of rows in the section.
     return [self.listOfFiles count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    FileDetailsTableViewCell *cell = (FileDetailsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"downloadPictureCell" forIndexPath:indexPath];
+    DownloadFileTableViewCell *cell = (DownloadFileTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"downloadFileCell" forIndexPath:indexPath];
     
-    FileJSON *fileDetails = [self.listOfFiles objectAtIndex:indexPath.row];
+    FileJSON *fileJSONObj = [self.listOfFiles objectAtIndex:indexPath.row];
     
-    
-    [cell.fileName setText:fileDetails.filename];
-    [cell.fileSize setText:fileDetails.filesize];
-    [cell.lastChanged setText:fileDetails.changed];
-    [cell.fid setText:[NSString stringWithFormat:@"fid: %@",fileDetails.fid]];
-
+    [cell.fileName setText:fileJSONObj.filename];
+    [cell.fileSize setText:fileJSONObj.filesize];
+    [cell.lastChanged setText:fileJSONObj.changed];
+    [cell.fid setText:[NSString stringWithFormat:@"fid : %@",fileJSONObj.fid]];
+    [cell.downloadButton setTag:indexPath.row];
+    [cell.downloadButton addTarget:self action:@selector(downloadFile:) forControlEvents:UIControlEventTouchUpInside];
+     
     
     return cell;
 }
 
+-(void)downloadFile:(id)sender{
+    UIButton *senderButton = (UIButton *)sender;
+   // NSLog(@"%ld",(long)senderButton.tag);
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:hud];
+    
+    // Set determinate bar mode
+    hud.mode = MBProgressHUDModeDeterminateHorizontalBar;
+    
+    hud.delegate = self;
+    [hud show:YES];
+    // myProgressTask uses the HUD instance to update progress
+    
+    FileJSON *fileJSONObj = [self.listOfFiles objectAtIndex:senderButton.tag];
+    NSURL *url = [NSURL URLWithString:fileJSONObj.uri];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:fileJSONObj.filename];
+    operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
+    
+    
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        NSLog(@"bytesRead: %u, totalBytesRead: %lld, totalBytesExpectedToRead: %lld", bytesRead, totalBytesRead, totalBytesExpectedToRead);
+        float percentDone = ((float)((int)totalBytesRead) / (float)((int)totalBytesExpectedToRead));
+        [(UIProgressView *)hud setProgress:percentDone];
+        hud.labelText = [NSString stringWithFormat:@"%f",(100.0 * percentDone)];
+    }];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        [hud hide:YES];
+        
+        NSLog(@"RES: %@", [[[operation response] allHeaderFields] description]);
+        
+        NSError *error;
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
+        
+        if (error) {
+            NSLog(@"ERR: %@", [error description]);
+        } else {
+            NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+            long long fileSize = [fileSizeNumber longLongValue];
+            NSLog(@"%lld", fileSize);
+            NSLog(@"File download completed !");
+            NSLog(@"Successfully downloaded file to %@", path);
+            
+            //[[_downloadFile titleLabel] setText:[NSString stringWithFormat:@"%lld", fileSize]];
+        }
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [hud hide:YES];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                       message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription]
+                                                      delegate:nil
+                                             cancelButtonTitle:@"Dismiss"
+                                             otherButtonTitles: nil];
+        [alert show];
+        
+    }];
+    
+    [operation start];
+    
+}
 
 /*
 // Override to support conditional editing of the table view.
@@ -236,31 +293,14 @@
 }
 */
 
-
+/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-    if ([sender isKindOfClass:[UITableViewCell class]]) {
-        
-        if ([segue.destinationViewController isKindOfClass:[DownloadPictureViewController class]]) {
-            
-            if ([segue.identifier isEqualToString:@"downloadPicture"]) {
-                
-                DownloadPictureViewController *newVC = (DownloadPictureViewController *)segue.destinationViewController;
-                
-                
-                FileJSON *fileJSONObj = (FileJSON *)[self.listOfFiles objectAtIndex:[self.tableView indexPathForCell:sender].row];
-                
-                newVC.pictureURL = fileJSONObj.uri;
-                newVC.imageName = fileJSONObj.filename;
-                
-            }
-        }
-    }
-
-
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
 }
+*/
 
 @end

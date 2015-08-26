@@ -18,7 +18,7 @@
 #import "LoginViewController.h"
 #import "LogoutViewController.h"
 #import "ManageUserAccountViewController.h"
-#import "DownloadFileViewController.h"
+#import "DownloadFilesViewController.h"
 #import "UploadFileViewController.h"
 #import "DeleteFileViewController.h"
 #import "DownloadPicturesViewController.h"
@@ -86,7 +86,7 @@
     }
     else if ( [[self.detailItem description] isEqualToString: @"DownloadFile"] ) {
         UIStoryboard *storyboard = self.storyboard;
-        DownloadFileViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"DownloadFile" ];  // MAS: see identifier in IB
+        DownloadFilesViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"DownloadFile" ];  // MAS: see identifier in IB
         [self.navigationController showViewController:controller sender:self];
     }
     else if ( [[self.detailItem description] isEqualToString: @"UploadFile"] ) {

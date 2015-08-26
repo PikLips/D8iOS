@@ -9,7 +9,8 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
-@interface DownloadPicturesViewController : UITableViewController
+@interface DownloadPicturesViewController : UITableViewController <MBProgressHUDDelegate>
 
 @end

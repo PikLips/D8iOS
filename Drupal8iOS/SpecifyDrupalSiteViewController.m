@@ -145,8 +145,19 @@
                 
                 [hud hide:YES];
                 // Display alert on faliure
+                int statusCode = operation.response.statusCode;
+                
+                if (statusCode == 403) {
+                    
+                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:[NSString stringWithFormat:@"Error with %@ . It seems that you are already logged in to other site.",error.localizedDescription]  delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                    [alert show];
+
+                }
+                else{
+                
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:[NSString stringWithFormat:@"An error occured while connecting to the URL with %@",error.localizedDescription]  delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                 [alert show];
+                }
                 NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"FAILED" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.000]}];
                 [self.connectionStatusLabel setAttributedText:attributeStatus];
                 
