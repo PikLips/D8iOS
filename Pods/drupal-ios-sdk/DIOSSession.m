@@ -62,6 +62,10 @@
         NSURLCredential *credential = [NSURLCredential credentialWithUser:_basicAuthUsername password:_basicAuthPassword persistence:NSURLCredentialPersistenceNone];
         [operation setCredential:credential];
     }
+    else{
+        [operation setCredential:nil];
+    }
+    
     [self.operationQueue addOperation:operation];
 }
 
