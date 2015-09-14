@@ -74,7 +74,7 @@
                                  parameters:(NSDictionary *)parameters
 {
     NSString *urlString = [NSString stringWithFormat:@"%@/%@", [[self baseURL] absoluteString], path];
-    NSLog(urlString);
+    NSLog(@"Urlstring is %@", urlString);
     [self.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [self.requestSerializer setValue:@"application/hal+json" forHTTPHeaderField:@"Content-Type"];
 

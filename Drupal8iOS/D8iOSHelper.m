@@ -1,10 +1,20 @@
+//
+//  D8iOSHelper.m
+//  Drupal8iOS
+//
+//  Created by Vivek Pandya on 8/21/15.
+//  Copyright © 2015 PikLips. All rights reserved.
+//
+/*  MAS:
+ *  These routines assist in authentication.
+ */
 
+// MAS:Vivek - explain how each of these methods are used with authentication
 
 #import "D8iOSHelper.h"
 #import "User.h"
 #import "SGKeychain.h"
 #import "Developer.h"
-
 
 @implementation D8iOSHelper
 
@@ -12,16 +22,13 @@
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSURL *baseURL = nil;
-    if ([defaults objectForKey:DRUPAL8SITE] != nil) {
+    if ( [defaults objectForKey:DRUPAL8SITE] != nil ) {
         NSString *baseURLString = [defaults objectForKey:DRUPAL8SITE];
         
         /*NSString *baseURLString = [NSString stringWithFormat:@"http://localhost/dr8a11/"]; */
         
         baseURL = [NSURL URLWithString:baseURLString];
     }
-
-    
-    
     return baseURL;
 }
 
@@ -40,9 +47,6 @@
     NSURL *urlForNodeID = [baseURL URLByAppendingPathComponent:stringForNid];
     
     return urlForNodeID;
-    
-    
-
 }
 
 +(NSString *)basicAuthStringforUsername:(NSString *)username Password:(NSString *)password{
@@ -60,7 +64,6 @@
 
 +(void)performLoginWithUsername:(NSString *)username andPassword:(NSString *)password{
 
-
     NSString *basicAuthString = [self basicAuthStringforUsername:username Password:password];
     
     NSURL *loginRequestURL = [self createURLForPath:@"user/details"];
@@ -74,55 +77,36 @@
     
     NSURLSessionDataTask *loginTask = [session dataTaskWithRequest:loginRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        
         if (!error) {
             
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
-            if(httpResponse.statusCode == 200) {
+            if( httpResponse.statusCode == 200 ) {
                 
-                
+                // this is the case when
                 NSDictionary *retrievedJSON = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
                 NSMutableDictionary *userDictionary = [retrievedJSON mutableCopy];
                 [userDictionary setObject:basicAuthString forKey:@"basicAuthString"];
                 User *user = [User sharedInstance];
                 [user fillUserWithUserJSONObject:userDictionary];
-                
-              
-                
-                
             }
-            else if(httpResponse.statusCode == 403 ){
+            else if( httpResponse.statusCode == 403 ) {
                 
                 // this is the case when user has changed credential details form the iste it self
                 NSError *deleteError;
                
                 [SGKeychain deletePasswordandUserNameForServiceName:@"Drupal 8" accessGroup:nil error:&deleteError];
                 
-                
-                
-                
             }
-            
-            
         }
-        else{
-            
+        else {
             
             NSLog(@"error -> %@",error.localizedDescription);
             
-            
         }
-        
-
-        
-        
     }];
     
     [loginTask resume];
-    
-
-
 }
 
 @end

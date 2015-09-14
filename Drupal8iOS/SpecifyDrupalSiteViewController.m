@@ -5,10 +5,10 @@
 //  Created by Michael Smith on 7/11/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
-/* MAS: *****************************************************************************
- *************        For Vivek to code here to END  ----       *********************
- *************  Code this as you see fit.                       *********************
- *************  We will tie the logic into the UI.              *********************/
+/* MAS: 
+ *  This provides a way for the user to specify the URL of the Drupal 8
+ *  website that will act as this apps back-end.
+ */
 
 #import "SpecifyDrupalSiteViewController.h"
 #import "Developer.h"// MAS: for development only, see which
@@ -33,7 +33,7 @@
     NSURL *url = [NSURL URLWithString:self.userSiteRequest.text];
     if (url != nil) {
         if(url && url.scheme && url.host){
-            
+ // MAS:Vivek - how does this know that the site is Drupal 8 and not Drupal 7?
             
          MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
             [self.navigationController.view addSubview:hud];
@@ -108,11 +108,6 @@
             
             [sharedSession GET:[url absoluteString] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
-               
-                
-
-                
-                
                     // Currently this storage per user
                     // storing a validated D8 site to user preferences
                     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -145,15 +140,15 @@
                 
                 [hud hide:YES];
                 // Display alert on faliure
-                int statusCode = operation.response.statusCode;
+                long statusCode = operation.response.statusCode;
                 
-                if (statusCode == 403) {
+                if ( statusCode == 403 ) {
                     
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:[NSString stringWithFormat:@"Error with %@ . It seems that you are already logged in to other site.",error.localizedDescription]  delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
 
                 }
-                else{
+                else {
                 
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:[NSString stringWithFormat:@"An error occured while connecting to the URL with %@",error.localizedDescription]  delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                 [alert show];
@@ -162,14 +157,12 @@
                 [self.connectionStatusLabel setAttributedText:attributeStatus];
                 
             }];
-
            
             // Restore the ResponseSerializer to JSONSerializer
             [sharedSession setResponseSerializer:[AFJSONResponseSerializer serializer]];
             
         }
-        else{
-            
+        else {
             
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:@"Please enter a valid URL hostname, scheme etc. " delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
             [alert show];
@@ -178,17 +171,13 @@
 
             
         }
-        
-        
-        
     }
-    else{
+    else {
     
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:@"BAD URL" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
         
     }
-    
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }

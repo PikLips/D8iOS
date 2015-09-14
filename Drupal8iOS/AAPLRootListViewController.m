@@ -13,7 +13,6 @@
  Abstract:
  
  The view controller displaying the root list of the app.
- 
  */
 
 #import "AAPLRootListViewController.h"
@@ -21,7 +20,6 @@
 #import "Developer.h"  // MAS: for development only, see which
 
 @import Photos;
-
 
 @interface AAPLRootListViewController () <PHPhotoLibraryChangeObserver>
 @property (strong) NSArray *collectionsFetchResults;
@@ -89,7 +87,7 @@ static NSString * const CollectionSegue = @"showCollection";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger numberOfRows = 0;
-    if (section == 0) {
+    if ( section == 0 ) {
         numberOfRows = 1; // "All Photos" section
     } else {
         PHFetchResult *fetchResult = self.collectionsFetchResults[section - 1];
@@ -103,7 +101,7 @@ static NSString * const CollectionSegue = @"showCollection";
     UITableViewCell *cell = nil;
     NSString *localizedTitle = nil;
     
-    if (indexPath.section == 0) {
+    if ( indexPath.section == 0 ) {
         cell = [tableView dequeueReusableCellWithIdentifier:AllPhotosReuseIdentifier forIndexPath:indexPath];
         localizedTitle = NSLocalizedString(@"All Photos", @"");
     } else {
@@ -135,17 +133,17 @@ static NSString * const CollectionSegue = @"showCollection";
         
         NSMutableArray *updatedCollectionsFetchResults = nil;
         
-        for (PHFetchResult *collectionsFetchResult in self.collectionsFetchResults) {
+        for ( PHFetchResult *collectionsFetchResult in self.collectionsFetchResults ) {
             PHFetchResultChangeDetails *changeDetails = [changeInstance changeDetailsForFetchResult:collectionsFetchResult];
-            if (changeDetails) {
-                if (!updatedCollectionsFetchResults) {
+            if ( changeDetails ) {
+                if ( !updatedCollectionsFetchResults ) {
                     updatedCollectionsFetchResults = [self.collectionsFetchResults mutableCopy];
                 }
                 [updatedCollectionsFetchResults replaceObjectAtIndex:[self.collectionsFetchResults indexOfObject:collectionsFetchResult] withObject:[changeDetails fetchResultAfterChanges]];
             }
         }
         
-        if (updatedCollectionsFetchResults) {
+        if ( updatedCollectionsFetchResults ) {
             self.collectionsFetchResults = updatedCollectionsFetchResults;
             [self.tableView reloadData];
         }
@@ -171,7 +169,7 @@ static NSString * const CollectionSegue = @"showCollection";
         [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
             [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:title];
         } completionHandler:^(BOOL success, NSError *error) {
-            if (!success) {
+            if ( !success ) {
                 NSLog(@"Error creating album: %@", error);
             }
         }];

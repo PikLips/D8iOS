@@ -409,7 +409,7 @@ static NSString * const SGKeychainErrorDomain = @"com.secondgear.sgkeychain";
 #if !TARGET_IPHONE_SIMULATOR && !__MAC_OS_X_VERSION_MIN_REQUIRED
     if (accessGroup != nil)
     {
-        [deletequery setObject:accessGroup forKey:(__bridge id)kSecAttrAccessGroup];
+        [deleteQuery setObject:accessGroup forKey:(__bridge id)kSecAttrAccessGroup];
     }
 #endif
 

@@ -5,7 +5,9 @@
 //  Created by Michael Smith on 7/15/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
-/* MAS:  Note, this is currently a placeholder
+/* MAS:  Note, reaches out to the Drupal 8 server to get a list of images
+ *  that are avaialable for viewing/download.  If the user selects a cell
+ *  another viewer will be pushed, displaying the image.
  */
 
 #import "DownloadPicturesViewController.h"
@@ -16,8 +18,6 @@
 #import "FileJSON.h"
 #import "FileDetailsTableViewCell.h"
 #import "DownloadPictureViewController.h"
-
-
 
 @interface DownloadPicturesViewController ()
 @property (nonatomic,strong) NSMutableArray * listOfFiles;
@@ -31,10 +31,7 @@
         
     }
     return _listOfFiles;
-    
 }
-
-
 
 -(IBAction)getData{
     
@@ -42,7 +39,7 @@
     
     if (sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
         
-        
+        // MAS:Vivek - MBProgressHUD code is used many times, can we put it into a class?
         
         MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:hud];
@@ -50,8 +47,6 @@
         hud.delegate = self;
         hud.labelText = @"Loading the images";
         [hud show:YES];
-        
-        
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
@@ -63,8 +58,6 @@
         // As currently RESTExport do not support authentication
         //sharedSession.signRequests = NO;
         
-        
-        
         if (sharedSession.baseURL != nil) {
             [DIOSView getViewWithPath:[NSString stringWithFormat:@"images/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 [self.listOfFiles removeAllObjects];
@@ -73,17 +66,10 @@
                 {
                     FileJSON *fileJSONObj = [[FileJSON alloc]initWithDictionary:fileJSONDict];
                     [self.listOfFiles addObject:fileJSONObj];
-                    
+                
                 }
                 
                 [self.tableView reloadData];
-                
-                
-                
-                
-                
-                
-                
                 
                 [self.refreshControl endRefreshing];
                 //  sharedSession.signRequests =YES;
@@ -95,7 +81,7 @@
                 [hud hide:YES];
                 //  sharedSession.signRequests =YES;
                 
-                int statusCode = operation.response.statusCode;
+                long statusCode = operation.response.statusCode;
                 // This can happen when GET is with out Authorization details
                 if (statusCode == 401) {
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
@@ -114,8 +100,6 @@
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                     
-                    
-                    
                 }
                 else{
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
@@ -124,37 +108,26 @@
                 }
                 
             }];
-            
-            
         }
         else{
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
             [alert show];
         }
         
-        
     }
-    else{
+    else {
         
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please first login" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
-        
-        
-        
     }
     
 }
-
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self getData];
     
 }
-
-
-
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -185,12 +158,10 @@
     return [self.listOfFiles count];
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FileDetailsTableViewCell *cell = (FileDetailsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"downloadPictureCell" forIndexPath:indexPath];
     
     FileJSON *fileDetails = [self.listOfFiles objectAtIndex:indexPath.row];
-    
     
     [cell.fileName setText:fileDetails.filename];
     [cell.fileSize setText:fileDetails.filesize];
@@ -200,7 +171,6 @@
     
     return cell;
 }
-
 
 /*
 // Override to support conditional editing of the table view.
@@ -236,7 +206,6 @@
 }
 */
 
-
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -259,8 +228,6 @@
             }
         }
     }
-
-
 }
 
 @end

@@ -5,15 +5,8 @@
 //  Created by Michael Smith on 7/12/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
-/* MAS: *****************************************************************************
- *************        For Vivek to code here to END  ----       *********************
- *************  Code this as you see fit.                       *********************
- *************                                                  *********************/
-
-
-
-
-
+/* MAS: This signs in a registered user
+ */
 
 #import "LoginViewController.h"
 #import "Developer.h"  // MAS: for development only, see which
@@ -24,16 +17,11 @@
 #import "DIOSSession.h"
 #import "DIOSView.h"
 
-
-
 @interface LoginViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *userName;
 @property (weak, nonatomic) IBOutlet UITextField *userPassword;
 @property (weak, nonatomic) IBOutlet UILabel *username_status;
 @property (weak, nonatomic) IBOutlet UILabel *roles_status;
-
-
-
 
 @end
 
@@ -50,7 +38,6 @@
     NSString *password = self.userPassword.text;
     
     [self loginWithUsername:username andPassword:password];
-    
   
 }
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
@@ -63,7 +50,7 @@
     hud.labelText = @"Logging in";
     [hud show:YES];
 
-   /*
+   /* MAS:Vivek - how is this commented code useful?
     =============================
     Login with NSURLSessionTask 
     =============================
@@ -216,7 +203,7 @@
         }
         
         else{
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"Error with code %d",statusCode] message:@"Please contact website admin." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"Error with code %ld",(long)statusCode] message:@"Please contact website admin." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
             [alert show];
             
 

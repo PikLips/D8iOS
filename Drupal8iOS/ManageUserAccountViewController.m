@@ -5,10 +5,11 @@
 //  Created by Michael Smith on 7/12/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
-/* MAS: *****************************************************************************
- *************        For Vivek to code here to END  ----       *********************
- *************  Code this as you see fit.                       *********************
- *************  We will tie the logic into the UI.              *********************/
+/* MAS:  This allows a registered user who is signed-in to change their
+ *  user name.  It is limited to this one change as per a limitation 
+ *  in the beta release of Drupal.  When Drupal is extended to allow other
+ *  user profile changes, they will be added.
+ */
 
 #import "ManageUserAccountViewController.h"
 #import "Developer.h"  // MAS: for development only, see which
@@ -35,12 +36,11 @@
     [super viewWillAppear:animated];
     User *sharedUser = [User sharedInstance];
     
-    if (sharedUser.name != nil && ![sharedUser.name  isEqual: @""])
+    if ( sharedUser.name != nil && ![sharedUser.name  isEqual: @""] )
     {
         // Currently only able to change username for the user -- see bug 2552099
         [self.userName setText:sharedUser.name];
         [self.userEmailAddress setText:sharedUser.email];
-        
         
     }
     
@@ -49,7 +49,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     
 }
 
@@ -73,18 +72,16 @@
     User *sharedUser = [User sharedInstance];
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     
-    if ([self.revisedUserPassword.text isEqualToString:@""] && [self.userName.text isEqualToString:@""] && [self.userEmailAddress.text isEqualToString:@""]) {
+    if ( [self.revisedUserPassword.text isEqualToString:@""] && [self.userName.text isEqualToString:@""] && [self.userEmailAddress.text isEqualToString:@""] ) {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Information" message:@"Please provide value for atleast one filed to be change." delegate:nil cancelButtonTitle:@"Dissmiss" otherButtonTitles:nil];
         [alert show];
     }
     else{
         
-        if (sharedUser.name != nil && ![sharedUser.name  isEqual: @""])
+        if ( sharedUser.name != nil && ![sharedUser.name  isEqual: @""] )
         {
             
-            if (self.currentUserPassword.text != nil && ![self.currentUserPassword.text isEqualToString:@""]) {
-                
-                
+            if ( self.currentUserPassword.text != nil && ![self.currentUserPassword.text isEqualToString:@""] ) {
                 
                 NSError __block *sgKeyChainError = nil;
                 
@@ -92,12 +89,7 @@
                 // [1] = password
                 NSMutableArray __block *credentials = [[SGKeychain usernamePasswordForServiceName:@"Drupal 8" accessGroup:nil error:&sgKeyChainError] mutableCopy];
                 
-                
-                
-                if([credentials[1] isEqualToString:self.currentUserPassword.text]) {
-                    
-                    
-                    
+                if( [credentials[1] isEqualToString:self.currentUserPassword.text] ) {
                     
                     MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
                     [self.navigationController.view addSubview:hud];
@@ -105,8 +97,6 @@
                     hud.delegate = self;
                     hud.labelText = @"Updating user details";
                     [hud show:YES];
-                    
-                    
                     
                     // Currently only able to change username for the user -- see bug 2552099
                     
@@ -141,26 +131,22 @@
                     NSArray *passArray;
                     
                     
-                    if (self.userName.text !=nil && ![self.userName.text isEqualToString:@""]) {
+                    if ( self.userName.text !=nil && ![self.userName.text isEqualToString:@""] ) {
                         // create dictionary   {"value":"somevalue"}
                         valueForName = [[NSDictionary alloc]initWithObjects:@[self.userName.text] forKeys:@[@"value"]];
                         // create array [{"value":"somevalue"}]
                         nameArray = [[NSArray alloc]initWithObjects:valueForName, nil];
                         
-                        
-                        
                     }
                     
-                    if (self.userEmailAddress.text !=nil && ![self.userEmailAddress.text isEqualToString:@""]) {
+                    if ( self.userEmailAddress.text !=nil && ![self.userEmailAddress.text isEqualToString:@""] ) {
                         
                         //create dictionary {"value":"marthinal@drupalisawesome.com"}
                         valueForMail = [[NSDictionary alloc]initWithObjects:@[self.userEmailAddress.text] forKeys:@[@"value"]];
                         
                         // create mail array [{"value":"marthinal@drupalisawesome.com"}]
                         mailArray = [[NSArray alloc]initWithObjects:valueForMail, nil];
-                        
-                        
-                        
+
                     }
                     
                     if (self.revisedUserPassword.text != nil && ![self.revisedUserPassword.text isEqualToString:@""]) {
@@ -169,8 +155,7 @@
                         
                         // create password array [{"existing":"existingSecretPass", "value": "myNewSuperSecretPass"}]
                         passArray = [[NSArray alloc]initWithObjects:valueForPass, nil];
-                        
-                        
+   
                     }
                     
                     
@@ -185,32 +170,20 @@
                     [params setObject:mailArray forKey:@"mail"];
                     [params setObject:passArray forKey:@"pass"];
                     
-                    
-                    
-                    
-                    
-                    
                     [DIOSUser patchUserWithID:sharedUser.uid params:params type:@"user" success:^(AFHTTPRequestOperation *operation, id responseObject) {
                         
                         // If PATCH is successfull then it may have changed any combinations of username, password, email so we need to update sharedUser and credentials on sharedSession accordingly
                         
-                        
-                        
                         [SGKeychain deletePasswordandUserNameForServiceName:@"Drupal 8" accessGroup:nil error:&sgKeyChainError];
-                        
-                        
-                        
                         
                         sharedUser.email = (self.userEmailAddress.text != nil && ![self.userEmailAddress.text isEqualToString:@""]) ? self.userEmailAddress.text : sharedUser.email ;
                         
-                        
-                        if (self.userName.text != nil && ![self.userName.text isEqualToString:@""]  ) {
+                        if ( self.userName.text != nil && ![self.userName.text isEqualToString:@""] ) {
                             
                             credentials[0] = self.userName.text;
                             sharedUser.name = self.userName.text;
                             
                         }
-                        
                         
                         /* uncomment this portion when bug 2552099 is solved
                          if (self.revisedUserPassword.text != nil && ![self.revisedUserPassword.text isEqualToString:@""]) {
@@ -223,11 +196,7 @@
                         
                         [SGKeychain setPassword:credentials[1] username:credentials[0] serviceName:@"Drupal 8" accessGroup:nil updateExisting:NO error:&sgKeyChainError];
                         
-                        
-                        
                         [sharedSession setBasicAuthCredsWithUsername:credentials[0] andPassword:credentials[1]];
-                        
-                        
                         
                         UIImageView *imageView;
                         UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
@@ -235,7 +204,7 @@
                         
                         hud.customView = imageView;
                         hud.mode = MBProgressHUDModeCustomView;
-                        
+                        // MAS:Vivek - how do you know that 2 seconds is enough?
                         hud.labelText = @"Completed";
                         dispatch_async(dispatch_get_main_queue(), ^{
                             // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
@@ -243,39 +212,30 @@
                             [hud hide:YES];
                         });
                         
-                        
-                        
-                        
                     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                         [hud hide:YES];
                         
-                        
-                        
                         NSInteger statusCode  = operation.response.statusCode;
                         
-                        if (statusCode == 403){
+                        if ( statusCode == 403 ){
                             
                             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials" message:@"Please check username and password." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                             [alert show];
-                            
                             
                             User *user = [User sharedInstance];
                             [user clearUserDetails];
                             DIOSSession *sharedSession = [DIOSSession sharedSession];
                             sharedSession.signRequests = NO;
                             
-                            
-                            
-                            
                         }
-                        else if( statusCode == 0){
+                        else if( statusCode == 0 ){
                             
                             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                             [alert show];
                             
                         }
                         
-                        else{
+                        else {
                             // Email and Password change requires existing password to be specified
                             // The code above tries to capture those requirements but if some how it is missed then Drupal REST will provide propper error and that will be reflected by this alert
                             
@@ -286,40 +246,27 @@
                             
                             [alert show];
                         }
-                        
-                        
-                        
                     }];
-                    
-                    
                 }
                 
-                else{
-                    
-                    
+                else {
                     
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Entered current password didn't matched with one stored in application!" delegate:nil cancelButtonTitle:@"Dissmiss" otherButtonTitles:nil];
                     [alert show];
-                    
-                    
-                    
-                    
                 }
             }
-            else{
+            else {
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Information" message:@"Please provide your current password." delegate:nil cancelButtonTitle:@"Dissmiss" otherButtonTitles:nil];
                 [alert show];
                 
             }
-            
         }
-        else{
+        else {
             
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Information" message:@"Please first login to your account." delegate:nil cancelButtonTitle:@"Dissmiss" otherButtonTitles:nil];
             [alert show];
             
         }
-        
     }
 }
 

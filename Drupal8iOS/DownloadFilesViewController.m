@@ -5,6 +5,13 @@
 //  Created by Vivek Pandya on 8/21/15.
 //  Copyright © 2015 PikLips. All rights reserved.
 //
+/*  MAS:
+ *  This allows the user to download files from the Drupal 8 site to local
+ *  storage, depending upon permissions.  These files may be uploaded (which see) 
+ *  depending upon permissions.
+ */
+
+// MAS:Vivek - explain how authentication will be involved when 2228141 is resolved
 
 #import "DownloadFilesViewController.h"
 #import "User.h"
@@ -23,7 +30,7 @@
 
 
 -(NSMutableArray *)listOfFiles{
-    if (!_listOfFiles) {
+    if ( !_listOfFiles ) {
         _listOfFiles = [[NSMutableArray alloc]init];
         
     }
@@ -37,7 +44,7 @@
     
     User *sharedUser = [User sharedInstance];
     
-    if (sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
+    if ( sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
         
         
         
@@ -62,11 +69,11 @@
         
         
         
-        if (sharedSession.baseURL != nil) {
+        if ( sharedSession.baseURL != nil ) {
             [DIOSView getViewWithPath:[NSString stringWithFormat:@"files/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 [self.listOfFiles removeAllObjects];
                 
-                for (NSMutableDictionary *fileJSONDict in responseObject)
+                for ( NSMutableDictionary *fileJSONDict in responseObject )
                 {
                     FileJSON *fileJSONObj = [[FileJSON alloc]initWithDictionary:fileJSONDict];
                     [self.listOfFiles addObject:fileJSONObj];
@@ -74,13 +81,6 @@
                 }
                 
                 [self.tableView reloadData];
-                
-                
-                
-                
-                
-                
-                
                 
                 [self.refreshControl endRefreshing];
                 //  sharedSession.signRequests =YES;
@@ -92,15 +92,15 @@
                 [hud hide:YES];
                 //  sharedSession.signRequests =YES;
                 
-                int statusCode = operation.response.statusCode;
+                long statusCode = operation.response.statusCode;
                 // This can happen when GET is with out Authorization details
-                if (statusCode == 401) {
+                if ( statusCode == 401 ) {
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                 }
                 
                 // Credentials sent with request is invalid
-                else if(statusCode == 403){
+                else if( statusCode == 403 ) {
                     
                     sharedSession.signRequests = NO;
                     
@@ -111,37 +111,26 @@
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                     
-                    
-                    
                 }
-                else{
+                else {
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                     
                 }
-                
             }];
-            
-            
         }
-        else{
+        else {
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
             [alert show];
         }
-        
-        
     }
-    else{
+    else {
         
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please first login" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
         
-        
-        
     }
-    
 }
-
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -186,12 +175,11 @@
     [cell.fid setText:[NSString stringWithFormat:@"fid : %@",fileJSONObj.fid]];
     [cell.downloadButton setTag:indexPath.row];
     [cell.downloadButton addTarget:self action:@selector(downloadFile:) forControlEvents:UIControlEventTouchUpInside];
-     
     
     return cell;
 }
 
--(void)downloadFile:(id)sender{
+-(void)downloadFile:(id)sender {
     UIButton *senderButton = (UIButton *)sender;
    // NSLog(@"%ld",(long)senderButton.tag);
     MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
@@ -216,7 +204,7 @@
     
     
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        NSLog(@"bytesRead: %u, totalBytesRead: %lld, totalBytesExpectedToRead: %lld", bytesRead, totalBytesRead, totalBytesExpectedToRead);
+        NSLog(@"bytesRead: %lu, totalBytesRead: %lld, totalBytesExpectedToRead: %lld", (unsigned long)bytesRead, totalBytesRead, totalBytesExpectedToRead);
         float percentDone = ((float)((int)totalBytesRead) / (float)((int)totalBytesExpectedToRead));
         [(UIProgressView *)hud setProgress:percentDone];
         hud.labelText = [NSString stringWithFormat:@"%f",(100.0 * percentDone)];
@@ -242,8 +230,6 @@
             
             //[[_downloadFile titleLabel] setText:[NSString stringWithFormat:@"%lld", fileSize]];
         }
-        
-        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [hud hide:YES];
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"

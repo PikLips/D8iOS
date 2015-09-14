@@ -147,11 +147,11 @@ int d8FlagLevel = D8FLAGDEBUG; // MAS: highest level
                       includingPropertiesForKeys:properties
                       options:(NSDirectoryEnumerationSkipsHiddenFiles)
                       error:&error];
-    if (!(error == nil)) {
+    if ( !(error == nil) ) {
         D8E(@"Directory error %@", error);
     }
     
-    if (directoryContents.count == 0) {
+    if ( directoryContents.count == 0 ) {
         D8E(@"Directory Empty");
     }
     else {
@@ -176,14 +176,14 @@ int d8FlagLevel = D8FLAGDEBUG; // MAS: highest level
                                              return NO;
                                          }];
     
-    for (NSURL *url in enumerator) {
+    for ( NSURL *url in enumerator ) {
         
         D8D(@"URL is %@", url);
         
         NSNumber *isDirectory = nil;
         [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
         
-        if ([isDirectory boolValue]) {
+        if ( [isDirectory boolValue] ) {
             
             NSString *localizedName = nil;
             [url getResourceValue:&localizedName forKey:NSURLLocalizedNameKey error:NULL];

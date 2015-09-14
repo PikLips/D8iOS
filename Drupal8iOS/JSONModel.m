@@ -20,11 +20,10 @@
 
 -(instancetype)initWithDictionary:(NSMutableDictionary *)jsonObject{
     
-    if (self = [super init]) {
+    if ( self = [super init] ) {
         [self setValuesForKeysWithDictionary:jsonObject];
     }
     return self;
-    
     
 }
 

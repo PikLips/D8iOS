@@ -5,6 +5,9 @@
 //  Created by Michael Smith on 7/15/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
+/*  MAS: This displays the image that was selected from the 
+ *  DownloadPicturesViewController.
+ */
 
 #import "DownloadPictureViewController.h"
 #import "UIImageView+AFNetworking.h"
@@ -16,12 +19,8 @@
 
 @implementation DownloadPictureViewController
 
-
-
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
-    
     
     MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:hud];
@@ -29,7 +28,8 @@
     hud.delegate = self;
     hud.labelText = @"Downloading image...";
     [hud show:YES];
-
+    
+    // MAS:Vivek - Here you have coded three ways to load the image. have you chosen your preferred way?
     
     // Now code will load image from self.pictureURL
     
@@ -55,7 +55,7 @@
     
     
     /*=================================
-     Downlaod and display Image with AFNetworking + UIImageView Category
+     Download and display Image with AFNetworking + UIImageView Category
      with this option all threading is done by AFNetworking library 
      ==============================================================
      */
@@ -118,7 +118,6 @@
      [operation start];
      
      */
-    
 
 }
 

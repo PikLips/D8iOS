@@ -1,11 +1,15 @@
+//
+//  D8iOSHelper.h
+//  Drupal8iOS
+//
+//  Created by Vivek Pandya on 8/21/15.
+//  Copyright © 2015 PikLips. All rights reserved.
+//
 
-
-/*
- 
- This class provides class methods to create NSURL for the site created with Drupal to which the application will connect.
- It will also contain authorization related stuffs.
- 
- 
+/* Vivek:
+ *  This class provides class methods to create NSURL for the site created
+ *  with Drupal to which the application will connect.
+ *  It will also contain authorization related stuffs.
  */
 
 #import <Foundation/Foundation.h>
@@ -22,7 +26,5 @@
 
 // login helper method 
 +(void)performLoginWithUsername:(NSString *)username andPassword:(NSString *)password;
-
-
 
 @end

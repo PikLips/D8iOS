@@ -5,6 +5,10 @@
 //  Created by Michael Smith on 7/12/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
+/*  MAS: This goes to the Drupal 8 server and retrieves a list of files that
+ *  may be deleted, producing a table view that the user can select files and
+ *  have them removed from the server.
+ */
 
 #import "DeleteFileViewController.h"
 #import "DIOSSession.h"
@@ -25,13 +29,9 @@
 -(NSMutableArray *)listOfFiles{
     if (!_listOfFiles) {
         _listOfFiles = [[NSMutableArray alloc]init];
-        
     }
     return _listOfFiles;
-    
 }
-
-
 
 -(IBAction)getData{
     
@@ -40,14 +40,12 @@
     if (sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
         
         
-        
         MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:hud];
         
         hud.delegate = self;
         hud.labelText = @"Loading the files";
         [hud show:YES];
-        
         
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -60,8 +58,6 @@
         // As currently RESTExport do not support authentication
         //sharedSession.signRequests = NO;
         
-        
-        
         if (sharedSession.baseURL != nil) {
             [DIOSView getViewWithPath:[NSString stringWithFormat:@"files/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 [self.listOfFiles removeAllObjects];
@@ -70,17 +66,9 @@
                 {
                     FileJSON *fileJSONObj = [[FileJSON alloc]initWithDictionary:fileJSONDict];
                     [self.listOfFiles addObject:fileJSONObj];
-                    
                 }
                 
                 [self.tableView reloadData];
-                
-               
-                
-                
-                
-                
-                
                 
                 [self.refreshControl endRefreshing];
               //  sharedSession.signRequests =YES;
@@ -92,54 +80,41 @@
                 [hud hide:YES];
               //  sharedSession.signRequests =YES;
                 
-                int statusCode = operation.response.statusCode;
+                long statusCode = operation.response.statusCode;
                 // This can happen when GET is with out Authorization details
-                if (statusCode == 401) {
+                if ( statusCode == 401 ) {
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                 }
                 
                 // Credentials sent with request is invalid
-                else if(statusCode == 403){
+                else if( statusCode == 403 ){
                     
                     sharedSession.signRequests = NO;
                     
                     User *sharedUser = [User sharedInstance];
                     [sharedUser clearUserDetails];
                     
-                    
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
-                    
-                    
-                    
                 }
-                else{
+                else {
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
-                    
                 }
                 
             }];
-            
-            
         }
-        else{
+        else {
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
             [alert show];
         }
-        
-        
     }
-    else{
+    else {
         
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please first login" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
-
-    
-    
     }
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -148,13 +123,8 @@
     [self getData];
 }
 
-
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     
     // Show the HUD while the provided method executes in a new thread
     
@@ -167,19 +137,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
 
 #pragma mark - Table view data source
 
@@ -198,11 +155,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    
     FileDetailsTableViewCell *cell = (FileDetailsTableViewCell *) [self.tableView dequeueReusableCellWithIdentifier:@"deleteFileCell" forIndexPath:indexPath];
     
     FileJSON *fileDetails = [self.listOfFiles objectAtIndex:indexPath.row];
-    
     
     [cell.fileName setText:fileDetails.filename];
     [cell.fileSize setText:fileDetails.filesize];
@@ -213,15 +168,11 @@
     //
 }
 
-
-
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
-
-
 
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -242,8 +193,6 @@
         [DIOSEntity deleteEntityWithEntityName:@"file" andID:fileJSONObj.fid
                                        success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                            
-                                           
-            
                                            [self.listOfFiles removeObjectAtIndex:indexPath.row];
                                            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
                                        
@@ -260,15 +209,12 @@
                                                sleep(1);
                                                [hud hide:YES];
                                            });
-
-                                       
-                                       
                                        }
                                        failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                            
                                            [hud hide:YES];
                                            
-                                           int statusCode = operation.response.statusCode;
+                                           long statusCode = operation.response.statusCode;
                                            // This can happen when GET is with out Authorization details
                                            if (statusCode == 401) {
                                                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
@@ -284,32 +230,20 @@
                                                User *sharedUser = [User sharedInstance];
                                                [sharedUser clearUserDetails];
                                                
-                                               
                                                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                                                [alert show];
-                                               
-                                               
-                                               
                                            }
                                            else{
                                                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                                                [alert show];
                                                
                                            }
-                                           
-                                           
-                                           
-                                           
                                        }];
-       
-        
-        
         
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
 }
-
 
 /*
  // Override to support rearranging the table view.
@@ -324,19 +258,5 @@
  return YES;
  }
  */
-
-
-#pragma mark - Navigation
-
-
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    
-//    
-//
-//    
-//}
-
-
-
 
 @end

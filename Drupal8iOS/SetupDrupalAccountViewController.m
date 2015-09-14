@@ -5,10 +5,14 @@
 //  Created by Michael Smith on 7/11/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
-/* MAS: *****************************************************************************
- *************        For Vivek to code here to END  ----       *********************
- *************  Code this as you see fit.                       *********************
- *************  We will tie the logic into the UI.              *********************/
+/* MAS: 
+ *  This allows anonymous visitors to get a Drupal account.  On the web (HTTP)
+ *  interface, anonymous visitors can be permitted to automatically create an
+ *  account, create an account after verifying with an email, or create an
+ *  account after admin approval.
+ */
+
+// MAS:Vivek - please explain how this code manages the different types of user registration as per the REGISTRAION AND CANCELLATION section of http://dev-piklips-beta14.pantheon.io/admin/config/people/accounts
 
 #import "SetupDrupalAccountViewController.h"
 #import "Developer.h"  // MAS: for development only, see which
@@ -48,7 +52,8 @@ bool emailStatus = NO;
 
 }
 - (IBAction)createUserAccount:(id)sender {
-    /* MAS: Vivek: validate format of userName, userEmail, and userPassword, then submit
+    /* MAS:  
+     *  Vivek: validate format of userName, userEmail, and userPassword, then submit
      *      to Drupal site as new account.
      *      Report error alert for duplicate userName and allow retry.
      */
@@ -100,14 +105,14 @@ bool emailStatus = NO;
     User *sharedUser = [User sharedInstance];
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     
-    if (sharedUser.name !=nil && ![sharedUser.name isEqualToString:@""]) {
+    if ( sharedUser.name !=nil && ![sharedUser.name isEqualToString:@""] ) {
     // A user is already logged in
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Information" message:@"You are already logged in." delegate:nil cancelButtonTitle:@"Dissmiss" otherButtonTitles:nil];
         [alert show];
         
         
     }
-    else{
+    else {
         // Creating NSDictionary for JSON body on the fly
    NSDictionary *JSONBody =     @{
           @"langcode": @[
@@ -169,7 +174,7 @@ bool emailStatus = NO;
             
             NSInteger statusCode  = operation.response.statusCode;
             
-            if (statusCode == 403){
+            if ( statusCode == 403 ){
                 
               // After https://www.drupal.org/node/2291055 is solved we do not need this block of code
                 
@@ -182,14 +187,14 @@ bool emailStatus = NO;
                 
                 
             }
-            else if( statusCode == 0){
+            else if( statusCode == 0 ) {
                 
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                 [alert show];
                 
             }
             
-            else{
+            else {
                 // Email and Password change requires existing password to be specified
                 // The code above tries to capture those requirements but if some how it is missed then Drupal REST will provide propper error and that will be reflected by this alert
                 
@@ -256,7 +261,7 @@ bool emailStatus = NO;
 }
 */
 
--(BOOL)validateUserName:(NSString *) userName{
+-(BOOL)validateUserName:(NSString *) userName {
 // Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.
     // For regExp refer http://www.raywenderlich.com/30288/nsregularexpression-tutorial-and-cheat-sheet
     
@@ -285,12 +290,12 @@ bool emailStatus = NO;
     NSString *regExPattern = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
     NSPredicate *myTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regExPattern];
     
-    if ([myTest evaluateWithObject: emailString]){
+    if ( [myTest evaluateWithObject: emailString] ) {
         
         emailStatus = YES;
         return YES;
     }
-    else{
+    else {
         emailStatus =NO;
         return NO;
         
@@ -315,14 +320,14 @@ bool emailStatus = NO;
 -(void)updateEmailValidation:(id)sender{
     NSString *email  = self.drupalUserEmail.text;
     
-    if ([email length] == 0){
+    if ( [email length] == 0 ) {
         self.emailValidationTextView.text = nil;
         emailStatus = NO;
     }
-    else{
+    else {
         NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] init];
 
-        if ([self validateEmail:email]) {
+        if ( [self validateEmail:email] ) {
             
                 [mutableAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"It's a valid email." attributes:@{NSForegroundColorAttributeName: [UIColor greenColor]}]];
             
@@ -331,14 +336,14 @@ bool emailStatus = NO;
 
 
         }
-        else{
+        else {
             
             [mutableAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"Please enter a valid email." attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]];
             
             
             self.emailValidationTextView.attributedText = mutableAttributedString;
             
-            }
+        }
     }
     [self changeAddAccBtnStatus];
 
@@ -347,14 +352,14 @@ bool emailStatus = NO;
 -(void)updateUserNameValidation:(id)sender{
     NSString *userName  = self.drupalUserName.text;
     
-    if ([userName length] == 0){
+    if ( [userName length] == 0 ){
         self.userNameValidationTextView.text = nil;
         userNameStatus = NO;
     }
-    else{
+    else {
         NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] init];
         
-        if (![self validateUserName:userName]) {
+        if ( ![self validateUserName:userName] ) {
             
             [mutableAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"Spaces are allowed; punctuation is not allowed except for ., -, ', and _ ." attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]];
             
@@ -362,7 +367,7 @@ bool emailStatus = NO;
             self.userNameValidationTextView.attributedText = mutableAttributedString;
             
         }
-        else{
+        else {
             self.userNameValidationTextView.text = nil;
 
         }
@@ -378,7 +383,7 @@ bool emailStatus = NO;
 - (void)updatePasswordStrength:(id)sender {
     NSString *password = self.drupalUserPassword.text;
     
-    if ([password length] == 0) {
+    if ( [password length] == 0 ) {
         self.validationsTextView.text = nil;
         self.passwordStrengthProgressView.progress = 0.0f;
         self.passwordStrengthLabel.text = nil;
@@ -387,9 +392,9 @@ bool emailStatus = NO;
         NJOPasswordStrength strength = [NJOPasswordStrengthEvaluator strengthOfPassword:password];
         
         NSArray *failingRules = nil;
-        if ([self.strictValidator validatePassword:password failingRules:&failingRules]) {
+        if ( [self.strictValidator validatePassword:password failingRules:&failingRules] ) {
             self.passwordStrengthLabel.text = [NJOPasswordStrengthEvaluator localizedStringForPasswordStrength:strength];
-            switch (strength) {
+            switch ( strength ) {
                 case NJOVeryWeakPasswordStrength:
                     self.passwordStrengthProgressView.progress = 0.05f;
                     self.passwordStrengthProgressView.tintColor = [UIColor redColor];
@@ -414,7 +419,6 @@ bool emailStatus = NO;
             
             self.validationsTextView.text = nil;
             passwordStatus = YES;
-            
 
         } else {
             self.passwordStrengthLabel.text = NSLocalizedString(@"Invalid Password", nil);
@@ -430,7 +434,6 @@ bool emailStatus = NO;
             passwordStatus = NO;
         }
        
-
     }
      [self changeAddAccBtnStatus];
 }

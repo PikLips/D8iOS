@@ -5,6 +5,14 @@
 //  Created by Michael Smith on 7/15/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
+/*  MAS:
+ *  This shows lists (table views) of articles from the Drupal 8 site.  There
+ *  are two types of articles - ones that are public (for anonymous users, too) 
+ *  and ones that are restricted via authentication such as signed-in users,
+ *  signed-in users of a group, or just the signed-in user who authors the article.
+ */
+
+// MAS:Vivek - explain how authentication will play a role in showing articles using this code (after the 2228141 bug is resolved)
 
 #import "ViewArticlesTableViewController.h"
 #import "Article.h"
@@ -101,7 +109,7 @@
     sharedSession.signRequests = YES;
     
     
-    if (sharedSession.baseURL != nil) {
+    if ( sharedSession.baseURL != nil ) {
         [DIOSView getViewWithPath:@"articles" params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             [self.articleList removeAllObjects];
           
@@ -113,13 +121,8 @@
                     }
                     [self.tableView reloadData];
             
-                                //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
-                    
-                    
-                    
-                    
-                    
-                    
+                    //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
+            
                     [self.refreshControl endRefreshing];
             sharedSession.signRequests =YES;
                     [hud hide:YES];
@@ -130,27 +133,24 @@
             [hud hide:YES];
             sharedSession.signRequests =YES;
 
-            int statusCode = operation.response.statusCode;
+            long statusCode = operation.response.statusCode;
             // This can happen when GET is with out Authorization details
-            if (statusCode == 401) {
+            if ( statusCode == 401 ) {
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                 [alert show];
             }
             
             // Credentials sent with request is invalid
-            else if(statusCode == 403){
+            else if( statusCode == 403 ) {
                 
                 sharedSession.signRequests = NO;
                 
                 User *sharedUser = [User sharedInstance];
                 [sharedUser clearUserDetails];
                 
-                
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                 [alert show];
-                
-                
-                
+    
             }
             else{
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
@@ -159,17 +159,11 @@
             }
         
         }];
-    
-        
     }
-    else{
+    else {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
     }
-    
-    
-    
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -214,12 +208,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"articleCell" forIndexPath:indexPath];
     Article *articleObj = nil;
     
         articleObj = [self.articleList objectAtIndex:indexPath.row];
-    
     
     cell.textLabel.text = [articleObj valueForKeyPath:@"title"];
     cell.detailTextLabel.text = [articleObj valueForKeyPath:@"changed"];
@@ -268,18 +260,15 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    
-    if ([sender isKindOfClass:[UITableViewCell class]]) {
+    if ( [sender isKindOfClass:[UITableViewCell class]] ) {
         
-        if ([segue.destinationViewController isKindOfClass:[ViewArticleViewController class]]) {
+        if ( [segue.destinationViewController isKindOfClass:[ViewArticleViewController class]] ) {
             
             if ([segue.identifier isEqualToString:@"showArticle"]) {
                 
                 ViewArticleViewController *newVC = (ViewArticleViewController *)segue.destinationViewController;
                 
-                
                     newVC.article = [self.articleList objectAtIndex:[self.tableView indexPathForCell:sender].row];
-                
                 
             }
         }

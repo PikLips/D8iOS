@@ -5,6 +5,8 @@
 //  Created by Michael Smith on 7/12/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
+/*  MAS: This logs out a current user/
+ */
 
 #import "LogoutViewController.h"
 #import "Developer.h"  // MAS: for development only, see which
@@ -23,9 +25,6 @@
      */
     
     [self performLogout];
-    
-    
-    
 }
 
 - (void)viewDidLoad {

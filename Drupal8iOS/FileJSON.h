@@ -6,9 +6,10 @@
 //  Copyright © 2015 PikLips. All rights reserved.
 //
 
-/* this class maps to dictionary returned by /files/{uid} 
- This is just for convenience. For some complex applicaiton this may be modified
- It is sub class of JSONModel.
+/* Vivek: 
+ *  this class maps to dictionary returned by /files/{uid}
+ *  This is just for convenience. For some complex applicaiton this may be modified
+ *  It is sub class of JSONModel.
  */
 
 #import "JSONModel.h"

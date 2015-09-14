@@ -5,6 +5,13 @@
 //  Created by Michael Smith on 7/15/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
+/*  MAS:
+ *  This displays the details of an article selected from the referencing 
+ *  table cell in the VeiwArticleTableVeiwController.  This is where the user
+ *  can submit comments if permissions are granted.
+ */
+
+// MAS:Vivek - how will you incorporate comments here?  Will it be a modal view?
 
 #import "ViewArticleViewController.h"
 #import <AFNetworking.h>
@@ -26,11 +33,10 @@
 
 @implementation ViewArticleViewController
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     if (self.article != nil) {
-        
+// MAS:Vivek - will this code be used?
         
 //        AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
 //        
@@ -84,7 +90,6 @@
         
     }
 
-    
     // Do any additional setup after loading the view.
 }
 
@@ -93,13 +98,10 @@
     [super viewWillAppear:animated];
     
     DIOSSession *sharedSession = [DIOSSession sharedSession];
-    
+    // MAS:Vivek - would DRUPAL8SITE be better managed as a stored value?
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
     sharedSession.baseURL = baseURL;
-    
-    
-    
     
     if(sharedSession.baseURL != nil){
         
@@ -123,15 +125,8 @@
             [hud hide:YES];
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error while loading article with %@ ",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
             [alert show];
-            
-            
         }];
-        
-        
-        
     }
-    
-    
 }
 
 - (void)didReceiveMemoryWarning {

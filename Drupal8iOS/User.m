@@ -1,4 +1,12 @@
+//
+//  User.m
+//  Drupal8iOS
+//
+//  Created by Vivek Pandya on 8/21/15.
+//  Copyright © 2015 PikLips. All rights reserved.
+//
 
+// MAS:Vivek - explain the roles of these objects
 
 #import "User.h"
 #import "D8iOSHelper.h" // this was added to support performLogin method
@@ -27,7 +35,6 @@ static User *sharedDataInstance = nil;
     
     return sharedDataInstance;
 
-
 }
 
 -(void)clearUserDetails{
@@ -43,7 +50,7 @@ static User *sharedDataInstance = nil;
 
 -(void)fillUserWithUserJSONObject:(NSDictionary *)UserJSONObject{
 
-
+// MAS:Vivek - would you comment on this commented code?
   /*  self.name = [UserJSONObject objectForKey:@"name"];
     self.roles = [UserJSONObject objectForKey:@"roles"];
     self.basicAuthString = [UserJSONObject objectForKey:@"basicAuthString"];
