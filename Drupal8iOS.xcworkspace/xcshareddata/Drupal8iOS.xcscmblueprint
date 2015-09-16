@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "6EB2C9DEB9F2132504454B4AA2305B521B44E5FE",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "6EB2C9DEB9F2132504454B4AA2305B521B44E5FE" : 0,
+    "A0C55FDFE47C8CF34A12C1B9E88EBB0541CD4BE3" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "BDA42B2A-1EA0-46A2-BE27-784A3AA203F4",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "6EB2C9DEB9F2132504454B4AA2305B521B44E5FE" : "D8iOS",
+    "A0C55FDFE47C8CF34A12C1B9E88EBB0541CD4BE3" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Drupal8iOS",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Drupal8iOS.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/vivekvpandya\/D8iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6EB2C9DEB9F2132504454B4AA2305B521B44E5FE"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/PikLips\/D8iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A0C55FDFE47C8CF34A12C1B9E88EBB0541CD4BE3"
+    }
+  ]
+}
