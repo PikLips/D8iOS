@@ -13,6 +13,9 @@
  */
 
 // MAS:Vivek - please explain how this code manages the different types of user registration as per the REGISTRAION AND CANCELLATION section of http://dev-piklips-beta14.pantheon.io/admin/config/people/accounts
+//Vivek:MAS - The following answer is my understanding but I think some senior person from community like klausi or catch or webchick who actually takes design decision for REST in Drupal 8 can answer this better.
+// My answer : Actually currently this code creates POST on /user/entity. So it probably does not follows any permision settings enforeced by REGISTRATION AND CANCELLATION section. But it directly follows it from http://dev-piklips-beta14.pantheon.io/admin/people/permissions . And it just says that who can make POST on request on /user/entity. But there is a work going on and almost done. Please refer https://www.drupal.org/node/2291055 . The mentioned feature request covers many other issues related to user reqistration. I think  after this work in upstream permissions on user sign up via REST will follow REGISTRAION AND CANCELLATION section. And if so happens then case by case detials sent by client to the server will differ. For example most preferred case would be <#Visitors, but administrator approval is required#> for that metter app will not send <#"status": [{"value": "1"}]#> in request JSON becuase the created account will be unblocked by administrator only, so that details do not make any sense. I hope this clarifies your dobut and if not then we can talk on this. I would also suggest if possible you meet some drupal core person and get this thing clear.
+
 
 #import "SetupDrupalAccountViewController.h"
 #import "Developer.h"  // MAS: for development only, see which

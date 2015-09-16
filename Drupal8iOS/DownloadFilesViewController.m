@@ -12,6 +12,7 @@
  */
 
 // MAS:Vivek - explain how authentication will be involved when 2228141 is resolved
+// Vivek:Mass - Due to the bug 2228141 it is not possible to enforce permissions on view and thus on view based REST export. To support this code we are using REST view to export the details of Files, so will need to enforce same permission which is enforce on GET on Files i.e if user is not allowed to GET a File then user should not access the list of Files detials. So once this bug is solved we can supply authentication details to verify it.
 
 #import "DownloadFilesViewController.h"
 #import "User.h"

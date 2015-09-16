@@ -34,6 +34,7 @@
     if (url != nil) {
         if(url && url.scheme && url.host){
  // MAS:Vivek - how does this know that the site is Drupal 8 and not Drupal 7?
+// Vivek:MAS - Actually there is no such provision in this code it just checks if device is able to connect (i.e 200 OK http status) to web site specified. But ideally it is Drupal 8 REST module's responsibility to enable one publically accisible end point, and its URL pattern should be some standard documented on drupal.org for example /node/verify . So then app can call GET on this specific URL and the the PHP code on the server will verify that REST and related modules are enabled and based on that it will return some status code in response. By using this endpoint we can verify that this is Drupal 8 or not. Again this is my thought there can be better way perhaps baesed on response headers. This point also requires discussion with some drupal 8 experienced community person.
             
          MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
             [self.navigationController.view addSubview:hud];

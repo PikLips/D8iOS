@@ -27,6 +27,8 @@
         self.preferredContentSize = CGSizeMake(320.0, 600.0);
     }
 }
+
+
 /* MAS: 
  */
 
@@ -34,6 +36,8 @@
 //  For example, if the site is not specified, the specify site view would be the
 //  only menu item.  If the site was specified but user not signed-in then only
 //  the specify site view and login menu items would be visible, etc.
+
+//Vivek:MAS - Yes, I think we can do these checks here with viewWillAppear method as this is the view which gets loaded first. This will also make application Launch screen to be hold untill we are done with checks and then configure our view and show it to the user. But as this may take some time due to network call so it is required to intimate the user that what is going on . Similar to Facebook app loading screen. To do so we can add one loading view controller that performs all these tasks and also shows some status of all operation to user. We can code this thing but I think I will be running short of time for next days as my mid semester exam is approaching. Still I will try to do this after 8 Oct, 2015 
 
 - (BOOL) checkDrupalURL {
     /* MAS: Check to see if Drupal site was previously set

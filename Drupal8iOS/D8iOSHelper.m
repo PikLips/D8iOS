@@ -11,6 +11,8 @@
 
 // MAS:Vivek - explain how each of these methods are used with authentication
 
+//Vivek:MAS - Most of these things are taken care by drupal-ios-sdk and Only LoginViewController uses one method basicAuthStringforUsername and it can also be removed by some code. But I would suggest do not remove it for now. I will remove it once I am done with image upload and comments.
+
 #import "D8iOSHelper.h"
 #import "User.h"
 #import "SGKeychain.h"

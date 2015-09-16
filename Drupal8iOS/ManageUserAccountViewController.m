@@ -205,6 +205,7 @@
                         hud.customView = imageView;
                         hud.mode = MBProgressHUDModeCustomView;
                         // MAS:Vivek - how do you know that 2 seconds is enough?
+                        // Vivek:MAS - This can be changed. but I tried 1 - 3 secs and I found it sufficient. And this will show "Completed" label for 1 sec after the operation completes. Here if user's attention is specifically required than it would be better to use UIAlertView instead. So that user have to responde to it.
                         hud.labelText = @"Completed";
                         dispatch_async(dispatch_get_main_queue(), ^{
                             // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds

@@ -13,6 +13,7 @@
  */
 
 // MAS:Vivek - explain how authentication will play a role in showing articles using this code (after the 2228141 bug is resolved)
+// Vivek:Mass - Due to the bug 2228141 it is not possible to enforce permissions on view and thus on view based REST export. To support this code we are using REST view to export the details of Article so, will need to enforce same permission which is enforce on GET on nodes i.e if user is not allowed to GET a node ( Article ) then user should not access the list of Article detials. So once this bug is solved we can supply authentication details to verify it.
 
 #import "ViewArticlesTableViewController.h"
 #import "Article.h"

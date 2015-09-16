@@ -51,8 +51,10 @@
     [hud show:YES];
 
    /* MAS:Vivek - how is this commented code useful?
+   // Vivek:MAS - Again this is with plain AFNetworking. I have kept all these code as a reference just to learn how things can be done with out drupal-ios-sdk. The reason for this is as follows, drupal-ios-sdk currently has very premitive support but by learning following code we can even extend the drupal-ios-sdk if required.
+    
     =============================
-    Login with NSURLSessionTask 
+    Login with NSURLSessionTask
     =============================
     
     
