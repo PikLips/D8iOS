@@ -7,6 +7,7 @@
 //
 
 // MAS:Vivek - explain the roles of these objects
+// Vivek:MAS - This is a singleton class that holds user information around the app after login. Currenly it holds username, roles assigned to user, basicAuthentication string for username:password combination ( but this is not required, as drupal-ios-sdk directly requires username and password in string format ), email address of user associated with account, user id to get more information ( if required ) 
 
 #import "User.h"
 #import "D8iOSHelper.h" // this was added to support performLogin method

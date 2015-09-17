@@ -12,6 +12,7 @@
  */
 
 // MAS:Vivek - how will you incorporate comments here?  Will it be a modal view?
+// Vivek:MAS - Well, Drupal comments can have full HTML content so we have to use UIWebView to display it. But this will be little tricky as it supports multiple level in trems of reply. I tried to connect some people on IRC about meximum depth supported by comment but no good reply. I am trying on this. Also here I am thinking to use / create a code that can be reused for such situaltions, probably creating a class or categoty on UIWebView that can hold, fetch comments for a node. I will let you know when I will have some concrete work on this.
 
 #import "ViewArticleViewController.h"
 #import <AFNetworking.h>
@@ -37,6 +38,13 @@
     [super viewDidLoad];
     if (self.article != nil) {
 // MAS:Vivek - will this code be used?
+// Vivek:MAS - I was just testing If Is it better to fetch Article details after view has been loaded or fetch it before view is loaded.
+//             And with viewWillAppear it works fine. You may remove this code. I have kept it just for reference.
+ 
+        
+        
+// ***************** <#This code can fetch node details with plain AFNetworking, it does not require drupal-ios-sdk #> *******************
+
         
 //        AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
 //        
@@ -60,6 +68,9 @@
 //        
 //        
 //        [UIAlertView showAlertViewForTaskWithErrorOnCompletion:getNodeData delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+        
+        
+  // ***************** <# This code uses drupal-io-sdk #> *******************
         
 //        DIOSSession *sharedSession = [DIOSSession sharedSession];
 //        
@@ -99,6 +110,9 @@
     
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     // MAS:Vivek - would DRUPAL8SITE be better managed as a stored value?
+    // Vivek:MAS - I have used NSUserDefaults to store DRUPAL8SITE because it is not sensitive data like password. So according to Apple it is OK to use. But, in future for some professional App If it is required to store drupal site information per User than it would be better to use a simple framework based on Keychain  access to sperate each user's data.
+    
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
     sharedSession.baseURL = baseURL;

@@ -30,6 +30,7 @@
     [hud show:YES];
     
     // MAS:Vivek - Here you have coded three ways to load the image. have you chosen your preferred way?
+    // MAS:Vivek - Here I have kept all 3 ways to load the image that I find on internet. The first way is based on plain CoreNetworking and here developer manages all threading stuffs. The second method is through AFNetworking and it is very convenient and simple but it is specific to UIImageView. The third way is again with AFNetworking but the first and third way can be used for images, audio, video etc, by just changing few lines. So I have kept all three ways for references. But ya second way is preferred for this use case. 
     
     // Now code will load image from self.pictureURL
     
