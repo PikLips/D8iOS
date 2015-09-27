@@ -17,7 +17,9 @@
 
 #import "AAPLAssetViewController.h"
 #import "Developer.h"  // MAS: for development only, see which
-
+#import "DIOSSession.h"
+#import "DIOSEntity.h"
+#import "User.h"
 
 @implementation CIImage (Convenience)
 - (NSData *)aapl_jpegRepresentationWithCompressionQuality:(CGFloat)compressionQuality {
@@ -46,10 +48,14 @@
 @property (strong) IBOutlet UIProgressView *progressView;
 @property (strong) AVPlayerLayer *playerLayer;
 @property (assign) CGSize lastImageViewSize;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *space1;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
 @end
 
 
 @implementation AAPLAssetViewController
+
+
 
 static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplecode.SamplePhotosApp";
 
@@ -71,7 +77,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
     if (self.asset.mediaType == PHAssetMediaTypeVideo) {
         self.toolbarItems = @[self.playButton, self.space, self.trashButton];
     } else {
-        self.toolbarItems = @[self.space, self.trashButton];
+        self.toolbarItems = @[self.space1,self.uploadButton, self.space,self.trashButton];
     }
     
     BOOL isEditable = ([self.asset canPerformEditOperation:PHAssetEditOperationProperties] || [self.asset canPerformEditOperation:PHAssetEditOperationContent]);
@@ -284,6 +290,92 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
     } else {
         [self.playerLayer.player play];
     }
+    
+}
+
+- (NSString *)encodeToBase64String:(UIImage *)image {
+    return [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+}
+
+- (IBAction)uploadImage:(id)sender {
+    
+    
+    
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:hud];
+    
+    hud.dimBackground = YES;
+    hud.labelText = @"Uploading image ...";
+    // Regiser for HUD callbacks so we can remove it from the window at the right time
+    hud.delegate = self;
+    
+    [hud show:YES];
+    
+    
+    // This is the JSON body with required details to be sent 
+   NSDictionary *params = @{
+        @"filename":@[@{@"value":[self.asset valueForKey:@"filename"]}],
+        @"data":@[@{@"value":[self encodeToBase64String:self.imageView.image]
+        }]};
+    
+    
+    [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
+                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                       
+                                       
+                                       UIImageView *imageView;
+                                       UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+                                       imageView = [[UIImageView alloc] initWithImage:image];
+                                       
+                                       hud.customView = imageView;
+                                       hud.mode = MBProgressHUDModeCustomView;
+                                       
+                                       hud.labelText = @"Completed";
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
+                                           sleep(1);
+                                           [hud hide:YES];
+                                       });
+                                   }
+                                   failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                       
+                                       [hud hide:YES];
+                                       
+                                       long statusCode = operation.response.statusCode;
+                                       // This can happen when POST is with out Authorization details or login fails
+                                       if (statusCode == 401) {
+                                           DIOSSession *sharedSession = [DIOSSession sharedSession];
+                                           
+                                           sharedSession.signRequests = NO;
+                                           
+                                           User *sharedUser = [User sharedInstance];
+                                           [sharedUser clearUserDetails];
+                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                           [alert show];
+                                       }
+                                       
+                                       else if( statusCode == 0 ) {
+                                           
+                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+                                           [alert show];
+                                           
+                                       }
+                                       
+                                       // Credentials are valid but user is not authorised for the operation.
+                                       else if(statusCode == 403){
+                                           
+                                           
+                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for the operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                           [alert show];
+                                       }
+                                       else{
+                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                           [alert show];
+                                           
+                                       }
+                                   }];
+
+    
     
 }
 

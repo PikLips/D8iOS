@@ -107,7 +107,7 @@
     // Remove line given below once bug 2228141 is solved
     // As currently RESTExport do not support authentication
     // When pushing this code to pantheon site set this to NO becuase it has not been patched with 2228141.patch 
-    sharedSession.signRequests = YES;
+    //sharedSession.signRequests = YES;
     
     
     if ( sharedSession.baseURL != nil ) {
@@ -135,21 +135,22 @@
             sharedSession.signRequests =YES;
 
             long statusCode = operation.response.statusCode;
-            // This can happen when GET is with out Authorization details
+            // This can happen when GET is with out Authorization details or credentials are wrong
             if ( statusCode == 401 ) {
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                [alert show];
-            }
-            
-            // Credentials sent with request is invalid
-            else if( statusCode == 403 ) {
                 
                 sharedSession.signRequests = NO;
                 
                 User *sharedUser = [User sharedInstance];
                 [sharedUser clearUserDetails];
+
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentials. " delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                [alert show];
+            }
+            
+            // Credentials are valid but user is not authorised to perform this operation.
+            else if( statusCode == 403 ) {
                 
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                 [alert show];
     
             }

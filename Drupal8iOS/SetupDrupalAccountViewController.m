@@ -181,7 +181,7 @@ bool emailStatus = NO;
                 
               // After https://www.drupal.org/node/2291055 is solved we do not need this block of code
                 
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials" message:@"Please check username and password." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                 [alert show];
                 
                 
