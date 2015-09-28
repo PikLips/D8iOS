@@ -83,22 +83,23 @@
                 //  sharedSession.signRequests =YES;
                 
                 long statusCode = operation.response.statusCode;
-                // This can happen when GET is with out Authorization details
+                // This can happen when GET is with out Authorization details or login failed.
                 if (statusCode == 401) {
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                    sharedSession.signRequests = NO;
+                    
+                    User *sharedUser = [User sharedInstance];
+                    [sharedUser clearUserDetails];
+
+                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                 }
                 
                 // Credentials sent with request is invalid
                 else if(statusCode == 403){
                     
-                    sharedSession.signRequests = NO;
-                    
-                    User *sharedUser = [User sharedInstance];
-                    [sharedUser clearUserDetails];
                     
                     
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for the operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                     
                 }

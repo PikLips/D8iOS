@@ -32,8 +32,12 @@
 		44CF1E191B524E2700FC66EE /* LogoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E181B524E2700FC66EE /* LogoutViewController.m */; };
 		44CF1E1C1B5251FB00FC66EE /* ManageUserAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E1B1B5251FB00FC66EE /* ManageUserAccountViewController.m */; };
 		44CF1E251B52619100FC66EE /* UploadFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E241B52619100FC66EE /* UploadFileViewController.m */; };
+		CF0A72711BB809C400300569 /* AddCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF0A72701BB809C400300569 /* AddCommentViewController.m */; };
 		CF195B111B84778F00003A2B /* FileJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = CF195B101B84778F00003A2B /* FileJSON.m */; };
 		CF195B141B847AD400003A2B /* FileDetailsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF195B131B847AD400003A2B /* FileDetailsTableViewCell.m */; };
+		CF1A32671BAF38EB0080E8A5 /* CommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF1A32661BAF38EB0080E8A5 /* CommentTableViewCell.m */; };
+		CF38A2181BB051550035D321 /* CommentsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF38A2171BB051550035D321 /* CommentsTableViewController.m */; };
+		CF38A21B1BB054D30035D321 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = CF38A21A1BB054D30035D321 /* Comment.m */; };
 		CF46F3BC1B9B460200E5D9AC /* NJOPasswordStrengthEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = CF46F3BB1B9B460100E5D9AC /* NJOPasswordStrengthEvaluator.m */; };
 		CF47B1E01B69F6ED00B7BDF3 /* SGKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CF47B1DF1B69F6ED00B7BDF3 /* SGKeychain.m */; };
 		CF553CB51B695A2E00B2D6D8 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = CF553CB41B695A2E00B2D6D8 /* User.m */; };
@@ -117,10 +121,18 @@
 		54A7EB5376FDEF676FC354FE /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		779ED5E60D48423481D03CDC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		A6EA9BB3BED6B0F02536D693 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF0A726F1BB809C400300569 /* AddCommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddCommentViewController.h; sourceTree = "<group>"; };
+		CF0A72701BB809C400300569 /* AddCommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddCommentViewController.m; sourceTree = "<group>"; };
 		CF195B0F1B84778F00003A2B /* FileJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileJSON.h; sourceTree = "<group>"; };
 		CF195B101B84778F00003A2B /* FileJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileJSON.m; sourceTree = "<group>"; };
 		CF195B121B847AD400003A2B /* FileDetailsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileDetailsTableViewCell.h; sourceTree = "<group>"; };
 		CF195B131B847AD400003A2B /* FileDetailsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileDetailsTableViewCell.m; sourceTree = "<group>"; };
+		CF1A32651BAF38EB0080E8A5 /* CommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentTableViewCell.h; sourceTree = "<group>"; };
+		CF1A32661BAF38EB0080E8A5 /* CommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentTableViewCell.m; sourceTree = "<group>"; };
+		CF38A2161BB051550035D321 /* CommentsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentsTableViewController.h; sourceTree = "<group>"; };
+		CF38A2171BB051550035D321 /* CommentsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentsTableViewController.m; sourceTree = "<group>"; };
+		CF38A2191BB054D30035D321 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
+		CF38A21A1BB054D30035D321 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
 		CF46F3BA1B9B460100E5D9AC /* NJOPasswordStrengthEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NJOPasswordStrengthEvaluator.h; sourceTree = "<group>"; };
 		CF46F3BB1B9B460100E5D9AC /* NJOPasswordStrengthEvaluator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NJOPasswordStrengthEvaluator.m; sourceTree = "<group>"; };
 		CF47B1DE1B69F6ED00B7BDF3 /* SGKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGKeychain.h; sourceTree = "<group>"; };
@@ -283,6 +295,8 @@
 		CF6599371B5BA4D1000AC0D7 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				CF0A726F1BB809C400300569 /* AddCommentViewController.h */,
+				CF0A72701BB809C400300569 /* AddCommentViewController.m */,
 				44511BD61B56D8380002A3CF /* D8iOSUISplitViewController.h */,
 				44511BD71B56D8380002A3CF /* D8iOSUISplitViewController.m */,
 				44CF1DEC1B51D97C00FC66EE /* MasterViewController.h */,
@@ -325,6 +339,10 @@
 				CF56A0671B86F33D00B45A83 /* DownloadFilesViewController.m */,
 				CF56A0691B86F3A100B45A83 /* DownloadFileTableViewCell.h */,
 				CF56A06A1B86F3A100B45A83 /* DownloadFileTableViewCell.m */,
+				CF1A32651BAF38EB0080E8A5 /* CommentTableViewCell.h */,
+				CF1A32661BAF38EB0080E8A5 /* CommentTableViewCell.m */,
+				CF38A2161BB051550035D321 /* CommentsTableViewController.h */,
+				CF38A2171BB051550035D321 /* CommentsTableViewController.m */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -342,6 +360,8 @@
 				CF65993D1B5BA5A7000AC0D7 /* JSONModel.m */,
 				CF195B0F1B84778F00003A2B /* FileJSON.h */,
 				CF195B101B84778F00003A2B /* FileJSON.m */,
+				CF38A2191BB054D30035D321 /* Comment.h */,
+				CF38A21A1BB054D30035D321 /* Comment.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -504,19 +524,23 @@
 				CF56A06B1B86F3A100B45A83 /* DownloadFileTableViewCell.m in Sources */,
 				44CF1E251B52619100FC66EE /* UploadFileViewController.m in Sources */,
 				444511C51B541A7C008B7E13 /* AAPLAssetViewController.m in Sources */,
+				CF0A72711BB809C400300569 /* AddCommentViewController.m in Sources */,
 				44CF1E191B524E2700FC66EE /* LogoutViewController.m in Sources */,
+				CF1A32671BAF38EB0080E8A5 /* CommentTableViewCell.m in Sources */,
 				441736331B579EDA00C984B5 /* ViewArticleViewController.m in Sources */,
 				444511C21B541935008B7E13 /* AAPLAssetGridViewController.m in Sources */,
 				441736301B579EB700C984B5 /* DeleteFileViewController.m in Sources */,
 				44CF1E131B523D5400FC66EE /* SetupDrupalAccountViewController.m in Sources */,
 				CF195B141B847AD400003A2B /* FileDetailsTableViewCell.m in Sources */,
 				44CF1DE81B51D97C00FC66EE /* main.m in Sources */,
+				CF38A2181BB051550035D321 /* CommentsTableViewController.m in Sources */,
 				44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */,
 				CFA9E7A61B7D1C8900390843 /* MBProgressHUD.m in Sources */,
 				CF553CB81B695A5700B2D6D8 /* D8iOSHelper.m in Sources */,
 				CF65993B1B5BA536000AC0D7 /* Article.m in Sources */,
 				444511BF1B5417EB008B7E13 /* AAPLRootListViewController.m in Sources */,
 				44CF1E161B524BA000FC66EE /* LoginViewController.m in Sources */,
+				CF38A21B1BB054D30035D321 /* Comment.m in Sources */,
 				CF56A0681B86F33D00B45A83 /* DownloadFilesViewController.m in Sources */,
 				44511BD51B56B6670002A3CF /* DownloadPicturesViewController.m in Sources */,
 				CF195B111B84778F00003A2B /* FileJSON.m in Sources */,

@@ -19,7 +19,11 @@
 #import <UIAlertView+AFNetworking.h>
 #import <DIOSSession.h>
 #import <DIOSNode.h>
+#import <DIOSComment.h>
 #import "Developer.h"
+#import "CommentsTableViewController.h"
+#import "User.h"
+#import "AddCommentViewController.h"
 
 @interface ViewArticleViewController ()
 
@@ -33,6 +37,14 @@
 @end
 
 @implementation ViewArticleViewController
+- (IBAction)addComment:(id)sender {
+    
+    
+    UIAlertView *commentInputAlertView = [[UIAlertView alloc]initWithTitle:@"Add Comment" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add", nil];
+    [commentInputAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [commentInputAlertView show];
+    
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -148,14 +160,167 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    
+    if([segue.identifier isEqualToString:@"showComments"]){
+        
+        CommentsTableViewController *destinationViewController = (CommentsTableViewController *) segue.destinationViewController;
+        
+        destinationViewController.nid = self.article.nid;
+        
+    
+    }
+    else if([segue.identifier isEqualToString:@"postComment"]){
+        
+        
+        
+        UINavigationController *destinationViewController = (UINavigationController *) segue.destinationViewController;
+        NSArray *viewControllers = destinationViewController.viewControllers;
+        AddCommentViewController *rootViewController = (AddCommentViewController *)[viewControllers objectAtIndex:0];
+        rootViewController.nid = self.article.nid;
+        
+        
+    }
+    
 }
-*/
+
+
+//-(void)alertView:(nonnull UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+//
+//    [self postComment:[[alertView textFieldAtIndex:0] text]];
+//
+//
+//
+//}
+//
+//-(void)postComment:(NSString *)comment{
+//    
+//    User *user = [User sharedInstance];
+//    
+//    
+// /* Vivek: <#Note#> This JSON request works fine with my 8.0.x branch but this does not currently work on beta14
+//  *              I am looking into this. But I sespect that this code will not require change. It must be some patch required on Drupal side.
+//  */
+//    
+//  NSDictionary *params=
+//      @{
+//          
+//          @"entity_id": @[
+//                        @{
+//                            @"target_id": self.article.nid
+//                        }
+//                        ],
+//          @"subject": @[
+//                     @{
+//                          @"value": comment
+//                      }],
+//          
+//          @"uid":@[
+//                @{
+//                     
+//                     @"target_id":user.uid
+//                 }
+//                 ],
+//          @"status": @[
+//                     @{
+//                         @"value": @"1"
+//                     }
+//                     ],
+//          @"entity_type": @[
+//                          @{
+//                              @"value": @"node"
+//                          }
+//                          ],
+//          @"comment_type": @[
+//                           @{
+//                               @"target_id": @"comment"
+//                           }
+//                           ],
+//          @"field_name": @[
+//                         @{
+//                             @"value": @"comment"
+//                         }
+//                         ],
+//          @"comment_body": @[
+//                           @{
+//                               @"value":comment
+//                           }
+//                           ]
+//          };
+//    
+//    MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+//    [self.navigationController.view addSubview:hud];
+//    
+//    hud.delegate = self;
+//    hud.labelText = @"Posting comment...";
+//    [hud show:YES];
+//    [DIOSComment createCommentWithParams:params relationID:self.article.nid type:@"comment" success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        
+//        
+//        UIImageView *imageView;
+//        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+//        imageView = [[UIImageView alloc] initWithImage:image];
+//        
+//        hud.customView = imageView;
+//        hud.mode = MBProgressHUDModeCustomView;
+//        
+//        hud.labelText = @"Completed";
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 1 seconds
+//            sleep(1);
+//            [hud hide:YES];
+//        });
+//        
+//        
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        [hud hide:YES];
+//        
+//        NSInteger statusCode  = operation.response.statusCode;
+//        
+//        if ( statusCode == 403 ){
+//            
+//            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+//            [alert show];
+//            
+//            
+//            
+//        }
+//        else if(statusCode == 401){
+//            User *user = [User sharedInstance];
+//            [user clearUserDetails];
+//            DIOSSession *sharedSession = [DIOSSession sharedSession];
+//            sharedSession.signRequests = NO;
+//            
+//            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentials first." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+//            [alert show];
+//            
+//        }
+//        else if( statusCode == 0 ){
+//            
+//            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+//            [alert show];
+//            
+//        }
+//        
+//        else {
+//           
+//            
+//            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+//                                                           message:[NSString stringWithFormat:@"Error while posting the comment with error code %@",error.localizedDescription]
+//                                                          delegate:nil
+//                                                 cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+//            
+//            [alert show];
+//        }
+//
+//        
+//    }];
+//    
+//    
+//}
 
 @end

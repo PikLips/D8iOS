@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
-@interface UploadFileViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
+@interface UploadFileViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate, MBProgressHUDDelegate>
 @property (weak, nonatomic) IBOutlet UIPickerView *uploadFilePicker;
 
 @end

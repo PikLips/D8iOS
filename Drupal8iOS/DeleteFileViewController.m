@@ -81,21 +81,24 @@
               //  sharedSession.signRequests =YES;
                 
                 long statusCode = operation.response.statusCode;
-                // This can happen when GET is with out Authorization details
+                // This can happen when request is with out Authorization details or wrong credentials are specified 
                 if ( statusCode == 401 ) {
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                    [alert show];
-                }
-                
-                // Credentials sent with request is invalid
-                else if( statusCode == 403 ){
+                    
                     
                     sharedSession.signRequests = NO;
                     
                     User *sharedUser = [User sharedInstance];
                     [sharedUser clearUserDetails];
                     
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentilas." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                    [alert show];
+                }
+                
+                // Request is in correct format but Drupal refuses to fulfil it as per  permissions set by admin
+                else if( statusCode == 403 ){
+                   
+                    
+                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is npot authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                 }
                 else {
@@ -217,20 +220,21 @@
                                            long statusCode = operation.response.statusCode;
                                            // This can happen when GET is with out Authorization details
                                            if (statusCode == 401) {
-                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                               [alert show];
-                                           }
-                                           
-                                           // Credentials sent with request is invalid
-                                           else if(statusCode == 403){
                                                DIOSSession *sharedSession = [DIOSSession sharedSession];
                                                
                                                sharedSession.signRequests = NO;
                                                
                                                User *sharedUser = [User sharedInstance];
                                                [sharedUser clearUserDetails];
+                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                               [alert show];
+                                           }
+                                           
+                                           // Credentials sent with request is invalid
+                                           else if(statusCode == 403){
+                                              
                                                
-                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                                                [alert show];
                                            }
                                            else{

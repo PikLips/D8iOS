@@ -220,13 +220,20 @@
                         
                         if ( statusCode == 403 ){
                             
-                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials" message:@"Please check username and password." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                             [alert show];
                             
+                          
+                            
+                        }
+                        else if(statusCode == 401){
                             User *user = [User sharedInstance];
                             [user clearUserDetails];
                             DIOSSession *sharedSession = [DIOSSession sharedSession];
                             sharedSession.signRequests = NO;
+                            
+                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentials first." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+                            [alert show];
                             
                         }
                         else if( statusCode == 0 ){
