@@ -89,11 +89,6 @@ bool emailStatus = NO;
      "value": "CH92viveK"
      }
      ],
-     "status": [
-     {
-     "value": "1"
-     }
-     ]
      }
 
     */
@@ -137,26 +132,15 @@ bool emailStatus = NO;
                      @"value": self.drupalUserPassword.text
                      
                  }
-                 ],
-        @"status": @[
-                   @{
-                       @"value": @"1" // "0" for blocked status
-                   }
-                   ]
+                 ]
           };
         
         
-        // Vivek Pandya -- India
-        // This credentials will work with http://dev-piklips-beta14.pantheon.io only
-        [sharedSession setBasicAuthCredsWithUsername:@"Vivek Pandya" andPassword:@"India"]; // here we have to explicitly pass Admin credentials. This will be solved with https://www.drupal.org/node/2291055
         
         
         [DIOSUser createUserWithParams:JSONBody success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
-            // After making request please clear admin credential details
-
-            [sharedSession setSignRequests:NO]; // request from drupal-ios-sdk will not send credential information
-            [sharedSession.requestSerializer clearAuthorizationHeader];
+            
             
             
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Congratulations!" message:@"Your account has been created. Further details will be mailed by application server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -169,9 +153,6 @@ bool emailStatus = NO;
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
             [hud hide:YES];
-            // After making request please clear admin credential details
-            [sharedSession setSignRequests:NO]; // request from drupal-ios-sdk will not send credential information
-            [sharedSession.requestSerializer clearAuthorizationHeader];
             
             
             
