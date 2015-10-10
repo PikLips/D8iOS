@@ -293,7 +293,10 @@
             // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 1 seconds
             sleep(1);
             [hud hide:YES];
+            [self dismissViewControllerAnimated:YES completion:nil];
+
         });
+        
         
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

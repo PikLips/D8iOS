@@ -28,7 +28,17 @@
     NSDictionary *defaultDict = @{@"_links" : @{@"type" : @{@"href" : href}}};
     [dict addEntriesFromDictionary:defaultDict];
     [dict addEntriesFromDictionary:params];
-    NSString *path = [NSString stringWithFormat:@"entity/%@", name];
+    // This code change is due to https://www.drupal.org/node/2291055
+    NSString *path  = nil;
+    if ([name isEqualToString:@"user"]) {
+       path = [NSString stringWithFormat:@"entity/%@/register", name];
+
+    }
+    else{
+        path  = [NSString stringWithFormat:@"entity/%@", name];
+
+    }
+    
     [[DIOSSession sharedSession] sendRequestWithPath:path method:@"POST" params:dict success:success failure:failure];
 }
 + (void) deleteEntityWithEntityName:(NSString*)name andID:(NSString*)eid
