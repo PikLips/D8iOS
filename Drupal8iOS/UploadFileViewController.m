@@ -109,25 +109,18 @@
         D8D(@"Upload failed");
     }
 }
-/* MAS: *****************************************************************************
- *************        For Vivek to code here to END  ----       *********************
- *************  Code this as you see fit.                       *********************
- *************  We will tie the logic into the UI.              *********************/
 
 - (bool)uploadSelectedFile:(NSString*)localFilename {
     // MAS: upload and verify
-    
-    
-    
-    
     return NO;
 }
+
 - (IBAction)uploadFile:(id)sender {
     
     NSFileManager *theFM = [NSFileManager defaultManager];
     NSURL *documentsDirectory = [[theFM URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
     NSString *filePath =  [NSString stringWithFormat:@"%@/%@",documentsDirectory.path,selectedFilename];
-    NSLog(filePath);
+    D8D("Filepath: %@", filePath);
     
         if([[NSFileManager defaultManager] fileExistsAtPath:filePath])
         {
@@ -148,7 +141,6 @@
             NSDictionary *params = @{
                                      @"filename":@[@{@"value":selectedFilename}],
                                      @"data":@[@{@"value":base64EncodedFile}]};
-            
             
             [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
                                            success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -205,19 +197,14 @@
                                                    
                                                }
                                            }];
-
-            
-        
         }
-            else
-        {
-            NSLog(@"File not exits");
+            else {
+                
+            D8D(@"File to be uploaded does not exit");
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"File does not exist on device" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
             [alert show];
 
         }
-    
-
 }
 
 

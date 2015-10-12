@@ -34,13 +34,12 @@ int d8FlagLevel = D8FLAGDEBUG; // MAS: highest level
     NSError *error = nil;
     
     NSArray *credentials  = [SGKeychain usernamePasswordForServiceName:@"Drupal 8" accessGroup:nil error:&error];
-   // Frist element of the array is user name
+    // Frist element of the array is user name
     // Second element is the password
-   
     
     if (credentials !=nil && credentials[0] != nil) {
         
-        // Here we can perform a network call and verify the credentials 
+        // Here we perform a network call and verify the credentials --
         
         [sharedSession setBasicAuthCredsWithUsername:credentials[0] andPassword:credentials[1]];
         

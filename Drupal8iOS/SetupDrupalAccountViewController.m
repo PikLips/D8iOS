@@ -6,15 +6,23 @@
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
 /* MAS: 
- *  This allows anonymous visitors to get a Drupal account.  On the web (HTTP)
+ *  This allows anonymous visitors to get a Drupal account.  On the webpage
  *  interface, anonymous visitors can be permitted to automatically create an
  *  account, create an account after verifying with an email, or create an
  *  account after admin approval.
  */
 
-// MAS:Vivek - please explain how this code manages the different types of user registration as per the REGISTRAION AND CANCELLATION section of http://dev-piklips-beta14.pantheon.io/admin/config/people/accounts
-//Vivek:MAS - The following answer is my understanding but I think some senior person from community like klausi or catch or webchick who actually takes design decision for REST in Drupal 8 can answer this better.
-// My answer : Actually currently this code creates POST on /user/entity. So it probably does not follows any permision settings enforeced by REGISTRATION AND CANCELLATION section. But it directly follows it from http://dev-piklips-beta14.pantheon.io/admin/people/permissions . And it just says that who can make POST on request on /user/entity. But there is a work going on and almost done. Please refer https://www.drupal.org/node/2291055 . The mentioned feature request covers many other issues related to user reqistration. I think  after this work in upstream permissions on user sign up via REST will follow REGISTRAION AND CANCELLATION section. And if so happens then case by case detials sent by client to the server will differ. For example most preferred case would be <#Visitors, but administrator approval is required#> for that metter app will not send <#"status": [{"value": "1"}]#> in request JSON becuase the created account will be unblocked by administrator only, so that details do not make any sense. I hope this clarifies your dobut and if not then we can talk on this. I would also suggest if possible you meet some drupal core person and get this thing clear.
+/*  Vivek: This code creates POST on /user/entity. So it probably does not follows any permision settings
+ *  enforced by Drupal's REGISTRATION AND CANCELLATION section.
+ *  It directly follows it from ~/admin/people/permissions and just says that who can make POST on request 
+ *  on /user/entity. There is a work going on and almost done. Refer to https://www.drupal.org/node/2291055.
+ *  The mentioned feature request covers many other issues related to user reqistration. After this works
+ *  in upstream permissions on user sign up via REST, this will follow REGISTRAION AND CANCELLATION settings.
+ *  Once done, then case-by-case details sent by client to the server will differ. For example most preferred 
+ *  case would be <#Visitors, but administrator approval is required#>. For that matter, the app will not send
+ *  <#"status": [{"value": "1"}]#> in the JSON request becuase the created account will be unblocked by the
+ *  administrator only. So, the traditional webpage user reponse may not apply.
+ */
 
 
 #import "SetupDrupalAccountViewController.h"
@@ -55,13 +63,11 @@ bool emailStatus = NO;
 
 }
 - (IBAction)createUserAccount:(id)sender {
-    /* MAS:  
-     *  Vivek: validate format of userName, userEmail, and userPassword, then submit
-     *      to Drupal site as new account.
-     *      Report error alert for duplicate userName and allow retry.
+    /*  Vivek: This validates format of userName, userEmail, and userPassword, then submits it
+     *  to a Drupal site as new account.
+     *  Report error alert for duplicate userName and allow retry.
+     *  Validations are done in separate methods.
      */
-    
-    /*Vivek : Validations are done in separate methods */
     
     /* This is the example HAL+JSON for creating User
      {"_links":{
@@ -107,54 +113,39 @@ bool emailStatus = NO;
     // A user is already logged in
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Information" message:@"You are already logged in." delegate:nil cancelButtonTitle:@"Dissmiss" otherButtonTitles:nil];
         [alert show];
-        
-        
     }
     else {
         // Creating NSDictionary for JSON body on the fly
-   NSDictionary *JSONBody =     @{
-          @"langcode": @[
-                     @{
-                        @"value": @"en"}
-                     ],
-        @"name": @[
-                 @{
-                     @"value": self.drupalUserName.text
-                 }
-                 ],
-        @"mail": @[
-                 @{
-                     @"value": self.drupalUserEmail.text
-                 }
-                 ],
-        @"pass": @[
-                 @{
-                     @"value": self.drupalUserPassword.text
-                     
+        NSDictionary *JSONBody =  @{
+                    @"langcode": @[
+                            @{
+                                @"value": @"en"}
+                            ],
+                    @"name": @[
+                            @{
+                                @"value": self.drupalUserName.text
+                                }
+                            ],
+                    @"mail": @[
+                            @{
+                                @"value": self.drupalUserEmail.text
+                                }
+                            ],
+                    @"pass": @[
+                            @{
+                                @"value": self.drupalUserPassword.text
                  }
                  ]
           };
         
-        
-        
-        
         [DIOSUser createUserWithParams:JSONBody success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            
-            
-            
             
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Congratulations!" message:@"Your account has been created. Further details will be mailed by application server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
                 [hud hide:YES];
-            
-
-
-            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
             [hud hide:YES];
-            
-            
             
             NSInteger statusCode  = operation.response.statusCode;
             
@@ -164,45 +155,25 @@ bool emailStatus = NO;
                 
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                 [alert show];
-                
-                
-                
-                
-                
-                
             }
             else if( statusCode == 0 ) {
                 
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                 [alert show];
-                
             }
-            
             else {
-                // Email and Password change requires existing password to be specified
-                // The code above tries to capture those requirements but if some how it is missed then Drupal REST will provide propper error and that will be reflected by this alert
+                // Email and Password change requires existing password to be specified.
+                // The code above tries to capture those requirements.  If it is missed then
+                // Drupal REST will provide propper error and that will be reflected by this alert
                 
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
                                                                message:[NSString stringWithFormat:@"Error while creating user with %@",error.localizedDescription]
                                                               delegate:nil
                                                      cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                
                 [alert show];
             }
-
-
-            
         }];
-        
-        
-
-        
-        
-        
     }
-    
-    
-    
 }
 
 - (void)viewDidLoad {
@@ -254,13 +225,14 @@ bool emailStatus = NO;
     
     if ([myTest evaluateWithObject: userName]){
        
-        NSLog(@"User Name validatoin succeed");
+        D8D(@"User Name validation succeed");
         userNameStatus = YES;
         return YES;
 
     }
-    else{
-        NSLog(@"Username validation failed");
+    else {
+        
+        D8D(@"Username validation failed");
         userNameStatus = NO;
         return NO;
        
@@ -284,9 +256,6 @@ bool emailStatus = NO;
         return NO;
         
     }
-
-    
-    
     
    /* NSRegularExpression *regEx = [[NSRegularExpression alloc] initWithPattern:regExPattern options:NSRegularExpressionCaseInsensitive error:nil];
     NSUInteger regExMatches = [regEx numberOfMatchesInString:emailString options:0 range:NSMakeRange(0, [emailString length])];
@@ -315,15 +284,12 @@ bool emailStatus = NO;
             
                 [mutableAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"It's a valid email." attributes:@{NSForegroundColorAttributeName: [UIColor greenColor]}]];
             
-            
             self.emailValidationTextView.attributedText = mutableAttributedString;
-
 
         }
         else {
             
             [mutableAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"Please enter a valid email." attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]];
-            
             
             self.emailValidationTextView.attributedText = mutableAttributedString;
             
@@ -347,7 +313,6 @@ bool emailStatus = NO;
             
             [mutableAttributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"Spaces are allowed; punctuation is not allowed except for ., -, ', and _ ." attributes:@{NSForegroundColorAttributeName: [UIColor redColor]}]];
             
-            
             self.userNameValidationTextView.attributedText = mutableAttributedString;
             
         }
@@ -355,15 +320,10 @@ bool emailStatus = NO;
             self.userNameValidationTextView.text = nil;
 
         }
-        
-        
-       
     }
     [self changeAddAccBtnStatus];
-
-
-    
 }
+
 - (void)updatePasswordStrength:(id)sender {
     NSString *password = self.drupalUserPassword.text;
     

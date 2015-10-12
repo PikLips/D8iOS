@@ -19,13 +19,11 @@
 @property (nonatomic,strong) NSMutableArray * commentList;
 @end
 
-
-
 @implementation CommentsTableViewController
 @synthesize nid;
 
 -(NSMutableArray *)commentList{
-    if (!_commentList) {
+    if ( !_commentList ) {
         _commentList = [[NSMutableArray alloc]init];
         
     }
@@ -43,8 +41,6 @@ hud.delegate = self;
 hud.labelText = @"Loading the comments";
 [hud show:YES];
 
-
-
 NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
 
@@ -53,7 +49,7 @@ sharedSession.baseURL = baseURL;
 
 // Remove line given below once bug 2228141 is solved
 // As currently RESTExport do not support authentication
-// When pushing this code to pantheon site set this to NO becuase it has not been patched with 2228141.patch
+// When pushing this code to pantheon site set this to NO because it has not been patched with 2228141.patch
 sharedSession.signRequests = YES;
 
 
@@ -161,7 +157,7 @@ else {
         cell.commentSubject.text = comment.subject;
         [cell.commentBody loadHTMLString:comment.comment_body baseURL:[NSURL URLWithString:DRUPAL8SITE]];
         cell.indentationLevel = [comment.thread intValue];
-        NSLog(@"%d",cell.indentationLevel);
+        D8D(@"%ld",(long)cell.indentationLevel);
         cell.indentationWidth = 10.0f;
     
         return cell;

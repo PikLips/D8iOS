@@ -33,8 +33,16 @@
     NSURL *url = [NSURL URLWithString:self.userSiteRequest.text];
     if (url != nil) {
         if(url && url.scheme && url.host){
- // MAS:Vivek - how does this know that the site is Drupal 8 and not Drupal 7?
-// Vivek:MAS - Actually there is no such provision in this code it just checks if device is able to connect (i.e 200 OK http status) to web site specified. But ideally it is Drupal 8 REST module's responsibility to enable one publically accisible end point, and its URL pattern should be some standard documented on drupal.org for example /node/verify . So then app can call GET on this specific URL and the the PHP code on the server will verify that REST and related modules are enabled and based on that it will return some status code in response. By using this endpoint we can verify that this is Drupal 8 or not. Again this is my thought there can be better way perhaps baesed on response headers. This point also requires discussion with some drupal 8 experienced community person.
+/* Vivek: Actually there is no such provision in this code to determine if this is a valid D8 site.
+ *  It just checks if device is able to connect (i.e 200 OK http status) to web site specified. 
+ *  Ideally a Drupal 8 REST module's responsibility is to enable one publically accisible end point, 
+ *  and its URL pattern should be some standard documented on drupal.org for example /node/verify . 
+ *  So then app can call GET on this specific URL, and the the PHP code on the server will verify 
+ *  that REST and related modules are enabled and based on that it will return some status code 
+ *  in response. By using this endpoint we can verify that this is Drupal 8 or not.
+ *  There may be better way, perhaps based on response headers. This point may require
+ *  discussion with some very experienced, D8 community people.
+ */
             
          MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
             [self.navigationController.view addSubview:hud];
@@ -43,6 +51,7 @@
             hud.labelText = @"Verifying Drupal 8 site";
             [hud show:YES];
         // a valid URL according to RFC 2396 RFCs 1738 and 1808
+            
         // store the URL String to user's default settings
             
         // Validate the remote host with NSURLConnection
@@ -86,8 +95,6 @@
                 [alert show];
                 NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"FAILED" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.000]}];
                 [self.connectionStatusLabel setAttributedText:attributeStatus];
-
-            
             }
 
          */
@@ -97,10 +104,10 @@
             DIOSSession *sharedSession = [DIOSSession sharedSession];
             sharedSession.baseURL = url;
             
-            /* by default DIOSSession has AFJSONResponseSerializer which causes a http based response with status code 2XX 
-             to be an unacceptable response type.
-             So to execute the request we change ResponseSerializer temporarely
-             
+            /* Vivek: By default, DIOSSession has AFJSONResponseSerializer which causes a http-based response
+             *  with status code 2XX to be an unacceptable response type.
+             *  So to execute the request we change ResponseSerializer temporarely
+             *
              */
             [sharedSession setResponseSerializer:[AFHTTPResponseSerializer serializer]];
            
@@ -132,11 +139,7 @@
                     sleep(1);
                     [hud hide:YES];
                 });
-                
-                
-                
-                
-                
+            
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 
                 [hud hide:YES];

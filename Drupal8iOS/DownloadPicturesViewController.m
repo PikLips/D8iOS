@@ -5,7 +5,7 @@
 //  Created by Michael Smith on 7/15/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
-/* MAS:  Note, reaches out to the Drupal 8 server to get a list of images
+/* MAS:  This reaches out to the Drupal 8 server to get a list of images
  *  that are avaialable for viewing/download.  If the user selects a cell
  *  another viewer will be pushed, displaying the image.
  */
@@ -38,9 +38,6 @@
     User *sharedUser = [User sharedInstance];
     
     if (sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
-        
-        // MAS:Vivek - MBProgressHUD code is used many times, can we put it into a class?
-        // Vivek:MAS - I think it will be little bit tricky as MBProcessHUD requires a view to put it self into. So creating a framework upon the MBProcessHUD will be tough , but if we can have some example code that uses it in efficient way then we can learn and build. I have tried to search it on Internet that how to integrate MBProcessHUD with AFNetworking so that we can show it (if wants to ) on selected AFNetworking task but I didn't find any thing useful.
         
         MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:hud];

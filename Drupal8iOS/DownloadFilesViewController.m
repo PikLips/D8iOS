@@ -11,8 +11,12 @@
  *  depending upon permissions.
  */
 
-// MAS:Vivek - explain how authentication will be involved when 2228141 is resolved
-// Vivek:Mass - Due to the bug 2228141 it is not possible to enforce permissions on view and thus on view based REST export. To support this code we are using REST view to export the details of Files, so will need to enforce same permission which is enforce on GET on Files i.e if user is not allowed to GET a File then user should not access the list of Files detials. So once this bug is solved we can supply authentication details to verify it.
+/*  Vivek: Due to the bug 2228141, it is not possible to enforce permissions on view and thus on view-based 
+ *  REST export. To support this code we are using REST view to export the details of Files.
+ *  So, we will need to enforce same permission which is enforce on GET on Files.  In this case, if the user 
+ *  is not allowed to GET a File, then user should not access the list of Files detials. 
+ *  Once this bug is solved we can supply authentication details to verify it.
+ */
 
 #import "DownloadFilesViewController.h"
 #import "User.h"
@@ -38,8 +42,6 @@
     return _listOfFiles;
     
 }
-
-
 
 -(IBAction)getData{
     
@@ -206,7 +208,7 @@
     
     
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        NSLog(@"bytesRead: %lu, totalBytesRead: %lld, totalBytesExpectedToRead: %lld", (unsigned long)bytesRead, totalBytesRead, totalBytesExpectedToRead);
+        D8D(@"bytesRead: %lu, totalBytesRead: %lld, totalBytesExpectedToRead: %lld", (unsigned long)bytesRead, totalBytesRead, totalBytesExpectedToRead);
         float percentDone = ((float)((int)totalBytesRead) / (float)((int)totalBytesExpectedToRead));
         [(UIProgressView *)hud setProgress:percentDone];
         hud.labelText = [NSString stringWithFormat:@"%f",(100.0 * percentDone)];
@@ -216,19 +218,19 @@
         
         [hud hide:YES];
         
-        NSLog(@"RES: %@", [[[operation response] allHeaderFields] description]);
+        D8D(@"RES: %@", [[[operation response] allHeaderFields] description]);
         
         NSError *error;
         NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
         
         if (error) {
-            NSLog(@"ERR: %@", [error description]);
+            D8E(@"ERR: %@", [error description]);
         } else {
             NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
             long long fileSize = [fileSizeNumber longLongValue];
-            NSLog(@"%lld", fileSize);
-            NSLog(@"File download completed !");
-            NSLog(@"Successfully downloaded file to %@", path);
+            D8D(@"%lld", fileSize);
+            D8D(@"File download completed !");
+            D8D(@"Successfully downloaded file to %@", path);
             
             //[[_downloadFile titleLabel] setText:[NSString stringWithFormat:@"%lld", fileSize]];
         }

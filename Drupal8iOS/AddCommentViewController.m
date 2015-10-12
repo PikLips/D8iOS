@@ -1,6 +1,14 @@
+//
+//  AddCommentViewController.m
+//  Drupal8iOS
+//
+//  Created by Vivek Pandya on 7/19/15.
+//  Copyright (c) 2015 PikLips. All rights reserved.
+//
 
 #import "AddCommentViewController.h"
 #import "User.h"
+#import "Developer.h"
 
 //#import "UIAlertView+AFNetworking.h"
 #import "DIOSComment.h"
@@ -68,8 +76,8 @@
 //        NSLog(@"%@",self.tip);
 //           }
     
-    NSLog(@"view did load\n");
-    NSLog(self.nid);
+    D8D(@"view did load\n");
+    D8D(@"nib ID: %@", self.nid);
    
     
     // Do any additional setup after loading the view.
@@ -156,7 +164,6 @@
 }
 
 - (IBAction)done:(id)sender {
-    
     
     User *user = [User sharedInstance];
     
@@ -297,8 +304,6 @@
 
         });
         
-        
-        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [hud hide:YES];
         
@@ -310,8 +315,6 @@
            
             alert.tag = 2; // For error related alerts tag is 2
             [alert show];
-            
-            
             
         }
         else if(statusCode == 401){
@@ -335,7 +338,6 @@
         
         else {
             
-            
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
                                                            message:[NSString stringWithFormat:@"Error while posting the comment with error code %@",error.localizedDescription]
                                                           delegate:nil
@@ -343,16 +345,7 @@
             alert.tag = 2; // For error related alerts tag is 2
             [alert show];
         }
-        
-        
     }];
-
-    
-    
- 
-    
-    
-   
 }
 
 - (IBAction)switchEditor:(id)sender {
@@ -362,21 +355,18 @@
     
     NSInteger index  = segmentedController.selectedSegmentIndex;
     
-    if (index == 0) {
+    if ( index == 0 ) {
         self.bodyWebView.hidden = NO;
         self.bodyTextView.hidden = YES;
        
         [self.bodyWebView loadHTMLString:self.bodyTextView.textStorage.mutableString baseURL:nil];
     }
-    if (index == 1) {
+    if ( index == 1 ) {
         self.bodyWebView.hidden = YES;
         self.bodyTextView.hidden = NO;
         
     }
-    
 }
-
-
 
 -(void)insertHtmlTag:(NSString *)tag sender:(UIButton *)sender{
     
@@ -405,11 +395,7 @@
             _bodyTextView.selectedRange = NSMakeRange((selectedRange.location + [startTag length]), 0);
         }
         sender.selected = !sender.selected;
-        
-        
     }
-    
-    
 }
 
 -(void)paragraphText:(UIButton *)sender{
@@ -459,7 +445,7 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     if (alertView.tag == 1) {
-        NSLog(@"here");
+        D8D(@"here");
         
         // cancel button will have index 0
         if (buttonIndex == 1) {
@@ -488,13 +474,9 @@
         }
     }
     else if (alertView.tag == 2){
-        NSLog(@"It reaches here");
+        D8D(@"It reaches here");
         [self dismissViewControllerAnimated:YES completion:nil];  // Hide modal view if user press "Dismiss" button on error alertView
     }
-    
-    
-    
-    
 }
 
 -(BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView{
@@ -502,7 +484,6 @@
     if ([alertView textFieldAtIndex:0]) {
         if ([alertView textFieldAtIndex:0].text.length > 0) {
             return YES;
-            
         }
         else
             return  NO;
@@ -510,7 +491,6 @@
     else{
         return NO;
     }
-    
 }
 
 #pragma mark UIWebView Delegate method 
@@ -525,8 +505,6 @@
     return YES;
     
 }
-
-
 
 //-(void)uploadImage{
 //
@@ -607,8 +585,7 @@
 //    
     
     return inputAccessoryView;
-    
-    
+
 }
 
 //-(void)backButtonSelected:(id)object{

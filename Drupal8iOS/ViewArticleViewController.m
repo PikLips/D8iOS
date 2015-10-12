@@ -11,8 +11,11 @@
  *  can submit comments if permissions are granted.
  */
 
-// MAS:Vivek - how will you incorporate comments here?  Will it be a modal view?
-// Vivek:MAS - Well, Drupal comments can have full HTML content so we have to use UIWebView to display it. But this will be little tricky as it supports multiple level in trems of reply. I tried to connect some people on IRC about meximum depth supported by comment but no good reply. I am trying on this. Also here I am thinking to use / create a code that can be reused for such situaltions, probably creating a class or categoty on UIWebView that can hold, fetch comments for a node. I will let you know when I will have some concrete work on this.
+/* Vivek: Drupal comments can have full HTML content so we have to use UIWebView
+ *  to display it. But this will be little tricky as it supports multiple level in trems of 
+ *  reply.  Also here I am thinking to use / create a code that can be reused for such situaltions, 
+ *  probably creating a class or categoty on UIWebView that can hold, fetch comments for a node. 
+ */
 
 #import "ViewArticleViewController.h"
 #import <AFNetworking.h>
@@ -49,10 +52,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     if (self.article != nil) {
-// MAS:Vivek - will this code be used?
-// Vivek:MAS - I was just testing If Is it better to fetch Article details after view has been loaded or fetch it before view is loaded.
-//             And with viewWillAppear it works fine. You may remove this code. I have kept it just for reference.
- 
+
+    /* Vivek: I was just testing if it is better to fetch Article details after view has been 
+     * loaded or fetch it before view is loaded.
+     * And with viewWillAppear it works fine. You may remove this code. I have kept it just for reference.
+     */
         
         
 // ***************** <#This code can fetch node details with plain AFNetworking, it does not require drupal-ios-sdk #> *******************
@@ -121,15 +125,17 @@
     [super viewWillAppear:animated];
     
     DIOSSession *sharedSession = [DIOSSession sharedSession];
-    // MAS:Vivek - would DRUPAL8SITE be better managed as a stored value?
-    // Vivek:MAS - I have used NSUserDefaults to store DRUPAL8SITE because it is not sensitive data like password. So according to Apple it is OK to use. But, in future for some professional App If it is required to store drupal site information per User than it would be better to use a simple framework based on Keychain  access to sperate each user's data.
-    
+    /*  Vivek: I have used NSUserDefaults to store DRUPAL8SITE because it is not sensitive data
+     *  like password. So according to Apple it is OK to use. But, in future for some professional app.
+     *  If it is required to store drupal site information per User than it would be better to use a 
+     *  simple framework based on Keychain access to sperate each user's data.
+     */
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
     sharedSession.baseURL = baseURL;
     
-    if(sharedSession.baseURL != nil){
+    if( sharedSession.baseURL != nil ){
         
         MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:hud];
@@ -166,7 +172,7 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if([segue.identifier isEqualToString:@"showComments"]){
+    if( [segue.identifier isEqualToString:@"showComments"] ) {
         
         CommentsTableViewController *destinationViewController = (CommentsTableViewController *) segue.destinationViewController;
         
@@ -174,18 +180,14 @@
         
     
     }
-    else if([segue.identifier isEqualToString:@"postComment"]){
-        
-        
+    else if( [segue.identifier isEqualToString:@"postComment"] ) {
         
         UINavigationController *destinationViewController = (UINavigationController *) segue.destinationViewController;
         NSArray *viewControllers = destinationViewController.viewControllers;
         AddCommentViewController *rootViewController = (AddCommentViewController *)[viewControllers objectAtIndex:0];
         rootViewController.nid = self.article.nid;
         
-        
     }
-    
 }
 
 

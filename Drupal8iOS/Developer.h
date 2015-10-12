@@ -24,7 +24,7 @@ extern int d8FlagLevel;     // MAS: a nasty global, gods of OOP forgive me
 #define D8D(FMT,...) if(d8FlagLevel < D8FLAGDEBUG) ; else  NSLog(@"DEBUG: " FMT, ##__VA_ARGS__)
 #define D8W(FMT,...) if(d8FlagLevel < D8FLAGWARN)  ; else  NSLog(@"WARN: " FMT, ##__VA_ARGS__)
 #define D8E(FMT,...) if(d8FlagLevel < D8FLAGERROR) ; else  NSLog(@"ERROR: " FMT, ##__VA_ARGS__)
-#define D8P(FMT,...) if(d8FlagLevel == D8PRODUCTION) NSLog(@"D8iOS: " FMT, ##__VA_ARGS__)
+#define D8P(FMT,...) if(d8FlagLevel => D8PRODUCTION) NSLog(@"D8iOS: " FMT, ##__VA_ARGS__)
 
 #endif
 

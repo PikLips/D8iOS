@@ -43,7 +43,6 @@
         [self.userEmailAddress setText:sharedUser.email];
         
     }
-    
 }
 
 - (void)viewDidLoad {
@@ -78,8 +77,7 @@
     }
     else{
         
-        if ( sharedUser.name != nil && ![sharedUser.name  isEqual: @""] )
-        {
+        if ( sharedUser.name != nil && ![sharedUser.name  isEqual: @""] ) {
             
             if ( self.currentUserPassword.text != nil && ![self.currentUserPassword.text isEqualToString:@""] ) {
                 
@@ -172,7 +170,10 @@
                     
                     [DIOSUser patchUserWithID:sharedUser.uid params:params type:@"user" success:^(AFHTTPRequestOperation *operation, id responseObject) {
                         
-                        // If PATCH is successfull then it may have changed any combinations of username, password, email so we need to update sharedUser and credentials on sharedSession accordingly
+                        /* Vivek: If PATCH is successfull then we may have changed any combinations of 
+                         *  username, password, email. So, we need to update sharedUser and credentials on
+                         *  sharedSession accordingly.
+                         */
                         
                         [SGKeychain deletePasswordandUserNameForServiceName:@"Drupal 8" accessGroup:nil error:&sgKeyChainError];
                         
@@ -204,8 +205,11 @@
                         
                         hud.customView = imageView;
                         hud.mode = MBProgressHUDModeCustomView;
-                        // MAS:Vivek - how do you know that 2 seconds is enough?
-                        // Vivek:MAS - This can be changed. but I tried 1 - 3 secs and I found it sufficient. And this will show "Completed" label for 1 sec after the operation completes. Here if user's attention is specifically required than it would be better to use UIAlertView instead. So that user have to responde to it.
+                        /* Vivek: This can be changed.  I tried 1 - 3 secs and I found 2 sufficient.
+                         *  And this will show "Completed" label for 1 sec after the operation completes. 
+                         *  If user's attention is specifically required than it would be better to
+                         *  use UIAlertView, so that user will have to respond to it.
+                         */
                         hud.labelText = @"Completed";
                         dispatch_async(dispatch_get_main_queue(), ^{
                             // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
@@ -222,9 +226,6 @@
                             
                             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                             [alert show];
-                            
-                          
-                            
                         }
                         else if(statusCode == 401){
                             User *user = [User sharedInstance];
@@ -244,8 +245,10 @@
                         }
                         
                         else {
-                            // Email and Password change requires existing password to be specified
-                            // The code above tries to capture those requirements but if some how it is missed then Drupal REST will provide propper error and that will be reflected by this alert
+                            /* Vivek: Email and Password change requires existing password to be specified.
+                             *  The code above tries to capture those requirements, but if some how it is
+                             *  missed then Drupal REST will provide propper error, reflected by this alert.
+                             */
                             
                             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
                                                                            message:[NSString stringWithFormat:@"Error while updating user with %@",error.localizedDescription]

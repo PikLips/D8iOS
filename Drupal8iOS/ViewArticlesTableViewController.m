@@ -12,8 +12,12 @@
  *  signed-in users of a group, or just the signed-in user who authors the article.
  */
 
-// MAS:Vivek - explain how authentication will play a role in showing articles using this code (after the 2228141 bug is resolved)
-// Vivek:Mass - Due to the bug 2228141 it is not possible to enforce permissions on view and thus on view based REST export. To support this code we are using REST view to export the details of Article so, will need to enforce same permission which is enforce on GET on nodes i.e if user is not allowed to GET a node ( Article ) then user should not access the list of Article detials. So once this bug is solved we can supply authentication details to verify it.
+/* Vivek: Due to the bug 2228141, it was not possible to enforce permissions on view and thus on view based 
+ *  REST export.  We use REST view to export the details of Article. So, we will need to enforce same permission 
+ *  which is enforce on GET on nodes.  In this case, if the user is not allowed to GET a node ( Article ) 
+ *  then the user should not access the list of Article details. 
+ *  Once this bug is solved, we can supply authentication details to verify it.
+ */
 
 #import "ViewArticlesTableViewController.h"
 #import "Article.h"
@@ -29,7 +33,6 @@
 @interface ViewArticlesTableViewController ()
 
 @property (nonatomic,strong) NSMutableArray * articleList; // to hold NSDictionaries that are created with JSON Response and each NSDictionary represent article object i.e it will contain all the fields which you have enabled from RESTExport for the view
-
 
 @end
 
@@ -114,7 +117,7 @@
         [DIOSView getViewWithPath:@"articles" params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             [self.articleList removeAllObjects];
           
-                    for (NSMutableDictionary *article in responseObject)
+                    for ( NSMutableDictionary *article in responseObject )
                     {
                         Article *newTip = [[Article alloc]initWithDictionary:article];
                         [self.articleList addObject:newTip];
@@ -277,6 +280,5 @@
     }
    
 }
-
 
 @end

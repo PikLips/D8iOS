@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
 /*
- Copyright (C) 2014 Apple Inc. All Rights Reserved.
- See LICENSE.txt for this sample’s licensing information
- 
- Abstract:
- 
- A view controller displaying an asset full screen.
- 
+ *  Copyright (C) 2014 Apple Inc. All Rights Reserved.
+ *  See LICENSE.txt for this sample’s licensing information
+ *
+ *  Abstract:
+ *
+ *  A view controller displaying an asset full screen.
+ *
  */
 
 #import "AAPLAssetViewController.h"
@@ -189,7 +189,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
             request.contentEditingOutput = contentEditingOutput;
         } completionHandler:^(BOOL success, NSError *error) {
             if (!success) {
-                NSLog(@"Error: %@", error);
+                D8E(@"Error: %@", error);
             }
         }];
     }];
@@ -208,7 +208,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                 [request setFavorite:![self.asset isFavorite]];
             } completionHandler:^(BOOL success, NSError *error) {
                 if (!success) {
-                    NSLog(@"Error: %@", error);
+                    D8E(@"Error: %@", error);
                 }
             }];
         }]];
@@ -228,7 +228,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                 [request revertAssetContentToOriginal];
             } completionHandler:^(BOOL success, NSError *error) {
                 if (!success) {
-                    NSLog(@"Error: %@", error);
+                    D8E(@"Error: %@", error);
                 }
             }];
         }]];
@@ -247,7 +247,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                 [[self navigationController] popViewControllerAnimated:YES];
             });
         } else {
-            NSLog(@"Error: %@", error);
+            D8E(@"Error: %@", error);
         }
     };
     

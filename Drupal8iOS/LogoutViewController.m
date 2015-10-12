@@ -5,7 +5,7 @@
 //  Created by Michael Smith on 7/12/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
-/*  MAS: This logs out a current user/
+/*  MAS: This logs out a current user
  */
 
 #import "LogoutViewController.h"
@@ -49,12 +49,12 @@
 
 -(void)performLogout{
     
-    /* As per the RESTFul architecture server never stores the states of request or client.
-     So every request is sent with proper credential details if it is required.
-     It is client's responsiblity to maintain state information.
-     So for log out we do not have to perform any network call, we just delete credential details from our app.
+    /* Vivek:   As per the RESTFul architecture server never stores the states of request or client.
+     *  So every request is sent with proper credential details if it is required.
+     *  It is client's responsiblity to maintain state information.
+     *  So for log out we do not have to perform any network call, we just delete credential 
+     *  details from our app.
      */
-    
     
     MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:hud];

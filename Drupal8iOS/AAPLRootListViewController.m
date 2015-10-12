@@ -7,12 +7,12 @@
 //
 
 /*
- Copyright (C) 2014 Apple Inc. All Rights Reserved.
- See LICENSE.txt for this sample’s licensing information
- 
- Abstract:
- 
- The view controller displaying the root list of the app.
+ *  Copyright (C) 2014 Apple Inc. All Rights Reserved.
+ *  See LICENSE.txt for this sample’s licensing information
+ *
+ *  Abstract:
+ *
+ *  The view controller displaying the root list of the app.
  */
 
 #import "AAPLRootListViewController.h"
@@ -170,7 +170,7 @@ static NSString * const CollectionSegue = @"showCollection";
             [PHAssetCollectionChangeRequest creationRequestForAssetCollectionWithTitle:title];
         } completionHandler:^(BOOL success, NSError *error) {
             if ( !success ) {
-                NSLog(@"Error creating album: %@", error);
+                D8E(@"Error creating album: %@", error);
             }
         }];
     }]];

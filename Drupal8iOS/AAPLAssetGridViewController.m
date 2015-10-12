@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
 /*
- Copyright (C) 2014 Apple Inc. All Rights Reserved.
- See LICENSE.txt for this sample’s licensing information
- 
- Abstract:
- 
- A view controller displaying a grid of assets.
- 
+ *  Copyright (C) 2014 Apple Inc. All Rights Reserved.
+ *  See LICENSE.txt for this sample’s licensing information
+ *
+ *  Abstract:
+ *
+ *  A view controller displaying a grid of assets.
+ *
  */
 
 #import "AAPLAssetGridViewController.h"
@@ -297,7 +297,7 @@ static CGSize AssetGridThumbnailSize;
         }
     } completionHandler:^(BOOL success, NSError *error) {
         if (!success) {
-            NSLog(@"Error creating asset: %@", error);
+            D8E(@"Error creating asset: %@", error);
         }
     }];
 }

@@ -5,12 +5,16 @@
 //  Created by Vivek Pandya on 8/21/15.
 //  Copyright © 2015 PikLips. All rights reserved.
 //
-
-// MAS:Vivek - explain the roles of these objects
-// Vivek:MAS - This is a singleton class that holds user information around the app after login. Currenly it holds username, roles assigned to user, basicAuthentication string for username:password combination ( but this is not required, as drupal-ios-sdk directly requires username and password in string format ), email address of user associated with account, user id to get more information ( if required ) 
+/* Vivek: This is a singleton class that holds user information around the app after login. 
+ *  Currenly, it holds username, roles assigned to user, basicAuthentication string for the 
+ *  username:password combination ( but this is not required, as drupal-ios-sdk directly 
+ *  requires username and password in string format ), email address of user associated with account, 
+ *  and user id to get more information ( if required ).
+ */
 
 #import "User.h"
 #import "D8iOSHelper.h" // this was added to support performLogin method
+#import "Developer.h"
 
 
 @interface User()
@@ -51,17 +55,16 @@ static User *sharedDataInstance = nil;
 
 -(void)fillUserWithUserJSONObject:(NSDictionary *)UserJSONObject{
 
-// MAS:Vivek - would you comment on this commented code?
-  /*  self.name = [UserJSONObject objectForKey:@"name"];
-    self.roles = [UserJSONObject objectForKey:@"roles"];
-    self.basicAuthString = [UserJSONObject objectForKey:@"basicAuthString"];
-    self.uid = [UserJSONObject objectForKey:@"uid"];
+// MAS:Vivek - would you comment on this unused code?
     
-    */
+/*  self.name = [UserJSONObject objectForKey:@"name"];
+ *  self.roles = [UserJSONObject objectForKey:@"roles"];
+ *  self.basicAuthString = [UserJSONObject objectForKey:@"basicAuthString"];
+ *  self.uid = [UserJSONObject objectForKey:@"uid"];
+ */
     [self setValuesForKeysWithDictionary:UserJSONObject];
-    NSLog(@"initialized");
+    D8D(@"UserJSONObject initialized");
     
-
 }
 
 

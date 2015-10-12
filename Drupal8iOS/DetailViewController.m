@@ -11,7 +11,7 @@
 #import "Developer.h"  // MAS: for development only, see which
 
 /* MAS:
- *  The following are here in order to manage the views that are not
+ *  The following manage the views that are not
  *  handled by the Master Controller Segue.
  */
 #import "SpecifyDrupalSiteViewController.h"

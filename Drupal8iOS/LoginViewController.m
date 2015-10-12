@@ -50,9 +50,13 @@
     hud.labelText = @"Logging in";
     [hud show:YES];
 
-   /* MAS:Vivek - how is this commented code useful?
-   // Vivek:MAS - Again this is with plain AFNetworking. I have kept all these code as a reference just to learn how things can be done with out drupal-ios-sdk. The reason for this is as follows, drupal-ios-sdk currently has very premitive support but by learning following code we can even extend the drupal-ios-sdk if required.
+   /* Vivek: This is with plain AFNetworking. I have kept this code as a reference just
+    *   to learn how things can be done with out drupal-ios-sdk. The reason for this is as 
+    *   follows, drupal-ios-sdk currently has basic support but by learning following 
+    *   code we can even extend the drupal-ios-sdk if required.
+    */
     
+    /*
     =============================
     Login with NSURLSessionTask
     =============================
@@ -149,12 +153,10 @@
     
     /*
      ==================================
-            Login with Kyle's SDK
+            Login with Kyle's iOS-SDK
      ==================================
      
      */
-    
-    
     
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     [sharedSession setBasicAuthCredsWithUsername:username andPassword:password];
@@ -171,8 +173,8 @@
         [session setBasicAuthCredsWithUsername:username andPassword:password];
         [hud hide:YES];
         
-        if (userDictionary != nil) {
-            NSLog(@"userDictionary %@", userDictionary );
+        if ( userDictionary != nil ) {
+            D8D(@"userDictionary %@", userDictionary );
             User *user = [User sharedInstance];
             [user fillUserWithUserJSONObject:userDictionary];
             
@@ -180,36 +182,26 @@
             NSString * rolesString = [[user.roles valueForKey:@"description"] componentsJoinedByString:@" "];
             
             [self.roles_status setText:rolesString];
-            
-            
         }
-
-        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
         NSInteger statusCode  = operation.response.statusCode;
         [hud hide:YES];
         
-        if (statusCode == 403){
+        if ( statusCode == 403 ){
             
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials" message:@"Please check username and password." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
             [alert show];
-            
-            
+
         }
-        else if( statusCode == 0){
+        else if( statusCode == 0 ){
             
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
             [alert show];
-
         }
-        
         else{
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"Error with code %ld",(long)statusCode] message:@"Please contact website admin." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
             [alert show];
-            
-
-        
         }
         
         User *user = [User sharedInstance];
@@ -218,9 +210,6 @@
         [self.roles_status setText:@"..."];
         
     }];
-    
-    
-
 }
 
 
@@ -235,14 +224,6 @@
         [self.roles_status setText:rolesString];
 
     }
-    
-    
-  
-    
-    
-    
-    
-    
 }
 
 - (void)viewDidLoad {
