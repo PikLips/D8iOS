@@ -1,5 +1,10 @@
-
-
+//
+//  User.h
+//  Drupal8iOS
+//
+//  Created by Vivek Pandya on 8/21/15.
+//  Copyright © 2015 PikLips. All rights reserved.
+//
 
 #import <Foundation/Foundation.h>
 #import "JSONModel.h"

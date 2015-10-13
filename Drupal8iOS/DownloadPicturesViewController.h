@@ -5,11 +5,12 @@
 //  Created by Michael Smith on 7/15/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
-/* MAS:  Note, this is currently a placeholder
+/* MAS:  
  */
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
-@interface DownloadPicturesViewController : UITableViewController
+@interface DownloadPicturesViewController : UITableViewController <MBProgressHUDDelegate>
 
 @end

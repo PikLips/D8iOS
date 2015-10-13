@@ -10,7 +10,7 @@
 #import "Article.h"
 #import "MBProgressHUD.h"
 
-@interface ViewArticleViewController : UIViewController <MBProgressHUDDelegate>
+@interface ViewArticleViewController : UIViewController <MBProgressHUDDelegate, UIAlertViewDelegate>
 @property (nonatomic,strong) Article* article;
 
 @end

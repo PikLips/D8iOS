@@ -5,14 +5,126 @@
 //  Created by Michael Smith on 7/15/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
+/*  MAS: This displays the image that was selected from the 
+ *  DownloadPicturesViewController.
+ */
 
 #import "DownloadPictureViewController.h"
+#import "UIImageView+AFNetworking.h"
+
 
 @interface DownloadPictureViewController ()
 
 @end
 
 @implementation DownloadPictureViewController
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:hud];
+    
+    hud.delegate = self;
+    hud.labelText = @"Downloading image...";
+    [hud show:YES];
+    
+    /* Vivek: I have 3 ways to load the image. The first way is based on CoreNetworking, and here the
+     *  developer manages all threading stuffs. The second method is through AFNetworking.
+     *  It is very convenient and simple, but it is specific to UIImageView. The third
+     *  way is also with AFNetworking, but the first and third way can be used for images, audio, video 
+     *  etc, by just changing few lines.  The second way is preferred for this use case.
+     */
+    
+    // Now code will load image from self.pictureURL
+    
+    /*=========================
+     Download image with CoreNetworking
+     With this option all thread managment is done by application developer
+    ==========================
+     
+     // Create new thread
+     dispatch_queue_t myqueue = dispatch_queue_create("myqueue", NULL);
+     
+     // execute a task on that queue asynchronously
+     dispatch_async(myqueue, ^{
+     NSURL *url = [NSURL URLWithString:[self.pictureURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];;
+     NSData *data = [NSData dataWithContentsOfURL:url];
+     dispatch_async(dispatch_get_main_queue(), ^{
+     self.imageView.image = [UIImage imageWithData:data]; //UI updates should be done on the main thread
+     });
+     });
+    
+     
+     */
+    
+    
+    /*=================================
+     Download and display Image with AFNetworking + UIImageView Category
+     with this option all threading is done by AFNetworking library 
+     ==============================================================
+     */
+   
+    
+    NSURL *url = [NSURL URLWithString:self.pictureURL];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    [self.imageView setImageWithURLRequest:request
+                          placeholderImage:nil
+                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                       [hud hide:YES];
+                                       [self.imageView setImage:image];
+                                       [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
+                                       self.navigationController.navigationBar.topItem.title = self.imageName;
+                              
+                          }
+                                   failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                                       [hud hide:YES];
+                                       
+                                       UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                      message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription]
+                                                                                     delegate:nil
+                                                                            cancelButtonTitle:@"Dismiss"
+                                                                            otherButtonTitles: nil];
+                                       [alert show];
+                              
+                          }];
+    
+    
+    /*=============================================================
+     Images can also be Downloaded with AFHTTPRequestOperation 
+     Here in this option threading is done by AFNetworking library 
+     ==============================================================
+    
+     NSURL *url = [NSURL URLWithString:self.pictureURL];
+     NSURLRequest *request = [NSURLRequest requestWithURL:url];
+     
+     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+     operation.responseSerializer = [AFImageResponseSerializer serializer];
+     
+     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+     NSLog(@"bytesRead: %u, totalBytesRead: %lld, totalBytesExpectedToRead: %lld", bytesRead, totalBytesRead, totalBytesExpectedToRead);
+     float percentDone = ((float)((int)totalBytesRead) / (float)((int)totalBytesExpectedToRead));
+     [(UIProgressView *)hud setProgress:percentDone];
+     hud.labelText = [NSString stringWithFormat:@"%f",(100.0 * percentDone)];
+     }];
+
+     
+     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+     
+     self.imageView.image = responseObject;
+    
+     
+     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+     
+     NSLog(@"Error: %@", error);
+     }];
+     
+     [operation start];
+     
+     */
+
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

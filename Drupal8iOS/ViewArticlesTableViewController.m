@@ -5,6 +5,19 @@
 //  Created by Michael Smith on 7/15/15.
 //  Copyright (c) 2015 PikLips. All rights reserved.
 //
+/*  MAS:
+ *  This shows lists (table views) of articles from the Drupal 8 site.  There
+ *  are two types of articles - ones that are public (for anonymous users, too) 
+ *  and ones that are restricted via authentication such as signed-in users,
+ *  signed-in users of a group, or just the signed-in user who authors the article.
+ */
+
+/* Vivek: Due to the bug 2228141, it was not possible to enforce permissions on view and thus on view based 
+ *  REST export.  We use REST view to export the details of Article. So, we will need to enforce same permission 
+ *  which is enforce on GET on nodes.  In this case, if the user is not allowed to GET a node ( Article ) 
+ *  then the user should not access the list of Article details. 
+ *  Once this bug is solved, we can supply authentication details to verify it.
+ */
 
 #import "ViewArticlesTableViewController.h"
 #import "Article.h"
@@ -21,7 +34,6 @@
 
 @property (nonatomic,strong) NSMutableArray * articleList; // to hold NSDictionaries that are created with JSON Response and each NSDictionary represent article object i.e it will contain all the fields which you have enabled from RESTExport for the view
 
-
 @end
 
 @implementation ViewArticlesTableViewController
@@ -35,7 +47,6 @@
 
 }
 
-
 -(IBAction)getData{
     
     MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
@@ -45,50 +56,6 @@
     hud.labelText = @"Loading the articles";
     [hud show:YES];
     
-    
-  //Request with pure AFNetworking
-//    AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
-//    
-//    [sessionManager setRequestSerializer:[AFHTTPRequestSerializer serializer]];
-//    [sessionManager setResponseSerializer:[AFJSONResponseSerializer serializer]];
-//    
-//    NSURLSessionDataTask *getTipData = [sessionManager GET:@"http://localhost/dr8b1211/articles" parameters:@{@"_format":@"json"} success:^(NSURLSessionDataTask *task, id responseObject) {
-//        
-//        
-//        
-//        
-//        
-//        
-//        [self.articleList removeAllObjects];
-//        for (NSMutableDictionary *article in responseObject)
-//        {
-//            Article *newTip = [[Article alloc]initWithDictionary:article];
-//            [self.articleList addObject:newTip];
-//            
-//        }
-//        [self.tableView reloadData];
-//        
-//        
-//        //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
-//        
-//        
-//        
-//        
-//        
-//        
-//        [self.refreshControl endRefreshing];
-//        
-//    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-//        
-//        [self.refreshControl endRefreshing];
-//        NSLog(@"%@",error.description);
-//        
-//        
-//        
-//    }];
-//    [ UIAlertView showAlertViewForTaskWithErrorOnCompletion:getTipData delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-    
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
     
@@ -97,14 +64,14 @@
    
     // Remove line given below once bug 2228141 is solved
     // As currently RESTExport do not support authentication
-    sharedSession.signRequests = NO;
+    // When pushing this code to pantheon site set this to NO becuase it has not been patched with 2228141.patch 
+    //sharedSession.signRequests = YES;
     
-    
-    if (sharedSession.baseURL != nil) {
+    if ( sharedSession.baseURL != nil ) {
         [DIOSView getViewWithPath:@"articles" params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             [self.articleList removeAllObjects];
           
-                    for (NSMutableDictionary *article in responseObject)
+                    for ( NSMutableDictionary *article in responseObject )
                     {
                         Article *newTip = [[Article alloc]initWithDictionary:article];
                         [self.articleList addObject:newTip];
@@ -112,13 +79,8 @@
                     }
                     [self.tableView reloadData];
             
-                                //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
-                    
-                    
-                    
-                    
-                    
-                    
+                    //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
+            
                     [self.refreshControl endRefreshing];
             sharedSession.signRequests =YES;
                     [hud hide:YES];
@@ -129,27 +91,25 @@
             [hud hide:YES];
             sharedSession.signRequests =YES;
 
-            int statusCode = operation.response.statusCode;
-            // This can happen when GET is with out Authorization details
-            if (statusCode == 401) {
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please login first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                [alert show];
-            }
-            
-            // Credentials sent with request is invalid
-            else if(statusCode == 403){
+            long statusCode = operation.response.statusCode;
+            // This can happen when GET is with out Authorization details or credentials are wrong
+            if ( statusCode == 401 ) {
                 
                 sharedSession.signRequests = NO;
                 
                 User *sharedUser = [User sharedInstance];
                 [sharedUser clearUserDetails];
-                
-                
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentials. " delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                 [alert show];
+            }
+            
+            // Credentials are valid but user is not authorised to perform this operation.
+            else if( statusCode == 403 ) {
                 
-                
-                
+                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                [alert show];
+    
             }
             else{
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
@@ -158,17 +118,11 @@
             }
         
         }];
-    
-        
     }
-    else{
+    else {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
     }
-    
-    
-    
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -213,12 +167,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"articleCell" forIndexPath:indexPath];
     Article *articleObj = nil;
     
         articleObj = [self.articleList objectAtIndex:indexPath.row];
-    
     
     cell.textLabel.text = [articleObj valueForKeyPath:@"title"];
     cell.detailTextLabel.text = [articleObj valueForKeyPath:@"changed"];
@@ -267,24 +219,20 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    
-    if ([sender isKindOfClass:[UITableViewCell class]]) {
+    if ( [sender isKindOfClass:[UITableViewCell class]] ) {
         
-        if ([segue.destinationViewController isKindOfClass:[ViewArticleViewController class]]) {
+        if ( [segue.destinationViewController isKindOfClass:[ViewArticleViewController class]] ) {
             
             if ([segue.identifier isEqualToString:@"showArticle"]) {
                 
                 ViewArticleViewController *newVC = (ViewArticleViewController *)segue.destinationViewController;
                 
-                
                     newVC.article = [self.articleList objectAtIndex:[self.tableView indexPathForCell:sender].row];
-                
                 
             }
         }
     }
    
 }
-
 
 @end

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
-@interface SetupDrupalAccountViewController : UIViewController
+@interface SetupDrupalAccountViewController : UIViewController <MBProgressHUDDelegate>
 
 @end

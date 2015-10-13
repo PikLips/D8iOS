@@ -27,10 +27,21 @@
         self.preferredContentSize = CGSizeMake(320.0, 600.0);
     }
 }
-/* MAS: *****************************************************************************
- *************        For Vivek to code here to END  ----       *********************
- *************  You only need to make the bool work correctly.  *********************
- *************  We will tie the logic into the UI.              *********************/
+
+
+/* MAS: We use this code to control the menu, we can eliminate checking for site, login, etc, 
+ *  in the other scenes.
+ *  For example, if the site is not specified, the specify site view would be the
+ *  only menu item.  If the site was specified but user not signed-in then only
+ *  the specify site view and login menu items would be visible, etc.
+ *
+ *  Vivek: We do these checks here with viewWillAppear method, as this is the view which gets
+ *  loaded first. This will use an application Launch screen to be hold until we are done
+ *  with checks, configure our view, and show it to the user. But as this may take some
+ *  time due to network call so it is required to intimate the user that what is going on. 
+ *  Similar to Facebook app loading screen. To do so we can add one loading view controller that 
+ *  performs all these tasks and also shows some status of all operation to user.
+ */
 
 - (BOOL) checkDrupalURL {
     /* MAS: Check to see if Drupal site was previously set
@@ -53,16 +64,18 @@
     return NO;
     
 }
-/* MAS:
- *********************        ---   END                 *****************************
- ************************************************************************************/
-
-
-/* MAS: Load Menus
- *      This creates two arrays of menu items for the Master Navigation.
- */
 
 - (void) loadMenus {
+
+    /*  MAS:
+     *  This creates an array of menu items for the Master Navigation.  This
+     *  allows the detail view to retain its position in the split view while
+     *  keeping the menu item views in code for easier refactoring (see
+     *  DetailViewController).  It also allows the methods above to alter
+     *  the table if certain menu items are unnecessary, such as when the Drupal
+     *  site has been previously entered or the user signed in.  See above.
+     */
+
     if ( !self.d8MenuItems ) {
         self.d8MenuItems = [[NSMutableArray alloc] init];
     }
@@ -78,23 +91,7 @@
     [self.d8MenuItems insertObject:@"Setup Drupal Account" atIndex: 0];
     [self.d8MenuItems insertObject:@"Specify Drupal Site" atIndex: 0];
     
-    if ( !self.d8MenuLinks ) {
-        self.d8MenuLinks = [[NSMutableArray alloc] init];
-    }
-    [self.d8MenuLinks insertObject:@"ViewArticles" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"UploadPicture" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"DownloadPicture" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"DeleteFile" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"UploadFile" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"DownloadFile" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"ManageUserAccount" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"Logout" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"Login" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"SetupDrupalAccount" atIndex: 0];
-    [self.d8MenuLinks insertObject:@"SpecifyDrupalSite" atIndex: 0];
-    
 }
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -114,7 +111,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-
 - (void)insertNewObject:(id)sender {
     if (!self.d8MenuItems) {
         self.d8MenuItems = [[NSMutableArray alloc] init];
@@ -127,11 +123,11 @@
 #pragma mark - Segues
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    /* MAS:  This is being used to identify View Controllers other than DetailViewController
+    /* MAS:  Pass the menu item to the Detail View Controller --
      */
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSString *object = self.d8MenuLinks[indexPath.row];
+        NSString *object = self.d8MenuItems[indexPath.row];
         DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
         [controller setDetailItem:object];
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;

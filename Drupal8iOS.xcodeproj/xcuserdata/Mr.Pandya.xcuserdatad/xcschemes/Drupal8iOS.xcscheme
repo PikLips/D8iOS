@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
+<<<<<<< HEAD
    LastUpgradeVersion = "0600"
+=======
+   LastUpgradeVersion = "0700"
+>>>>>>> upstream/master
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -20,6 +24,7 @@
                ReferencedContainer = "container:Drupal8iOS.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+<<<<<<< HEAD
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
@@ -41,6 +46,15 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
+=======
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+>>>>>>> upstream/master
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -62,17 +76,34 @@
             ReferencedContainer = "container:Drupal8iOS.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+<<<<<<< HEAD
    </TestAction>
    <LaunchAction
+=======
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+>>>>>>> upstream/master
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
+<<<<<<< HEAD
       buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable>
+=======
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+>>>>>>> upstream/master
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "44CF1DE11B51D97B00FC66EE"
@@ -85,12 +116,22 @@
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
+<<<<<<< HEAD
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
       <BuildableProductRunnable>
+=======
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+>>>>>>> upstream/master
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "44CF1DE11B51D97B00FC66EE"
