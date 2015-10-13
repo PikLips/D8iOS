@@ -40,7 +40,6 @@
         
     }
     return _listOfFiles;
-    
 }
 
 -(IBAction)getData{
@@ -49,16 +48,12 @@
     
     if ( sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
         
-        
-        
         MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:hud];
         
         hud.delegate = self;
         hud.labelText = @"Loading the files";
         [hud show:YES];
-        
-        
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
@@ -70,8 +65,6 @@
         // As currently RESTExport do not support authentication
         //sharedSession.signRequests = NO;
         
-        
-        
         if ( sharedSession.baseURL != nil ) {
             [DIOSView getViewWithPath:[NSString stringWithFormat:@"files/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 [self.listOfFiles removeAllObjects];
@@ -80,7 +73,6 @@
                 {
                     FileJSON *fileJSONObj = [[FileJSON alloc]initWithDictionary:fileJSONDict];
                     [self.listOfFiles addObject:fileJSONObj];
-                    
                 }
                 
                 [self.tableView reloadData];
@@ -109,12 +101,8 @@
                 
                 // Credentials are valid but user is not authorised to perform this operation.
                 else if( statusCode == 403 ) {
-                    
-                   
-                    
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
-                    
                 }
                 else {
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
@@ -129,10 +117,8 @@
         }
     }
     else {
-        
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please first login" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
-        
     }
 }
 
@@ -244,9 +230,7 @@
         [alert show];
         
     }];
-    
     [operation start];
-    
 }
 
 /*
@@ -280,16 +264,6 @@
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the item to be re-orderable.
     return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
 }
 */
 

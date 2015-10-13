@@ -23,7 +23,4 @@
 @property (nonatomic, strong) NSString *uri;
 @property (nonatomic, strong) NSString *uid;
 
-
-
-
 @end

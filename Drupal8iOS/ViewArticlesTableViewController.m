@@ -47,7 +47,6 @@
 
 }
 
-
 -(IBAction)getData{
     
     MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
@@ -56,50 +55,6 @@
     hud.delegate = self;
     hud.labelText = @"Loading the articles";
     [hud show:YES];
-    
-    
-  //Request with pure AFNetworking
-//    AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
-//    
-//    [sessionManager setRequestSerializer:[AFHTTPRequestSerializer serializer]];
-//    [sessionManager setResponseSerializer:[AFJSONResponseSerializer serializer]];
-//    
-//    NSURLSessionDataTask *getTipData = [sessionManager GET:@"http://localhost/dr8b1211/articles" parameters:@{@"_format":@"json"} success:^(NSURLSessionDataTask *task, id responseObject) {
-//        
-//        
-//        
-//        
-//        
-//        
-//        [self.articleList removeAllObjects];
-//        for (NSMutableDictionary *article in responseObject)
-//        {
-//            Article *newTip = [[Article alloc]initWithDictionary:article];
-//            [self.articleList addObject:newTip];
-//            
-//        }
-//        [self.tableView reloadData];
-//        
-//        
-//        //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
-//        
-//        
-//        
-//        
-//        
-//        
-//        [self.refreshControl endRefreshing];
-//        
-//    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-//        
-//        [self.refreshControl endRefreshing];
-//        NSLog(@"%@",error.description);
-//        
-//        
-//        
-//    }];
-//    [ UIAlertView showAlertViewForTaskWithErrorOnCompletion:getTipData delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-    
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
@@ -111,7 +66,6 @@
     // As currently RESTExport do not support authentication
     // When pushing this code to pantheon site set this to NO becuase it has not been patched with 2228141.patch 
     //sharedSession.signRequests = YES;
-    
     
     if ( sharedSession.baseURL != nil ) {
         [DIOSView getViewWithPath:@"articles" params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {

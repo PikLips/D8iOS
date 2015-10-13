@@ -12,7 +12,7 @@
  *  account after admin approval.
  */
 
-/*  Vivek: This code creates POST on /user/entity. So it probably does not follows any permision settings
+/*  Vivek: This code creates POST on /user/entity. So it probably does not follow any permision settings
  *  enforced by Drupal's REGISTRATION AND CANCELLATION section.
  *  It directly follows it from ~/admin/people/permissions and just says that who can make POST on request 
  *  on /user/entity. There is a work going on and almost done. Refer to https://www.drupal.org/node/2291055.
@@ -52,16 +52,13 @@ bool userNameStatus = NO;
 bool passwordStatus = NO;
 bool emailStatus = NO;
 
-
 -(NJOPasswordValidator *)strictValidator{
     if (!_strictValidator) {
         _strictValidator = [NJOPasswordValidator validatorWithRules:@[[NJOLengthRule ruleWithRange:NSMakeRange(8, 64)], [NJORequiredCharacterRule lowercaseCharacterRequiredRule], [NJORequiredCharacterRule uppercaseCharacterRequiredRule], [NJORequiredCharacterRule symbolCharacterRequiredRule]]];
-        
     }
     return _strictValidator;
-    
-
 }
+
 - (IBAction)createUserAccount:(id)sender {
     /*  Vivek: This validates format of userName, userEmail, and userPassword, then submits it
      *  to a Drupal site as new account.
@@ -198,23 +195,12 @@ bool emailStatus = NO;
     [self updateEmailValidation:self];
     [self updateUserNameValidation:self];
     [self changeAddAccBtnStatus];
-
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 -(BOOL)validateUserName:(NSString *) userName {
 // Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.
@@ -228,7 +214,7 @@ bool emailStatus = NO;
         D8D(@"User Name validation succeed");
         userNameStatus = YES;
         return YES;
-
+        
     }
     else {
         
@@ -252,32 +238,24 @@ bool emailStatus = NO;
         return YES;
     }
     else {
-        emailStatus =NO;
+        
+        emailStatus = NO;
         return NO;
         
     }
-    
-   /* NSRegularExpression *regEx = [[NSRegularExpression alloc] initWithPattern:regExPattern options:NSRegularExpressionCaseInsensitive error:nil];
-    NSUInteger regExMatches = [regEx numberOfMatchesInString:emailString options:0 range:NSMakeRange(0, [emailString length])];
-    //NSLog(@"%i", regExMatches);
-    if (regExMatches == 0) {
-        emailStatus =NO;
-        return NO;
-    }
-    else{
-        emailStatus = YES;
-        return YES;
-    } */
 }
 
 -(void)updateEmailValidation:(id)sender{
     NSString *email  = self.drupalUserEmail.text;
     
     if ( [email length] == 0 ) {
+        
         self.emailValidationTextView.text = nil;
         emailStatus = NO;
+        
     }
     else {
+        
         NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] init];
 
         if ( [self validateEmail:email] ) {
@@ -296,7 +274,6 @@ bool emailStatus = NO;
         }
     }
     [self changeAddAccBtnStatus];
-
 }
 
 -(void)updateUserNameValidation:(id)sender{
@@ -317,6 +294,7 @@ bool emailStatus = NO;
             
         }
         else {
+            
             self.userNameValidationTextView.text = nil;
 
         }
@@ -377,7 +355,6 @@ bool emailStatus = NO;
             self.validationsTextView.attributedText = mutableAttributedString;
             passwordStatus = NO;
         }
-       
     }
      [self changeAddAccBtnStatus];
 }
@@ -386,6 +363,5 @@ bool emailStatus = NO;
 
     self.addAccBtn.enabled = emailStatus && userNameStatus && passwordStatus;
 }
-
 
 @end

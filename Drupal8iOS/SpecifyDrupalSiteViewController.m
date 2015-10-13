@@ -9,6 +9,16 @@
  *  This provides a way for the user to specify the URL of the Drupal 8
  *  website that will act as this apps back-end.
  */
+/* Vivek: Actually there is no such provision in this code to determine if this is a valid D8 site.
+ *  It just checks if device is able to connect (i.e 200 OK http status) to web site specified.
+ *  Ideally a Drupal 8 REST module's responsibility is to enable one publically accesible end point,
+ *  and its URL pattern should be some standard documented on drupal.org for example /node/verify .
+ *  So then app can call GET on this specific URL, and the the PHP code on the server will verify
+ *  that REST and related modules are enabled and based on that it will return some status code
+ *  in response. By using this endpoint we can verify that this is Drupal 8 or not.
+ *  There may be better way, perhaps based on response headers. This point may require
+ *  discussion with some very experienced, D8 community people.
+ */
 
 #import "SpecifyDrupalSiteViewController.h"
 #import "Developer.h"// MAS: for development only, see which
@@ -33,16 +43,6 @@
     NSURL *url = [NSURL URLWithString:self.userSiteRequest.text];
     if (url != nil) {
         if(url && url.scheme && url.host){
-/* Vivek: Actually there is no such provision in this code to determine if this is a valid D8 site.
- *  It just checks if device is able to connect (i.e 200 OK http status) to web site specified. 
- *  Ideally a Drupal 8 REST module's responsibility is to enable one publically accisible end point, 
- *  and its URL pattern should be some standard documented on drupal.org for example /node/verify . 
- *  So then app can call GET on this specific URL, and the the PHP code on the server will verify 
- *  that REST and related modules are enabled and based on that it will return some status code 
- *  in response. By using this endpoint we can verify that this is Drupal 8 or not.
- *  There may be better way, perhaps based on response headers. This point may require
- *  discussion with some very experienced, D8 community people.
- */
             
          MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
             [self.navigationController.view addSubview:hud];
@@ -55,51 +55,8 @@
         // store the URL String to user's default settings
             
         // Validate the remote host with NSURLConnection
-        /*
-            NSURLResponse *response=nil;
-            NSError *error=nil;
-            NSData *data = nil;
-            NSURLRequest *request = [NSURLRequest requestWithURL:url];
-            
-            data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-            
-            if( error == nil ){
-            
-                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
-                
-                if (httpResponse.statusCode == 200) {
-                    
-                    // Currently this storage per user
-                    
-                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                    [defaults setObject:self.userSiteRequest.text forKey:DRUPAL8SITE];
-                    [self.statusInfoLabel setText:self.userSiteRequest.text];
-                    NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"OK" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:0.1 green:2.0 blue:0.0 alpha:1.000]}];
-                    [self.connectionStatusLabel setAttributedText:attributeStatus];
-
-                    
-                }
-                else{
-                
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:[NSString  stringWithFormat:@"An attempt to connect the URL failed with %i status code",httpResponse.statusCode] delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                    [alert show];
-                    NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"FAILED" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.000]}];
-                    [self.connectionStatusLabel setAttributedText:attributeStatus];
-                    
-                }
-                
-            }
-            else{
-            
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:@"An error occured while connecting to the URL"  delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                [alert show];
-                NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"FAILED" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.000]}];
-                [self.connectionStatusLabel setAttributedText:attributeStatus];
-            }
-
-         */
-         
-         // Validating URL with drupal-ios-sdk
+        
+        // Validating URL with drupal-ios-sdk
             
             DIOSSession *sharedSession = [DIOSSession sharedSession];
             sharedSession.baseURL = url;
@@ -112,7 +69,6 @@
             [sharedSession setResponseSerializer:[AFHTTPResponseSerializer serializer]];
            
             sharedSession.signRequests = NO;
-            
             
             [sharedSession GET:[url absoluteString] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 
@@ -173,7 +129,6 @@
             NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"..." attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.000]}];
             [self.connectionStatusLabel setAttributedText:attributeStatus];
 
-            
         }
     }
     else {
@@ -199,16 +154,5 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
- 
-}
-*/
 
 @end

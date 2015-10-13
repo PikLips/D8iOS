@@ -42,7 +42,6 @@
 @implementation ViewArticleViewController
 - (IBAction)addComment:(id)sender {
     
-    
     UIAlertView *commentInputAlertView = [[UIAlertView alloc]initWithTitle:@"Add Comment" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add", nil];
     [commentInputAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
     [commentInputAlertView show];
@@ -52,71 +51,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     if (self.article != nil) {
-
-    /* Vivek: I was just testing if it is better to fetch Article details after view has been 
-     * loaded or fetch it before view is loaded.
-     * And with viewWillAppear it works fine. You may remove this code. I have kept it just for reference.
-     */
-        
-        
-// ***************** <#This code can fetch node details with plain AFNetworking, it does not require drupal-ios-sdk #> *******************
-
-        
-//        AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
-//        
-//        [sessionManager setRequestSerializer:[AFHTTPRequestSerializer serializer]];
-//        [sessionManager setResponseSerializer:[AFJSONResponseSerializer serializer]];
-//        
-//        NSString *nodeURL = [NSString stringWithFormat:@"%@%@", @"http://localhost/dr8b12/node/", self.article.nid];
-//        
-//        
-//        NSURLSessionDataTask *getNodeData = [sessionManager GET:nodeURL parameters:@{@"_format":@"hal_json"} success:^(NSURLSessionDataTask *task, id responseObject) {
-//            
-//            NSMutableDictionary *articleDict = (NSMutableDictionary *)responseObject;
-//            
-//            [self.titleLabel setText:self.article.title];
-//            [self.lastUpdatedLabel  setText:self.article.changed];
-//            [self.contentWebView loadHTMLString:[[[articleDict objectForKey:@"body"]  objectAtIndex:0] objectForKey:@"value"] baseURL:[NSURL URLWithString:@"http://localhost"]];
-//            
-//        } failure:^(NSURLSessionDataTask *task, NSError *error) {
-//            NSLog(@"%@",error.description);
-//        }];
-//        
-//        
-//        [UIAlertView showAlertViewForTaskWithErrorOnCompletion:getNodeData delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-        
-        
-  // ***************** <# This code uses drupal-io-sdk #> *******************
-        
-//        DIOSSession *sharedSession = [DIOSSession sharedSession];
-//        
-//        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//        NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:@DRUPAL8SITE]];
-//        
-//        sharedSession.baseURL = baseURL;
-//        if(sharedSession.baseURL != nil){
-//        
-//           [DIOSNode getNodeWithID:self.article.nid success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//                NSMutableDictionary *articleDict = (NSMutableDictionary *)responseObject;
-//                
-//                            [self.titleLabel setText:self.article.title];
-//                            [self.lastUpdatedLabel  setText:self.article.changed];
-//                            [self.contentWebView loadHTMLString:[[[articleDict objectForKey:@"body"]  objectAtIndex:0] objectForKey:@"value"] baseURL:[NSURL URLWithString:@"http://localhost"]];
-//
-//                
-//                
-//            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//                
-//            }];
-//            
-//            
-//            
-//                                                 }
-        
-
         
     }
-
     // Do any additional setup after loading the view.
 }
 

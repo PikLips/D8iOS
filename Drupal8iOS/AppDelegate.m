@@ -34,13 +34,12 @@ int d8FlagLevel = D8FLAGDEBUG; // MAS: highest level
     NSError *error = nil;
     
     NSArray *credentials  = [SGKeychain usernamePasswordForServiceName:@"Drupal 8" accessGroup:nil error:&error];
-    // Frist element of the array is user name
+    // First element of the array is user name
     // Second element is the password
     
     if (credentials !=nil && credentials[0] != nil) {
         
         // Here we perform a network call and verify the credentials --
-        
         [sharedSession setBasicAuthCredsWithUsername:credentials[0] andPassword:credentials[1]];
         
     }
@@ -124,7 +123,7 @@ int d8FlagLevel = D8FLAGDEBUG; // MAS: highest level
     
 }
 
-/* MAS: This is for testing
+/* MAS: This generates some files for testing
  */
 - (void)listFilesInDirectory:(NSURL *)directoryURL {
     D8D(@"listFilesInDirectory called for %@", directoryURL);

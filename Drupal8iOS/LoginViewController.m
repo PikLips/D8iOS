@@ -49,113 +49,9 @@
     hud.delegate = self;
     hud.labelText = @"Logging in";
     [hud show:YES];
-
-   /* Vivek: This is with plain AFNetworking. I have kept this code as a reference just
-    *   to learn how things can be done with out drupal-ios-sdk. The reason for this is as 
-    *   follows, drupal-ios-sdk currently has basic support but by learning following 
-    *   code we can even extend the drupal-ios-sdk if required.
-    */
     
     /*
-    =============================
-    Login with NSURLSessionTask
-    =============================
-    
-    
-    NSString *basicAuthString = [D8iOSHelper basicAuthStringforUsername:username Password:password];
-    AFHTTPSessionManager *sessionManager =[AFHTTPSessionManager manager];
-    sessionManager.requestSerializer = [AFJSONRequestSerializer serializer];
-    [sessionManager.requestSerializer setValue:basicAuthString forHTTPHeaderField:@"Authorization"];
-    sessionManager.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    
-   
-    
-    NSUserDefaults *defaults  = [NSUserDefaults standardUserDefaults];
-    NSString *baseURLString = [defaults objectForKey:DRUPAL8SITE];
-    
-    NSURLSessionDataTask *loginOperation = [sessionManager GET:[NSString stringWithFormat:@"%@/user/details",baseURLString]
-                                                    parameters:nil
-                                                       success:^(NSURLSessionDataTask *task, id responseObject) {
-                                                         //  [self.activityIndicator stopAnimating];
-                                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
-                                                           int responseCode = httpResponse.statusCode;
-                                                           if(responseCode == 200){
-                                                               
-                                                               NSMutableDictionary *userDictionary = [responseObject mutableCopy];
-                                                               [userDictionary addEntriesFromDictionary:@{@"basicAuthString":basicAuthString}];
-                                                               NSError *setPasswordError = nil;
-                                                               [SGKeychain setPassword:password username:username serviceName:@"Drupal 8" accessGroup:nil updateExisting:YES error:&setPasswordError];
-                                                               
-                                                               DIOSSession * session =  [DIOSSession sharedSession];
-                                                               [session setBasicAuthCredsWithUsername:username andPassword:password];
-                                                               [hud hide:YES];
-                                                               
-                                                               if (userDictionary != nil) {
-                                                                   NSLog(@"userDictionary %@", userDictionary );
-                                                                   User *user = [User sharedInstance];
-                                                                   [user fillUserWithUserJSONObject:userDictionary];
-                                                                   
-                                                                   [self.username_status setText:user.name];
-                                                                   NSString * rolesString = [[user.roles valueForKey:@"description"] componentsJoinedByString:@" "];
-                                                                   
-                                                                   [self.roles_status setText:rolesString];
-                                                                   
-                                                                   
-                                                               }
-                                                               
-                                                           }
-                                                           
-                                                           
-                                                           
-                                                           
-                                                           
-                                                           //                                                           UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                                                           //
-                                                           //                                                           // remove login view from stack and add userDetails view to stack
-                                                           //                                                           [self.navigationController setViewControllers:[NSArray arrayWithObject:[storyboard instantiateViewControllerWithIdentifier:@"userDetails"]] animated:YES];
-                                                           
-                                                           
-                                                       } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                                                           
-                                                           //[self.activityIndicator stopAnimating];
-                                                           [hud hide:YES];
-                                                           NSLog(@"faliure %@",error.description);
-                                                           
-                                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
-                                                           int responseCode = httpResponse.statusCode;
-                                                           if (responseCode == 403){
-                                                               NSLog(@"inside else if");
-                                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials" message:@"Please check username and password." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-                                                               [alert show];
-                                                               
-                                                               
-                                                           }
-                                                           else{
-                                                               
-                                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"Error with code %d",responseCode] message:@"Please contact website admin." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-                                                               [alert show];
-                                                               
-                                                               
-                                                           }
-                                                           User *user = [User sharedInstance];
-                                                           [user clearUserDetails];
-                                                           [self.username_status setText:@"..."];
-                                                           [self.roles_status setText:@"..."];
-                                                           
-                                                           
-                                                       }];
-    
-    [loginOperation resume];
-   // [self.activityIndicator startAnimating];
-    
-   */
-    
-    /*
-     ==================================
-            Login with Kyle's iOS-SDK
-     ==================================
-     
+     *  Login with Kyle's iOS-SDK
      */
     
     DIOSSession *sharedSession = [DIOSSession sharedSession];
@@ -235,15 +131,5 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

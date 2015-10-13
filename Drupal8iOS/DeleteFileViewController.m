@@ -155,7 +155,6 @@
     
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     FileDetailsTableViewCell *cell = (FileDetailsTableViewCell *) [self.tableView dequeueReusableCellWithIdentifier:@"deleteFileCell" forIndexPath:indexPath];

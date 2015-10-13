@@ -16,12 +16,9 @@
 #import "D8iOSHelper.h" // this was added to support performLogin method
 #import "Developer.h"
 
-
 @interface User()
 
 @property(nonatomic,strong) NSURLSession *sessoin;
-
-
 
 @end
 
@@ -50,13 +47,10 @@ static User *sharedDataInstance = nil;
     self.email = nil;
     self.uid = nil;
     
-
 }
 
 -(void)fillUserWithUserJSONObject:(NSDictionary *)UserJSONObject{
 
-// MAS:Vivek - would you comment on this unused code?
-    
 /*  self.name = [UserJSONObject objectForKey:@"name"];
  *  self.roles = [UserJSONObject objectForKey:@"roles"];
  *  self.basicAuthString = [UserJSONObject objectForKey:@"basicAuthString"];

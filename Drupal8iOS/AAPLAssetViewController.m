@@ -299,8 +299,6 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
 
 - (IBAction)uploadImage:(id)sender {
     
-    
-    
     MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:hud];
     
@@ -375,8 +373,6 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                                        }
                                    }];
 
-    
-    
 }
 
 @end

@@ -94,8 +94,6 @@
                 // Credentials sent with request is invalid
                 else if(statusCode == 403){
                     
-                    
-                    
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for the operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                     

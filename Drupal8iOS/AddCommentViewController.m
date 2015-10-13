@@ -69,13 +69,6 @@
     [self.editorSwitch setSelectedSegmentIndex:1];
     self.bodyWebView.delegate = self;
     
-//    if (self.tip != nil) {
-//        
-//    
-//        NSLog(@"entered");
-//        NSLog(@"%@",self.tip);
-//           }
-    
     D8D(@"view did load\n");
     D8D(@"nib ID: %@", self.nid);
    
@@ -169,9 +162,10 @@
     
     
     /* Vivek: <#Note#> This JSON request works fine with my 8.0.x branch but this does not currently work on beta14
-     *              I am looking into this. But I sespect that this code will not require change. It must be some patch required on Drupal side.
-     
-     Given below is working JSON for 8.0.x merge on my beta 14 setup
+     *  I am looking into this. But I sespect that this code will not require change.
+     *  It must be some patch required on Drupal side.
+     *
+     *  Given below is working JSON for 8.0.x merge on my beta 14 setup
      
      {
      "_links": {
@@ -229,8 +223,7 @@
      }
      ]
      }
-     
-     
+     *
      */
     
     NSDictionary *params=
@@ -468,7 +461,6 @@
                 
                 [_bodyTextView.textStorage.mutableString insertString:linkString atIndex:selectedRange.location];
                 
-                
             }
             
         }
@@ -621,6 +613,5 @@
     [UIView commitAnimations];
     
 }
-
 
 @end
