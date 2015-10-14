@@ -13,7 +13,11 @@
     "A0C55FDFE47C8CF34A12C1B9E88EBB0541CD4BE3" : ""
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Drupal8iOS",
+<<<<<<< HEAD
+  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+=======
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+>>>>>>> upstream/master
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Drupal8iOS.xcworkspace",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
