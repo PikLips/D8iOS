@@ -143,9 +143,16 @@
                                      @"filename":@[@{@"value":selectedFilename}],
                                      @"data":@[@{@"value":base64EncodedFile}]};
             
+            
+    // This is temporary work around for 200 response code instead of 201 , the drupal responds with text/html format here we explicitly ask for JSON so that AFNwteorking will not report error
+            DIOSSession *sharedSession = [DIOSSession sharedSession];
+            [sharedSession.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
             [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
                                            success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                                
+                                               // This is temporary work around for 200 response code instead of 201
+                                               [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
                                                
                                                UIImageView *imageView;
                                                UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
@@ -162,6 +169,9 @@
                                                });
                                            }
                                            failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                               
+                                               // This is temporary work around for 200 response code instead of 201
+                                               [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
                                                
                                                [hud hide:YES];
                                                

@@ -149,7 +149,7 @@
               ],
       @"comment_body": @[
               @{
-                  @"value":[self.bodyTextView text]
+                  @"value":[self.bodyTextView text],@"format":@"full_html"
                   }
               ]
       };

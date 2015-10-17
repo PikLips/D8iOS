@@ -316,8 +316,11 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
     
     [hud show:YES];
     
+    // This is temporary work around for 200 response code instead of 201 , the drupal responds with text/html format here we explicitly ask for JSON so that AFNwteorking will not report error
+    DIOSSession *sharedSession = [DIOSSession sharedSession];
+    [sharedSession.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
-    // This is the JSON body with required details to be sent 
+    // This is the JSON body with required details to be sent
    NSDictionary *params = @{
         @"filename":@[@{@"value":[self.asset valueForKey:@"filename"]}],
         @"data":@[@{@"value":[self encodeToBase64String:self.imageView.image]
@@ -327,6 +330,9 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
     [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
                                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                        
+                                       // This is temporary work around for 200 response code instead of 201
+
+                                       [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
                                        
                                        UIImageView *imageView;
                                        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
@@ -343,6 +349,10 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                                        });
                                    }
                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                       
+                                       // This is temporary work around for 200 response code instead of 201
+                                       
+                                       [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
                                        
                                        [hud hide:YES];
                                        
@@ -373,10 +383,31 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for the operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                                            [alert show];
                                        }
+                                       
+                                       // This to handle unacceptable content-type: text/html error
+                                       // This is very bad fix , but we have to keep this untill drupal patch is not updated to address this issue
+                                       else if (statusCode == 200){
+                                           UIImageView *imageView;
+                                           UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+                                           imageView = [[UIImageView alloc] initWithImage:image];
+                                           
+                                           hud.customView = imageView;
+                                           hud.mode = MBProgressHUDModeCustomView;
+                                           
+                                           hud.labelText = @"Completed";
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
+                                               sleep(2);
+                                               [hud hide:YES];
+                                           });
+
+                                           
+                                           
+                                       }
                                        else{
+                                           
                                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                                            [alert show];
-                                           
                                        }
                                    }];
      */
