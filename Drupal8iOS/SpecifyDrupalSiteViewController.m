@@ -27,10 +27,9 @@
 
 
 @interface SpecifyDrupalSiteViewController ()
+
 @property (weak, nonatomic) IBOutlet UITextField *userSiteRequest; // MAS: user input that require local format validation and remote confirmation
-
 @property (weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
-
 @property (weak, nonatomic) IBOutlet UILabel *statusInfoLabel;
 
 @end
@@ -41,8 +40,8 @@
     // If required this code can be dispatch on a separate thread to get more performance
     // check logic goes here
     NSURL *url = [NSURL URLWithString:self.userSiteRequest.text];
-    if (url != nil) {
-        if(url && url.scheme && url.host){
+    if ( url != nil ) {
+        if( url && url.scheme && url.host ) {
             
          MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
             [self.navigationController.view addSubview:hud];

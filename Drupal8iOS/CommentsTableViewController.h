@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
+
 @interface CommentsTableViewController : UITableViewController <MBProgressHUDDelegate>
+
 @property (nonatomic,strong) NSString *nid;
 
 @end

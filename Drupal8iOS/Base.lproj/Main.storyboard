@@ -66,7 +66,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FJe-Yq-33r" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="709" y="129"/>
+            <point key="canvasLocation" x="825" y="-263"/>
         </scene>
         <!--Specify Drupal Site-->
         <scene sceneID="aJa-N4-X5J">
@@ -150,7 +150,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C5N-nq-vfO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1376" y="129"/>
+            <point key="canvasLocation" x="1350" y="129"/>
         </scene>
         <!--Asset Grid View Controller-->
         <scene sceneID="UTk-eq-UiK">
@@ -1538,6 +1538,7 @@
                     </toolbar>
                     <connections>
                         <segue destination="JEX-9P-axG" kind="relationship" relationship="rootViewController" id="GKi-kA-LjT"/>
+                        <segue destination="BWj-ue-wEn" kind="show" identifier="Specify" id="abO-Jm-xpq"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SLD-UC-DBI" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
+/*
 #import  "MBProgressHUD.h"
+ */
 
-@interface AAPLAssetViewController : UIViewController <MBProgressHUDDelegate>
+@interface AAPLAssetViewController : UIViewController // <MBProgressHUDDelegate>
 
 @property (strong) PHAsset *asset;
 @property (strong) PHAssetCollection *assetCollection;

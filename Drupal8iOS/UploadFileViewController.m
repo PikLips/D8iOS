@@ -35,7 +35,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) configurePickerView {
+- (void)configurePickerView {
     // Set the default selected rows (the desired rows to initially select will vary by use case).
     /* MAS:
      */
@@ -59,10 +59,11 @@
     NSURL *documentsDirectory = [[theFM URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
     
     NSArray *directoryContents = [theFM contentsOfDirectoryAtPath:documentsDirectory.path  error:&error];
-    if (error) {
+    
+    if ( error ) {
         D8E(@"Directory error %@", [error localizedDescription]);
     }
-    if (directoryContents.count == 0) {
+    if ( directoryContents.count == 0 ) {
         D8E(@"Directory empty: %d  (%@)", (int) [directoryContents count], [error localizedDescription]);
     }
     else {
@@ -122,17 +123,17 @@
     NSString *filePath =  [NSString stringWithFormat:@"%@/%@",documentsDirectory.path,selectedFilename];
     D8D("Filepath: %@", filePath);
     
-        if([[NSFileManager defaultManager] fileExistsAtPath:filePath])
+        if ( [[NSFileManager defaultManager] fileExistsAtPath:filePath] )
         {
             NSData *data = [[NSFileManager defaultManager] contentsAtPath:filePath]; //NSData is required to get base64 encoding string of file
             NSString *base64EncodedFile = [data base64EncodedStringWithOptions:0];
-            
             
             MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
             [self.navigationController.view addSubview:hud];
             
             hud.dimBackground = YES;
             hud.labelText = @"Uploading file ...";
+            
             // Regiser for HUD callbacks so we can remove it from the window at the right time
             hud.delegate = self;
             

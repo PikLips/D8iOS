@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface DownloadFileTableViewCell : UITableViewCell
+
 @property (weak, nonatomic) IBOutlet UILabel *fileName;
 @property (weak, nonatomic) IBOutlet UILabel *lastChanged;
 @property (weak, nonatomic) IBOutlet UILabel *fileSize;

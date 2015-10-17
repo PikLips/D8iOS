@@ -62,10 +62,12 @@
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     
     if ( [self.revisedUserPassword.text isEqualToString:@""] && [self.userName.text isEqualToString:@""] && [self.userEmailAddress.text isEqualToString:@""] ) {
+        
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Information" message:@"Please provide value for atleast one filed to be change." delegate:nil cancelButtonTitle:@"Dissmiss" otherButtonTitles:nil];
         [alert show];
+        
     }
-    else{
+    else {
         
         if ( sharedUser.name != nil && ![sharedUser.name  isEqual: @""] ) {
             
@@ -77,7 +79,7 @@
                 // [1] = password
                 NSMutableArray __block *credentials = [[SGKeychain usernamePasswordForServiceName:@"Drupal 8" accessGroup:nil error:&sgKeyChainError] mutableCopy];
                 
-                if( [credentials[1] isEqualToString:self.currentUserPassword.text] ) {
+                if ( [credentials[1] isEqualToString:self.currentUserPassword.text] ) {
                     
                     MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
                     [self.navigationController.view addSubview:hud];
@@ -137,7 +139,7 @@
 
                     }
                     
-                    if (self.revisedUserPassword.text != nil && ![self.revisedUserPassword.text isEqualToString:@""]) {
+                    if ( self.revisedUserPassword.text != nil && ![self.revisedUserPassword.text isEqualToString:@""] ) {
                         // create dictionary {"existing":"existingSecretPass", "value": "myNewSuperSecretPass"}
                         [valueForPass setObject:self.revisedUserPassword.text forKey:@"value"];
                         
@@ -145,7 +147,6 @@
                         passArray = [[NSArray alloc]initWithObjects:valueForPass, nil];
    
                     }
-                    
                     
                     /* create dictionay {"name":[{"value":"somevalue"}],
                      "mail":[{"value":"marthinal@drupalisawesome.com"}],
@@ -212,12 +213,12 @@
                         
                         NSInteger statusCode  = operation.response.statusCode;
                         
-                        if ( statusCode == 403 ){
+                        if ( statusCode == 403 ) {
                             
                             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                             [alert show];
                         }
-                        else if(statusCode == 401){
+                        else if (statusCode == 401) {
                             User *user = [User sharedInstance];
                             [user clearUserDetails];
                             DIOSSession *sharedSession = [DIOSSession sharedSession];
@@ -227,7 +228,7 @@
                             [alert show];
                             
                         }
-                        else if( statusCode == 0 ){
+                        else if ( statusCode == 0 ) {
                             
                             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                             [alert show];

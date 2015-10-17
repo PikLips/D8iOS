@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface CommentTableViewCell : UITableViewCell
+
 @property (weak, nonatomic) IBOutlet UIWebView *commentBody;
 @property (weak, nonatomic) IBOutlet UILabel *lastUpdated;
 @property (weak, nonatomic) IBOutlet UILabel *commentSubject;

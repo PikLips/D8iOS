@@ -16,7 +16,6 @@
 
 @interface D8iOSHelper : NSObject
 
-
 // URL helper methods
 
 +(NSURL *)baseURL;

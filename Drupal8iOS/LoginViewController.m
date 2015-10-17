@@ -18,6 +18,7 @@
 #import "DIOSView.h"
 
 @interface LoginViewController ()
+
 @property (weak, nonatomic) IBOutlet UITextField *userName;
 @property (weak, nonatomic) IBOutlet UITextField *userPassword;
 @property (weak, nonatomic) IBOutlet UILabel *username_status;
@@ -26,7 +27,7 @@
 @end
 
 @implementation LoginViewController
-- (IBAction)loginUser:(id)sender {
+-(IBAction)loginUser:(id)sender {
     // MAS: this code validates the user name and password and logs in the user
     
     [self.userName resignFirstResponder];
@@ -40,8 +41,7 @@
     [self loginWithUsername:username andPassword:password];
   
 }
-- (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
-    
+-(void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
     
     MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:hud];
@@ -57,7 +57,6 @@
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     [sharedSession setBasicAuthCredsWithUsername:username andPassword:password];
     NSString *basicAuthString = [D8iOSHelper basicAuthStringforUsername:username Password:password];
-    
     
     [DIOSView getViewWithPath:@"user/details" params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSMutableDictionary *userDictionary = [responseObject mutableCopy];
@@ -84,18 +83,18 @@
         NSInteger statusCode  = operation.response.statusCode;
         [hud hide:YES];
         
-        if ( statusCode == 403 ){
+        if ( statusCode == 403 ) {
             
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials" message:@"Please check username and password." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
             [alert show];
-
+            
         }
-        else if( statusCode == 0 ){
+        else if ( statusCode == 0 ) {
             
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
             [alert show];
         }
-        else{
+        else {
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"Error with code %ld",(long)statusCode] message:@"Please contact website admin." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
             [alert show];
         }
@@ -109,7 +108,7 @@
 }
 
 
--(void)viewWillAppear:(BOOL)animated{
+-(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     User *user  = [User sharedInstance];
@@ -122,12 +121,12 @@
     }
 }
 
-- (void)viewDidLoad {
+-(void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
 
-- (void)didReceiveMemoryWarning {
+-(void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

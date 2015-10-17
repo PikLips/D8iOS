@@ -10,9 +10,9 @@
 #import "MBProgressHUD.h"
 
 @interface DownloadPictureViewController : UIViewController <MBProgressHUDDelegate>
+
 @property (nonatomic,strong) NSString *pictureURL;
 @property (nonatomic,strong) NSString *imageName;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-
 
 @end

@@ -17,9 +17,12 @@
 
 #import "AAPLAssetViewController.h"
 #import "Developer.h"  // MAS: for development only, see which
+/*
 #import "DIOSSession.h"
 #import "DIOSEntity.h"
+ */
 #import "User.h"
+#import "D8iOS.h"
 
 @implementation CIImage (Convenience)
 - (NSData *)aapl_jpegRepresentationWithCompressionQuality:(CGFloat)compressionQuality {
@@ -52,10 +55,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
 @end
 
-
 @implementation AAPLAssetViewController
-
-
 
 static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplecode.SamplePhotosApp";
 
@@ -292,13 +292,20 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
     }
     
 }
-
+/*
 - (NSString *)encodeToBase64String:(UIImage *)image {
     return [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
+ */
 
+/*  MAS: This calls the DIOSEntity to create the JSON object which gets 
+ *  passed to the server, uploading the image.
+ */
 - (IBAction)uploadImage:(id)sender {
     
+    [D8iOS uploadImageToServer: self.asset withImage: self.imageView withinView: self];
+
+    /*
     MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:hud];
     
@@ -372,6 +379,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                                            
                                        }
                                    }];
+     */
 
 }
 

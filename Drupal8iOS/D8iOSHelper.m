@@ -81,7 +81,7 @@
     
     NSURLSessionDataTask *loginTask = [session dataTaskWithRequest:loginRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
-        if (!error) {
+        if ( !error ) {
             
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             
@@ -94,7 +94,7 @@
                 User *user = [User sharedInstance];
                 [user fillUserWithUserJSONObject:userDictionary];
             }
-            else if( httpResponse.statusCode == 403 ) {
+            else if ( httpResponse.statusCode == 403 ) {
                 
                 // this is the case when user has changed credential details form the iste it self
                 NSError *deleteError;

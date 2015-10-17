@@ -33,11 +33,11 @@
     return _listOfFiles;
 }
 
--(IBAction)getData{
+-(IBAction)getData {
     
     User *sharedUser = [User sharedInstance];
     
-    if (sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
+    if ( sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
         
         MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:hud];
@@ -56,7 +56,7 @@
         // As currently RESTExport do not support authentication
         //sharedSession.signRequests = NO;
         
-        if (sharedSession.baseURL != nil) {
+        if ( sharedSession.baseURL != nil ) {
             [DIOSView getViewWithPath:[NSString stringWithFormat:@"images/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 [self.listOfFiles removeAllObjects];
                 
@@ -81,7 +81,7 @@
                 
                 long statusCode = operation.response.statusCode;
                 // This can happen when GET is with out Authorization details or login failed.
-                if (statusCode == 401) {
+                if ( statusCode == 401 ) {
                     sharedSession.signRequests = NO;
                     
                     User *sharedUser = [User sharedInstance];
@@ -92,32 +92,31 @@
                 }
                 
                 // Credentials sent with request is invalid
-                else if(statusCode == 403){
+                else if ( statusCode == 403 ) {
                     
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for the operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                     
                 }
-                else{
+                else {
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                     
                 }
-                
             }];
         }
-        else{
+        else {
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
             [alert show];
+            
         }
         
     }
     else {
-        
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please first login" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
+        
     }
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -126,7 +125,7 @@
     
 }
 
-- (void)viewDidLoad {
+-(void)viewDidLoad {
     [super viewDidLoad];
     
     // Uncomment the following line to preserve selection between presentations.
@@ -136,26 +135,26 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)didReceiveMemoryWarning {
+-(void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 
     // Return the number of sections.
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
     // Return the number of rows in the section.
     return [self.listOfFiles count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FileDetailsTableViewCell *cell = (FileDetailsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"downloadPictureCell" forIndexPath:indexPath];
     
     FileJSON *fileDetails = [self.listOfFiles objectAtIndex:indexPath.row];
@@ -165,57 +164,21 @@
     [cell.lastChanged setText:fileDetails.changed];
     [cell.fid setText:[NSString stringWithFormat:@"fid: %@",fileDetails.fid]];
 
-    
     return cell;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([sender isKindOfClass:[UITableViewCell class]]) {
+    if ( [sender isKindOfClass:[UITableViewCell class]] ) {
         
-        if ([segue.destinationViewController isKindOfClass:[DownloadPictureViewController class]]) {
+        if ( [segue.destinationViewController isKindOfClass:[DownloadPictureViewController class]] ) {
             
-            if ([segue.identifier isEqualToString:@"downloadPicture"]) {
+            if ( [segue.identifier isEqualToString:@"downloadPicture"] ) {
                 
                 DownloadPictureViewController *newVC = (DownloadPictureViewController *)segue.destinationViewController;
-                
                 
                 FileJSON *fileJSONObj = (FileJSON *)[self.listOfFiles objectAtIndex:[self.tableView indexPathForCell:sender].row];
                 

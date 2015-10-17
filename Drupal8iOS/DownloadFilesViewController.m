@@ -28,13 +28,15 @@
 
 
 @interface DownloadFilesViewController ()
+
 @property (nonatomic,strong) NSMutableArray *listOfFiles;
+
 @end
 
 @implementation DownloadFilesViewController
 
 
--(NSMutableArray *)listOfFiles{
+-(NSMutableArray *)listOfFiles {
     if ( !_listOfFiles ) {
         _listOfFiles = [[NSMutableArray alloc]init];
         
@@ -42,7 +44,7 @@
     return _listOfFiles;
 }
 
--(IBAction)getData{
+-(IBAction)getData {
     
     User *sharedUser = [User sharedInstance];
     
@@ -122,7 +124,7 @@
     }
 }
 
--(void)viewWillAppear:(BOOL)animated{
+-(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self getData];
 
@@ -153,7 +155,6 @@
     return [self.listOfFiles count];
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DownloadFileTableViewCell *cell = (DownloadFileTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"downloadFileCell" forIndexPath:indexPath];
     
@@ -171,7 +172,7 @@
 
 -(void)downloadFile:(id)sender {
     UIButton *senderButton = (UIButton *)sender;
-   // NSLog(@"%ld",(long)senderButton.tag);
+    // D8D(@"%ld",(long)senderButton.tag);
     MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:hud];
     
@@ -180,6 +181,7 @@
     
     hud.delegate = self;
     [hud show:YES];
+    
     // myProgressTask uses the HUD instance to update progress
     
     FileJSON *fileJSONObj = [self.listOfFiles objectAtIndex:senderButton.tag];
@@ -191,7 +193,6 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:fileJSONObj.filename];
     operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
-    
     
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
         D8D(@"bytesRead: %lu, totalBytesRead: %lld, totalBytesExpectedToRead: %lld", (unsigned long)bytesRead, totalBytesRead, totalBytesExpectedToRead);
@@ -209,9 +210,10 @@
         NSError *error;
         NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
         
-        if (error) {
+        if ( error) {
             D8E(@"ERR: %@", [error description]);
-        } else {
+        }
+        else {
             NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
             long long fileSize = [fileSizeNumber longLongValue];
             D8D(@"%lld", fileSize);
@@ -232,39 +234,5 @@
     }];
     [operation start];
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 @end

@@ -32,6 +32,7 @@
 		44CF1E191B524E2700FC66EE /* LogoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E181B524E2700FC66EE /* LogoutViewController.m */; };
 		44CF1E1C1B5251FB00FC66EE /* ManageUserAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E1B1B5251FB00FC66EE /* ManageUserAccountViewController.m */; };
 		44CF1E251B52619100FC66EE /* UploadFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E241B52619100FC66EE /* UploadFileViewController.m */; };
+		44E22EDC1BD1D53E00B4BC69 /* D8iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E22EDB1BD1D53E00B4BC69 /* D8iOS.m */; settings = {ASSET_TAGS = (); }; };
 		CF0A72711BB809C400300569 /* AddCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF0A72701BB809C400300569 /* AddCommentViewController.m */; };
 		CF195B111B84778F00003A2B /* FileJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = CF195B101B84778F00003A2B /* FileJSON.m */; };
 		CF195B141B847AD400003A2B /* FileDetailsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF195B131B847AD400003A2B /* FileDetailsTableViewCell.m */; };
@@ -118,6 +119,8 @@
 		44CF1E1B1B5251FB00FC66EE /* ManageUserAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageUserAccountViewController.m; sourceTree = "<group>"; };
 		44CF1E231B52619100FC66EE /* UploadFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadFileViewController.h; sourceTree = "<group>"; };
 		44CF1E241B52619100FC66EE /* UploadFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadFileViewController.m; sourceTree = "<group>"; };
+		44E22EDA1BD1D53E00B4BC69 /* D8iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = D8iOS.h; sourceTree = "<group>"; };
+		44E22EDB1BD1D53E00B4BC69 /* D8iOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = D8iOS.m; sourceTree = "<group>"; };
 		54A7EB5376FDEF676FC354FE /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		779ED5E60D48423481D03CDC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		A6EA9BB3BED6B0F02536D693 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,18 +217,22 @@
 		44CF1DE41B51D97B00FC66EE /* Drupal8iOS */ = {
 			isa = PBXGroup;
 			children = (
-				CF46F3BD1B9B460E00E5D9AC /* Navajo */,
-				CFA9E7A71B7D1C9100390843 /* MBProgressHUD */,
-				CF47B1E11B69F6F300B7BDF3 /* SGKeyChain */,
-				CF6599381B5BA506000AC0D7 /* Model */,
 				44CF1DF21B51D97C00FC66EE /* Main.storyboard */,
+				44511BDA1B56E8440002A3CF /* Developer.h */,
+				CF553CB61B695A5700B2D6D8 /* D8iOSHelper.h */,
+				CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */,
 				44CF1DE91B51D97C00FC66EE /* AppDelegate.h */,
 				44CF1DEA1B51D97C00FC66EE /* AppDelegate.m */,
-				44511BDA1B56E8440002A3CF /* Developer.h */,
-				CF6599371B5BA4D1000AC0D7 /* ViewController */,
+				44CF1DEC1B51D97C00FC66EE /* MasterViewController.h */,
+				44CF1DED1B51D97C00FC66EE /* MasterViewController.m */,
+				44CF1DEF1B51D97C00FC66EE /* DetailViewController.h */,
+				44CF1DF01B51D97C00FC66EE /* DetailViewController.m */,
+				CF6599371B5BA4D1000AC0D7 /* Drupal Functionalities */,
+				CF6599381B5BA506000AC0D7 /* Model */,
+				44E22ED71BD03EA700B4BC69 /* Third Party */,
+				44CF1DE51B51D97B00FC66EE /* Supporting Files */,
 				44CF1DF51B51D97C00FC66EE /* Images.xcassets */,
 				44CF1DF71B51D97C00FC66EE /* LaunchScreen.xib */,
-				44CF1DE51B51D97B00FC66EE /* Supporting Files */,
 			);
 			path = Drupal8iOS;
 			sourceTree = "<group>";
@@ -264,6 +271,32 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		44E22ED71BD03EA700B4BC69 /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				44E22ED81BD03EEA00B4BC69 /* Apple Photos Library */,
+				CFA9E7A71B7D1C9100390843 /* MBProgressHUD */,
+				CF47B1E11B69F6F300B7BDF3 /* SGKeyChain */,
+				CF46F3BD1B9B460E00E5D9AC /* Navajo */,
+			);
+			name = "Third Party";
+			sourceTree = "<group>";
+		};
+		44E22ED81BD03EEA00B4BC69 /* Apple Photos Library */ = {
+			isa = PBXGroup;
+			children = (
+				444511C61B541D63008B7E13 /* AAPLGridViewCell.h */,
+				444511C71B541D63008B7E13 /* AAPLGridViewCell.m */,
+				444511C31B541A7C008B7E13 /* AAPLAssetViewController.h */,
+				444511C41B541A7C008B7E13 /* AAPLAssetViewController.m */,
+				444511C01B541935008B7E13 /* AAPLAssetGridViewController.h */,
+				444511C11B541935008B7E13 /* AAPLAssetGridViewController.m */,
+				444511BD1B5417EB008B7E13 /* AAPLRootListViewController.h */,
+				444511BE1B5417EB008B7E13 /* AAPLRootListViewController.m */,
+			);
+			name = "Apple Photos Library";
+			sourceTree = "<group>";
+		};
 		BB3E79CCE05F085402F44A0D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -292,25 +325,13 @@
 			name = SGKeyChain;
 			sourceTree = "<group>";
 		};
-		CF6599371B5BA4D1000AC0D7 /* ViewController */ = {
+		CF6599371B5BA4D1000AC0D7 /* Drupal Functionalities */ = {
 			isa = PBXGroup;
 			children = (
 				CF0A726F1BB809C400300569 /* AddCommentViewController.h */,
 				CF0A72701BB809C400300569 /* AddCommentViewController.m */,
 				44511BD61B56D8380002A3CF /* D8iOSUISplitViewController.h */,
 				44511BD71B56D8380002A3CF /* D8iOSUISplitViewController.m */,
-				44CF1DEC1B51D97C00FC66EE /* MasterViewController.h */,
-				44CF1DED1B51D97C00FC66EE /* MasterViewController.m */,
-				44CF1DEF1B51D97C00FC66EE /* DetailViewController.h */,
-				44CF1DF01B51D97C00FC66EE /* DetailViewController.m */,
-				444511C61B541D63008B7E13 /* AAPLGridViewCell.h */,
-				444511C71B541D63008B7E13 /* AAPLGridViewCell.m */,
-				444511C31B541A7C008B7E13 /* AAPLAssetViewController.h */,
-				444511C41B541A7C008B7E13 /* AAPLAssetViewController.m */,
-				444511C01B541935008B7E13 /* AAPLAssetGridViewController.h */,
-				444511C11B541935008B7E13 /* AAPLAssetGridViewController.m */,
-				444511BD1B5417EB008B7E13 /* AAPLRootListViewController.h */,
-				444511BE1B5417EB008B7E13 /* AAPLRootListViewController.m */,
 				441736321B579EDA00C984B5 /* ViewArticleViewController.m */,
 				441736311B579ECA00C984B5 /* ViewArticleViewController.h */,
 				4417362F1B579EB700C984B5 /* DeleteFileViewController.m */,
@@ -343,15 +364,15 @@
 				CF1A32661BAF38EB0080E8A5 /* CommentTableViewCell.m */,
 				CF38A2161BB051550035D321 /* CommentsTableViewController.h */,
 				CF38A2171BB051550035D321 /* CommentsTableViewController.m */,
+				44E22EDA1BD1D53E00B4BC69 /* D8iOS.h */,
+				44E22EDB1BD1D53E00B4BC69 /* D8iOS.m */,
 			);
-			name = ViewController;
+			name = "Drupal Functionalities";
 			sourceTree = "<group>";
 		};
 		CF6599381B5BA506000AC0D7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				CF553CB61B695A5700B2D6D8 /* D8iOSHelper.h */,
-				CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */,
 				CF553CB31B695A2E00B2D6D8 /* User.h */,
 				CF553CB41B695A2E00B2D6D8 /* User.m */,
 				CF6599391B5BA536000AC0D7 /* Article.h */,
@@ -539,6 +560,7 @@
 				CF553CB81B695A5700B2D6D8 /* D8iOSHelper.m in Sources */,
 				CF65993B1B5BA536000AC0D7 /* Article.m in Sources */,
 				444511BF1B5417EB008B7E13 /* AAPLRootListViewController.m in Sources */,
+				44E22EDC1BD1D53E00B4BC69 /* D8iOS.m in Sources */,
 				44CF1E161B524BA000FC66EE /* LoginViewController.m in Sources */,
 				CF38A21B1BB054D30035D321 /* Comment.m in Sources */,
 				CF56A0681B86F33D00B45A83 /* DownloadFilesViewController.m in Sources */,

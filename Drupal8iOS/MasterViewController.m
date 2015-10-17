@@ -43,7 +43,7 @@
  *  performs all these tasks and also shows some status of all operation to user.
  */
 
-- (BOOL) checkDrupalURL {
+- (BOOL)checkDrupalURL {
     /* MAS: Check to see if Drupal site was previously set
      *      This logic chould determine whether the app has store the Drupal URL and it is still valid
      */
@@ -54,7 +54,7 @@
 
 }
 
-- (BOOL) checkUserLogin {
+- (BOOL)checkUserLogin {
     /* MAS: Check to see if Drupal login information was previously set
      *      This logic chould determine whether the app has store the Drupal user and it is still valid
      */
@@ -126,16 +126,19 @@
     /* MAS:  Pass the menu item to the Detail View Controller --
      */
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSString *object = self.d8MenuItems[indexPath.row];
+        NSIndexPath *indexPath  = [self.tableView indexPathForSelectedRow];
+        NSString *object        = self.d8MenuItems[indexPath.row];
+        
         DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
         [controller setDetailItem:object];
+        
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
     }
     /* MAS end
      */
 }
+
 
 #pragma mark - Table View
 

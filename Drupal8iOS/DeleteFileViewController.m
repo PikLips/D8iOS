@@ -20,24 +20,25 @@
 #import "Developer.h" // MAS: for development only, see which
 
 @interface DeleteFileViewController ()
+
 @property (nonatomic,strong) NSMutableArray *listOfFiles;
 
 @end
 
 @implementation DeleteFileViewController
 
--(NSMutableArray *)listOfFiles{
-    if (!_listOfFiles) {
+-(NSMutableArray *)listOfFiles {
+    if ( !_listOfFiles ) {
         _listOfFiles = [[NSMutableArray alloc]init];
     }
     return _listOfFiles;
 }
 
--(IBAction)getData{
+-(IBAction)getData {
     
     User *sharedUser = [User sharedInstance];
     
-    if (sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
+    if ( sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
         
         
         MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
@@ -58,7 +59,7 @@
         // As currently RESTExport do not support authentication
         //sharedSession.signRequests = NO;
         
-        if (sharedSession.baseURL != nil) {
+        if ( sharedSession.baseURL != nil ) {
             [DIOSView getViewWithPath:[NSString stringWithFormat:@"files/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 [self.listOfFiles removeAllObjects];
                 
@@ -78,12 +79,12 @@
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 [self.refreshControl endRefreshing];
                 [hud hide:YES];
+                
               //  sharedSession.signRequests =YES;
                 
                 long statusCode = operation.response.statusCode;
                 // This can happen when request is with out Authorization details or wrong credentials are specified 
                 if ( statusCode == 401 ) {
-                    
                     
                     sharedSession.signRequests = NO;
                     
@@ -93,11 +94,9 @@
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentilas." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                 }
-                
                 // Request is in correct format but Drupal refuses to fulfil it as per  permissions set by admin
                 else if( statusCode == 403 ){
                    
-                    
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is npot authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                 }
@@ -105,7 +104,6 @@
                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                     [alert show];
                 }
-                
             }];
         }
         else {
@@ -126,7 +124,7 @@
     [self getData];
 }
 
-- (void)viewDidLoad {
+-(void)viewDidLoad {
     [super viewDidLoad];
     
     // Show the HUD while the provided method executes in a new thread
@@ -136,26 +134,26 @@
     
 }
 
-- (void)didReceiveMemoryWarning {
+-(void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
     // Return the number of sections.
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     return [self.listOfFiles count];
     
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     FileDetailsTableViewCell *cell = (FileDetailsTableViewCell *) [self.tableView dequeueReusableCellWithIdentifier:@"deleteFileCell" forIndexPath:indexPath];
     
@@ -171,14 +169,14 @@
 }
 
 // Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
 
 // Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ( editingStyle == UITableViewCellEditingStyleDelete ) {
         
         MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:hud];
@@ -230,13 +228,12 @@
                                            }
                                            
                                            // Credentials sent with request is invalid
-                                           else if(statusCode == 403){
+                                           else if ( statusCode == 403 ){
                                               
-                                               
                                                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                                                [alert show];
                                            }
-                                           else{
+                                           else {
                                                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                                                [alert show];
                                                
@@ -247,19 +244,4 @@
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
 }
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 @end

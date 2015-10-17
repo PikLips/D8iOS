@@ -52,14 +52,14 @@ bool userNameStatus = NO;
 bool passwordStatus = NO;
 bool emailStatus = NO;
 
--(NJOPasswordValidator *)strictValidator{
+-(NJOPasswordValidator *)strictValidator {
     if (!_strictValidator) {
         _strictValidator = [NJOPasswordValidator validatorWithRules:@[[NJOLengthRule ruleWithRange:NSMakeRange(8, 64)], [NJORequiredCharacterRule lowercaseCharacterRequiredRule], [NJORequiredCharacterRule uppercaseCharacterRequiredRule], [NJORequiredCharacterRule symbolCharacterRequiredRule]]];
     }
     return _strictValidator;
 }
 
-- (IBAction)createUserAccount:(id)sender {
+-(IBAction)createUserAccount:(id)sender {
     /*  Vivek: This validates format of userName, userEmail, and userPassword, then submits it
      *  to a Drupal site as new account.
      *  Report error alert for duplicate userName and allow retry.
@@ -96,7 +96,7 @@ bool emailStatus = NO;
 
     */
     
-    MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:hud];
     
     hud.delegate = self;
@@ -104,7 +104,7 @@ bool emailStatus = NO;
     [hud show:YES];
     
     User *sharedUser = [User sharedInstance];
-    DIOSSession *sharedSession = [DIOSSession sharedSession];
+    // DIOSSession *sharedSession = [DIOSSession sharedSession]; // MAS: is this needed??
     
     if ( sharedUser.name !=nil && ![sharedUser.name isEqualToString:@""] ) {
     // A user is already logged in
@@ -146,7 +146,7 @@ bool emailStatus = NO;
             
             NSInteger statusCode  = operation.response.statusCode;
             
-            if ( statusCode == 403 ){
+            if ( statusCode == 403 ) {
                 
               // After https://www.drupal.org/node/2291055 is solved we do not need this block of code
                 
@@ -157,6 +157,7 @@ bool emailStatus = NO;
                 
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
                 [alert show];
+                
             }
             else {
                 // Email and Password change requires existing password to be specified.
@@ -173,7 +174,7 @@ bool emailStatus = NO;
     }
 }
 
-- (void)viewDidLoad {
+-(void)viewDidLoad {
     [super viewDidLoad];
     
     // Add notification center observer to observe change in password filed
@@ -197,7 +198,7 @@ bool emailStatus = NO;
     [self changeAddAccBtnStatus];
 }
 
-- (void)didReceiveMemoryWarning {
+-(void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -225,7 +226,7 @@ bool emailStatus = NO;
     }
 }
 
--(BOOL) validateEmail:(NSString*) emailString
+-(BOOL)validateEmail:(NSString*) emailString
 {
     // Please refer to http://www.regular-expressions.info/email.html for more information on Regular Expression for email validation
     

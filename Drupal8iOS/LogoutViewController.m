@@ -19,7 +19,7 @@
 @end
 
 @implementation LogoutViewController
-- (IBAction)logoutUser:(id)sender {
+-(IBAction)logoutUser:(id)sender {
     /* MAS: Log user out of Drupal site
      *      This code should also be invoked when application terminates.
      */
@@ -27,17 +27,17 @@
     [self performLogout];
 }
 
-- (void)viewDidLoad {
+-(void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
 
-- (void)didReceiveMemoryWarning {
+-(void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
--(void)performLogout{
+-(void)performLogout {
     
     /* Vivek:   As per the RESTFul architecture server never stores the states of request or client.
      *  So every request is sent with proper credential details if it is required.
@@ -53,7 +53,6 @@
     hud.labelText = @"Erasing login data";
     [hud show:YES];
 
-    
     User *user = [User sharedInstance];
     [user clearUserDetails]; // deleting details from User shared object
      NSError *deletePasswordError = nil;
@@ -78,8 +77,6 @@
         sleep(1);
         [hud hide:YES];
     });
-
-
 }
 
 @end

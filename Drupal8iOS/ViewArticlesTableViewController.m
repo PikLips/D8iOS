@@ -70,27 +70,27 @@
     if ( sharedSession.baseURL != nil ) {
         [DIOSView getViewWithPath:@"articles" params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
             [self.articleList removeAllObjects];
-          
-                    for ( NSMutableDictionary *article in responseObject )
-                    {
-                        Article *newTip = [[Article alloc]initWithDictionary:article];
-                        [self.articleList addObject:newTip];
             
-                    }
-                    [self.tableView reloadData];
+            for ( NSMutableDictionary *article in responseObject )
+            {
+                Article *newTip = [[Article alloc]initWithDictionary:article];
+                [self.articleList addObject:newTip];
+                
+            }
+            [self.tableView reloadData];
             
-                    //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
+            //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
             
-                    [self.refreshControl endRefreshing];
+            [self.refreshControl endRefreshing];
             sharedSession.signRequests =YES;
-                    [hud hide:YES];
-
-
+            [hud hide:YES];
+            
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             [self.refreshControl endRefreshing];
             [hud hide:YES];
             sharedSession.signRequests =YES;
-
+            
             long statusCode = operation.response.statusCode;
             // This can happen when GET is with out Authorization details or credentials are wrong
             if ( statusCode == 401 ) {
@@ -99,24 +99,24 @@
                 
                 User *sharedUser = [User sharedInstance];
                 [sharedUser clearUserDetails];
-
+                
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentials. " delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                 [alert show];
             }
             
             // Credentials are valid but user is not authorised to perform this operation.
-            else if( statusCode == 403 ) {
+            else if ( statusCode == 403 ) {
                 
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                 [alert show];
-    
+                
             }
-            else{
+            else {
                 UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                 [alert show];
-            
+                
             }
-        
+            
         }];
     }
     else {
@@ -170,7 +170,7 @@
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"articleCell" forIndexPath:indexPath];
     Article *articleObj = nil;
     
-        articleObj = [self.articleList objectAtIndex:indexPath.row];
+    articleObj = [self.articleList objectAtIndex:indexPath.row];
     
     cell.textLabel.text = [articleObj valueForKeyPath:@"title"];
     cell.detailTextLabel.text = [articleObj valueForKeyPath:@"changed"];
@@ -178,44 +178,7 @@
     
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
 #pragma mark - Navigation
-
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
@@ -223,7 +186,7 @@
         
         if ( [segue.destinationViewController isKindOfClass:[ViewArticleViewController class]] ) {
             
-            if ([segue.identifier isEqualToString:@"showArticle"]) {
+            if ( [segue.identifier isEqualToString:@"showArticle"]  ) {
                 
                 ViewArticleViewController *newVC = (ViewArticleViewController *)segue.destinationViewController;
                 

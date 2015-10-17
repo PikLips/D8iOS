@@ -10,7 +10,6 @@
 
 #import "MBProgressHUD.h"
 
-
 @interface ViewArticlesTableViewController : UITableViewController <MBProgressHUDDelegate>
 
 @end
