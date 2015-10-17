@@ -24,6 +24,7 @@
 #import "Developer.h"// MAS: for development only, see which
 #import "DIOSSession.h"
 #import "DIOSView.h"
+#import "D8iOS.h"
 
 
 @interface SpecifyDrupalSiteViewController ()
@@ -42,97 +43,55 @@
     NSURL *url = [NSURL URLWithString:self.userSiteRequest.text];
     if ( url != nil ) {
         if( url && url.scheme && url.host ) {
-            
-         MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-            [self.navigationController.view addSubview:hud];
-            
-            hud.delegate = self;
-            hud.labelText = @"Verifying Drupal 8 site";
-            [hud show:YES];
-        // a valid URL according to RFC 2396 RFCs 1738 and 1808
-            
-        // store the URL String to user's default settings
-            
-        // Validate the remote host with NSURLConnection
-        
-        // Validating URL with drupal-ios-sdk
-            
-            DIOSSession *sharedSession = [DIOSSession sharedSession];
-            sharedSession.baseURL = url;
-            
-            /* Vivek: By default, DIOSSession has AFJSONResponseSerializer which causes a http-based response
-             *  with status code 2XX to be an unacceptable response type.
-             *  So to execute the request we change ResponseSerializer temporarely
-             *
-             */
-            [sharedSession setResponseSerializer:[AFHTTPResponseSerializer serializer]];
-           
-            sharedSession.signRequests = NO;
-            
-            [sharedSession GET:[url absoluteString] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                
-                    // Currently this storage per user
-                    // storing a validated D8 site to user preferences
-                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                    [defaults setObject:self.userSiteRequest.text forKey:DRUPAL8SITE];
+            [D8iOS verifyDrupalSite:url withView:self.view completion:^(BOOL verified) {
+                if (verified) {
                     [self.statusInfoLabel setText:self.userSiteRequest.text];
-                
-                    NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"OK" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:0.1 green:2.0 blue:0.0 alpha:1.000]}];
+                    NSAttributedString *attributeStatus = [[NSAttributedString alloc]
+                                                           initWithString:@"OK"
+                                                           attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:0.1
+                                                                                                                       green:2.0
+                                                                                                                        blue:0.0
+                                                                                                                       alpha:1.000]}];
                     [self.connectionStatusLabel setAttributedText:attributeStatus];
-              
-                sharedSession.signRequests = YES;
-                 UIImageView *imageView;
-                                   UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-                    imageView = [[UIImageView alloc] initWithImage:image];
-            
-                hud.customView = imageView;
-                hud.mode = MBProgressHUDModeCustomView;
-                
-                hud.labelText = @"Completed";
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
-                    sleep(1);
-                    [hud hide:YES];
-                });
-            
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                
-                [hud hide:YES];
-                // Display alert on faliure
-                long statusCode = operation.response.statusCode;
-                
-                if ( statusCode == 403 ) {
-                    
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:[NSString stringWithFormat:@"Error with %@ . It seems that you are already logged in to other site.",error.localizedDescription]  delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                    [alert show];
 
                 }
-                else {
+                else{
+                    NSAttributedString *attributeStatus = [[NSAttributedString alloc]
+                                                           initWithString:@"FAILED"
+                                                           attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:1.0
+                                                                                                                       green:0.0
+                                                                                                                        blue:0.0
+                                                                                                                       alpha:1.000]}];
+                    [self.connectionStatusLabel setAttributedText:attributeStatus];
                 
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:[NSString stringWithFormat:@"An error occured while connecting to the URL with %@",error.localizedDescription]  delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                [alert show];
                 }
-                NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"FAILED" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.000]}];
-                [self.connectionStatusLabel setAttributedText:attributeStatus];
-                
             }];
-           
-            // Restore the ResponseSerializer to JSONSerializer
-            [sharedSession setResponseSerializer:[AFJSONResponseSerializer serializer]];
             
         }
         else {
             
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:@"Please enter a valid URL hostname, scheme etc. " delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS"
+                                                           message:@"Please enter a valid URL hostname, scheme etc. "
+                                                          delegate:self
+                                                 cancelButtonTitle:@"Dismiss"
+                                                 otherButtonTitles: nil];
             [alert show];
-            NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"..." attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.000]}];
+            NSAttributedString *attributeStatus = [[NSAttributedString alloc] initWithString:@"..."
+                                                                                  attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:0.0
+                                                                                                                                              green:0.0
+                                                                                                                                               blue:0.0
+                                                                                                                                              alpha:1.000]}];
             [self.connectionStatusLabel setAttributedText:attributeStatus];
 
         }
     }
     else {
     
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS" message:@"BAD URL" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS"
+                                                       message:@"BAD URL"
+                                                      delegate:self
+                                             cancelButtonTitle:@"Dismiss"
+                                             otherButtonTitles: nil];
         [alert show];
         
     }
