@@ -35,6 +35,9 @@
     
     [hud show:YES];
     
+    // This is temporary work around for 200 response code instead of 201 , the drupal responds with text/html format here we explicitly ask for JSON so that AFNwteorking will not report error
+    DIOSSession *sharedSession = [DIOSSession sharedSession];
+    [sharedSession.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     // This is the JSON body with required details to be sent
     NSDictionary *params = @{
@@ -60,40 +63,77 @@
                                    }
                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                        
-                                       [hud hide:YES];
+                                       
                                        
                                        long statusCode = operation.response.statusCode;
                                        // This can happen when POST is with out Authorization details or login fails
                                        if ( statusCode == 401 ) {
+                                           [hud hide:YES];
                                            DIOSSession *sharedSession = [DIOSSession sharedSession];
                                            
                                            sharedSession.signRequests = NO;
                                            
                                            User *sharedUser = [User sharedInstance];
                                            [sharedUser clearUserDetails];
-                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                          message:@"Please verify the login credentials."
+                                                                                         delegate:nil
+                                                                                cancelButtonTitle:@"Dismiss"
+                                                                                otherButtonTitles: nil];
                                            [alert show];
                                        }
                                        
                                        else if ( statusCode == 0 ) {
+                                           [hud hide:YES];
                                            
-                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"]
+                                                                                          message:@"Plese specify a Drupal 8 site first \n"
+                                                                                         delegate:nil
+                                                                                cancelButtonTitle:@"Dismiss"
+                                                                                otherButtonTitles:nil];
                                            [alert show];
                                            
                                        }
                                        
                                        // Credentials are valid but user is not authorised for the operation.
                                        else if ( statusCode == 403 ) {
+                                           [hud hide:YES];
                                            
-                                           
-                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for the operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                          message:@"User is not authorised for the operation."
+                                                                                         delegate:nil
+                                                                                cancelButtonTitle:@"Dismiss"
+                                                                                otherButtonTitles: nil];
                                            [alert show];
+                                       }
+                                       // This to handle unacceptable content-type: text/html error
+                                       // This is very bad fix , but we have to keep this untill drupal patch is not updated to address this issue
+                                       else if (statusCode == 200){
+                                           UIImageView *imageView;
+                                           UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+                                           imageView = [[UIImageView alloc] initWithImage:image];
+                                           
+                                           hud.customView = imageView;
+                                           hud.mode = MBProgressHUDModeCustomView;
+                                           
+                                           hud.labelText = @"Completed";
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
+                                               sleep(2);
+                                               [hud hide:YES];
+                                           });
                                        }
                                        else {
-                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                           [hud hide:YES];
+                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                          message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription]
+                                                                                         delegate:nil
+                                                                                cancelButtonTitle:@"Dismiss"
+                                                                                otherButtonTitles: nil];
                                            [alert show];
                                            
                                        }
+                                       
                                    }];
 }
 + (NSString *)encodeToBase64String:(UIImage *)image {
