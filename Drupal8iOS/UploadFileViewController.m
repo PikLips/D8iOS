@@ -11,6 +11,7 @@
 #import "DIOSEntity.h"
 #import "DIOSSession.h"
 #import "User.h"
+#import "D8iOS.h"
 
 @interface UploadFileViewController ()
 {
@@ -44,7 +45,7 @@
     
     /* MAS:
      */
-
+    
 }
 /* MAS: This will retrieve array of filenames of certain type from local directory
  *      provides the option to expose filtering to user (optional feature).
@@ -69,11 +70,11 @@
     else {
         D8D(@"Directory not empty: %@", directoryContents.firstObject);
     }
-
+    
     NSIndexSet *localFileNameIndexes = [directoryContents indexesOfObjectsPassingTest:^BOOL(NSString *fileName, NSUInteger idx, BOOL *stop) {
-                return [[fileName pathExtension] isEqualToString:fileExtension];
+        return [[fileName pathExtension] isEqualToString:fileExtension];
     }];
-                          
+    
     if ( localFileNameIndexes.count > 0 ) {
         NSArray *localFileNames = [directoryContents objectsAtIndexes:localFileNameIndexes]; // MAS's code
         return localFileNames;
@@ -123,99 +124,19 @@
     NSString *filePath =  [NSString stringWithFormat:@"%@/%@",documentsDirectory.path,selectedFilename];
     D8D("Filepath: %@", filePath);
     
-        if ( [[NSFileManager defaultManager] fileExistsAtPath:filePath] )
-        {
-            NSData *data = [[NSFileManager defaultManager] contentsAtPath:filePath]; //NSData is required to get base64 encoding string of file
-            NSString *base64EncodedFile = [data base64EncodedStringWithOptions:0];
-            
-            MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-            [self.navigationController.view addSubview:hud];
-            
-            hud.dimBackground = YES;
-            hud.labelText = @"Uploading file ...";
-            
-            // Regiser for HUD callbacks so we can remove it from the window at the right time
-            hud.delegate = self;
-            
-            [hud show:YES];
-            
-            NSDictionary *params = @{
-                                     @"filename":@[@{@"value":selectedFilename}],
-                                     @"data":@[@{@"value":base64EncodedFile}]};
-            
-            
-    // This is temporary work around for 200 response code instead of 201 , the drupal responds with text/html format here we explicitly ask for JSON so that AFNwteorking will not report error
-            DIOSSession *sharedSession = [DIOSSession sharedSession];
-            [sharedSession.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-            
-            [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
-                                           success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                               
-                                               // This is temporary work around for 200 response code instead of 201
-                                               [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
-                                               
-                                               UIImageView *imageView;
-                                               UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-                                               imageView = [[UIImageView alloc] initWithImage:image];
-                                               
-                                               hud.customView = imageView;
-                                               hud.mode = MBProgressHUDModeCustomView;
-                                               
-                                               hud.labelText = @"Completed";
-                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                   // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
-                                                   sleep(1);
-                                                   [hud hide:YES];
-                                               });
-                                           }
-                                           failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                               
-                                               // This is temporary work around for 200 response code instead of 201
-                                               [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
-                                               
-                                               [hud hide:YES];
-                                               
-                                               long statusCode = operation.response.statusCode;
-                                               // This can happen when POST is with out Authorization details
-                                               if (statusCode == 401) {
-                                                   DIOSSession *sharedSession = [DIOSSession sharedSession];
-                                                   
-                                                   sharedSession.signRequests = NO;
-                                                   
-                                                   User *sharedUser = [User sharedInstance];
-                                                   [sharedUser clearUserDetails];
-                                                   UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentials." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                                   [alert show];
-                                               }
-                                               
-                                               else if( statusCode == 0 ) {
-                                                   
-                                                   UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-                                                   [alert show];
-                                                   
-                                               }
-                                               
-                                               // Credentials are valid but user is not permitted to certain operation.
-                                               else if(statusCode == 403){
-                                                 
-                                                   
-                                                   UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                                   [alert show];
-                                               }
-                                               else{
-                                                   UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                                   [alert show];
-                                                   
-                                               }
-                                           }];
-        }
-            else {
-                
-            D8D(@"File to be uploaded does not exit");
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"File does not exist on device" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-            [alert show];
-
-        }
+    if ( [[NSFileManager defaultManager] fileExistsAtPath:filePath] )
+    {
+        NSData *data = [[NSFileManager defaultManager] contentsAtPath:filePath]; //NSData is required to get base64 encoding string of file
+        NSString *base64EncodedFile = [data base64EncodedStringWithOptions:0];
+        [D8iOS uploadFilewithFileName:selectedFilename andDataString:base64EncodedFile withView:self.view];
+    }
+    else {
+        
+        D8D(@"File to be uploaded does not exit");
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"File does not exist on device" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+        [alert show];
+        
+    }
 }
 
 @end

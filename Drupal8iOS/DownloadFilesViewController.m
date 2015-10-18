@@ -19,10 +19,9 @@
  */
 
 #import "DownloadFilesViewController.h"
-#import "User.h"
+#import "D8iOS.h"
 #import "Developer.h"
 #import "DIOSSession.h"
-#import "DIOSView.h"
 #import "FileJSON.h"
 #import "DownloadFileTableViewCell.h"
 
@@ -45,85 +44,13 @@
 }
 
 -(IBAction)getData {
-    
-    User *sharedUser = [User sharedInstance];
-    
-    if ( sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
-        
-        MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-        [self.navigationController.view addSubview:hud];
-        
-        hud.delegate = self;
-        hud.labelText = @"Loading the files";
-        [hud show:YES];
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
-        
-        DIOSSession *sharedSession = [DIOSSession sharedSession];
-        sharedSession.baseURL = baseURL;
-        
-        // Remove line given below once bug 2228141 is solved
-        // As currently RESTExport do not support authentication
-        //sharedSession.signRequests = NO;
-        
-        if ( sharedSession.baseURL != nil ) {
-            [DIOSView getViewWithPath:[NSString stringWithFormat:@"files/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                [self.listOfFiles removeAllObjects];
-                
-                for ( NSMutableDictionary *fileJSONDict in responseObject )
-                {
-                    FileJSON *fileJSONObj = [[FileJSON alloc]initWithDictionary:fileJSONDict];
-                    [self.listOfFiles addObject:fileJSONObj];
-                }
-                
-                [self.tableView reloadData];
-                
-                [self.refreshControl endRefreshing];
-                //  sharedSession.signRequests =YES;
-                [hud hide:YES];
-                
-                
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [self.refreshControl endRefreshing];
-                [hud hide:YES];
-                //  sharedSession.signRequests =YES;
-                
-                long statusCode = operation.response.statusCode;
-                // This can happen when GET is with out Authorization details
-                if ( statusCode == 401 ) {
-                    sharedSession.signRequests = NO;
-                    
-                    User *sharedUser = [User sharedInstance];
-                    [sharedUser clearUserDetails];
-                    
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                    [alert show];
-                }
-                
-                // Credentials are valid but user is not authorised to perform this operation.
-                else if( statusCode == 403 ) {
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                    [alert show];
-                }
-                else {
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                    [alert show];
-                    
-                }
-            }];
+    [D8iOS getFileDatafromPath:@"files" withView:self.view completion:^(NSMutableArray *fileList) {
+        if (fileList != nil) {
+            self.listOfFiles = fileList;
+            [self.tableView reloadData];
         }
-        else {
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-            [alert show];
-        }
-    }
-    else {
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please first login" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-        [alert show];
-    }
+    }];
 }
-
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self getData];

@@ -7,11 +7,9 @@
 //
 
 #import "CommentsTableViewController.h"
-#import "DIOSSession.h"
+#import "D8iOS.h"
 #import "Developer.h"
-#import "DIOSView.h"
 #import "Comment.h"
-#import "User.h"
 #import "CommentTableViewCell.h"
 
 @interface CommentsTableViewController ()
@@ -29,73 +27,12 @@
 }
 
 -(IBAction)getData{
-
-    MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    [self.navigationController.view addSubview:hud];
-
-    hud.delegate = self;
-    hud.labelText = @"Loading the comments";
-    [hud show:YES];
-
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
-
-    DIOSSession *sharedSession = [DIOSSession sharedSession];
-    sharedSession.baseURL = baseURL;
-
-    // Remove line given below once bug 2228141 is solved
-    // As currently RESTExport do not support authentication
-    // When pushing this code to pantheon site set this to NO because it has not been patched with 2228141.patch
-    sharedSession.signRequests = YES;
-    if ( sharedSession.baseURL != nil ) {
-    
-        [DIOSView getViewWithPath:[NSString stringWithFormat:@"comments/%@",self.nid]  params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            [self.commentList removeAllObjects];
-        
-            for ( NSMutableDictionary *comment in responseObject )
-            {
-                Comment *newComment = [[Comment alloc]initWithDictionary:comment];
-                [self.commentList addObject:newComment];
-            }
+    [D8iOS getCommentDataforNodeID:self.nid withView:self.view completion:^(NSMutableArray *commentList) {
+        if (commentList != nil) {
+            self.commentList = commentList;
             [self.tableView reloadData];
-        
-            //self.filteredTips  = [NSMutableArray arrayWithCapacity:[self.tipList count]];
-        
-            [self.refreshControl endRefreshing];
-            sharedSession.signRequests =YES;
-            [hud hide:YES];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [self.refreshControl endRefreshing];
-            [hud hide:YES];
-            sharedSession.signRequests =YES;
-        
-            long statusCode = operation.response.statusCode;
-            // This can happen when GET is with out Authorization details
-            if ( statusCode == 401 ) {
-                sharedSession.signRequests = NO;
-            
-                User *sharedUser = [User sharedInstance];
-                [sharedUser clearUserDetails];
-
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                [alert show];
-            }
-            // Credentials is correct but user is not authorised to do certain operation.
-            else if ( statusCode == 403 ) {
-            
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                [alert show];
-            }
-            else {
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                [alert show];
-            }
-        }];
-    }
-    else {
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-        [alert show];
-    }
+        }
+    }];
 }
 
 

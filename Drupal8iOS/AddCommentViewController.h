@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
 
-@interface AddCommentViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,UIWebViewDelegate,MBProgressHUDDelegate>
+@interface AddCommentViewController : UIViewController <UIAlertViewDelegate,UIWebViewDelegate>
 
 - (IBAction)cancel:(id)sender;
 - (IBAction)done:(id)sender;

@@ -9,7 +9,7 @@
  *  may be deleted, producing a table view that the user can select files and
  *  have them removed from the server.
  */
-
+#import "D8iOS.h"
 #import "DeleteFileViewController.h"
 #import "DIOSSession.h"
 #import "User.h"
@@ -35,87 +35,12 @@
 }
 
 -(IBAction)getData {
-    
-    User *sharedUser = [User sharedInstance];
-    
-    if ( sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
-        
-        
-        MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-        [self.navigationController.view addSubview:hud];
-        
-        hud.delegate = self;
-        hud.labelText = @"Loading the files";
-        [hud show:YES];
-        
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
-        
-        DIOSSession *sharedSession = [DIOSSession sharedSession];
-        sharedSession.baseURL = baseURL;
-        
-        // Remove line given below once bug 2228141 is solved
-        // As currently RESTExport do not support authentication
-        //sharedSession.signRequests = NO;
-        
-        if ( sharedSession.baseURL != nil ) {
-            [DIOSView getViewWithPath:[NSString stringWithFormat:@"files/%@",sharedUser.uid] params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                [self.listOfFiles removeAllObjects];
-                
-                for (NSMutableDictionary *fileJSONDict in responseObject)
-                {
-                    FileJSON *fileJSONObj = [[FileJSON alloc]initWithDictionary:fileJSONDict];
-                    [self.listOfFiles addObject:fileJSONObj];
-                }
-                
-                [self.tableView reloadData];
-                
-                [self.refreshControl endRefreshing];
-              //  sharedSession.signRequests =YES;
-                [hud hide:YES];
-                
-                
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [self.refreshControl endRefreshing];
-                [hud hide:YES];
-                
-              //  sharedSession.signRequests =YES;
-                
-                long statusCode = operation.response.statusCode;
-                // This can happen when request is with out Authorization details or wrong credentials are specified 
-                if ( statusCode == 401 ) {
-                    
-                    sharedSession.signRequests = NO;
-                    
-                    User *sharedUser = [User sharedInstance];
-                    [sharedUser clearUserDetails];
-                    
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentilas." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                    [alert show];
-                }
-                // Request is in correct format but Drupal refuses to fulfil it as per  permissions set by admin
-                else if( statusCode == 403 ){
-                   
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is npot authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                    [alert show];
-                }
-                else {
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                    [alert show];
-                }
-            }];
+    [D8iOS getFileDatafromPath:@"files" withView:self.view completion:^(NSMutableArray *fileList) {
+        if (fileList != nil) {
+            self.listOfFiles = fileList;
+            [self.tableView reloadData];
         }
-        else {
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please specify a drupal site first" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-            [alert show];
-        }
-    }
-    else {
-        
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please first login" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-        [alert show];
-    }
+    }];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -177,68 +102,14 @@
 // Override to support editing the table view.
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if ( editingStyle == UITableViewCellEditingStyleDelete ) {
-        
-        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-        [self.navigationController.view addSubview:hud];
-        
-        hud.dimBackground = YES;
-        hud.labelText = @"Deleting file ...";
-        // Regiser for HUD callbacks so we can remove it from the window at the right time
-        hud.delegate = self;
-        
-        [hud show:YES];
-        
         FileJSON *fileJSONObj = [self.listOfFiles objectAtIndex:indexPath.row];
-        
-        [DIOSEntity deleteEntityWithEntityName:@"file" andID:fileJSONObj.fid
-                                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                           
-                                           [self.listOfFiles removeObjectAtIndex:indexPath.row];
-                                           [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-                                       
-                                           UIImageView *imageView;
-                                           UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-                                           imageView = [[UIImageView alloc] initWithImage:image];
-                                           
-                                           hud.customView = imageView;
-                                           hud.mode = MBProgressHUDModeCustomView;
-                                           
-                                           hud.labelText = @"Completed";
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
-                                               sleep(1);
-                                               [hud hide:YES];
-                                           });
-                                       }
-                                       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                           
-                                           [hud hide:YES];
-                                           
-                                           long statusCode = operation.response.statusCode;
-                                           // This can happen when GET is with out Authorization details
-                                           if (statusCode == 401) {
-                                               DIOSSession *sharedSession = [DIOSSession sharedSession];
-                                               
-                                               sharedSession.signRequests = NO;
-                                               
-                                               User *sharedUser = [User sharedInstance];
-                                               [sharedUser clearUserDetails];
-                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                               [alert show];
-                                           }
-                                           
-                                           // Credentials sent with request is invalid
-                                           else if ( statusCode == 403 ){
-                                              
-                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                               [alert show];
-                                           }
-                                           else {
-                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                               [alert show];
-                                               
-                                           }
-                                       }];
+        [D8iOS deleteFilewithFileID:fileJSONObj.fid withView:self.view completion:^(BOOL deleted) {
+            if (deleted) {
+                [self.listOfFiles removeObjectAtIndex:indexPath.row];
+                [tableView deleteRowsAtIndexPaths:@[indexPath]
+                                 withRowAnimation:UITableViewRowAnimationFade];
+            }
+        }];
         
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view

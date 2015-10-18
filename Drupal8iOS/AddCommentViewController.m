@@ -9,7 +9,7 @@
 #import "AddCommentViewController.h"
 #import "User.h"
 #import "Developer.h"
-
+#import "D8iOS.h"
 #import "DIOSComment.h"
 #import "DIOSSession.h"
 
@@ -21,9 +21,6 @@
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;
 
 - (IBAction)switchEditor:(id)sender;
-
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
-
 @end
 
 @implementation AddCommentViewController
@@ -67,36 +64,11 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.tableView reloadData];
 }
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - UITableViewDataSource
-
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-
-    return 0;
-}
-
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
-}
-
--(NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    return @"Tag";
-
-}
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [[UITableViewCell alloc]init];
-  
-    cell = [tableView dequeueReusableCellWithIdentifier:@"tag" forIndexPath:indexPath];
-    return cell;
-
 }
 
 - (IBAction)cancel:(id)sender {
@@ -105,121 +77,15 @@
 }
 
 - (IBAction)done:(id)sender {
-    
-    User *user = [User sharedInstance];
-    
-    NSDictionary *params =
-    @{
-      
-      @"entity_id": @[
-              @{
-                  @"target_id": self.nid
+    [D8iOS postComment:[self.bodyTextView text]
+             withTitle:[self.tipTitle text]
+              onNodeID:self.nid
+              withView:self.view completion:^(BOOL success) {
+                  if (success) {
+                      [self dismissViewControllerAnimated:YES
+                                               completion:nil];
                   }
-              ],
-      @"subject": @[
-              @{
-                  @"value": [self.tipTitle text]
-                  }],
-      
-      @"uid":@[
-              @{
-                  
-                  @"target_id":user.uid
-                  }
-              ],
-      @"status": @[
-              @{
-                  @"value": @"1"
-                  }
-              ],
-      @"entity_type": @[
-              @{
-                  @"value": @"node"
-                  }
-              ],
-      @"comment_type": @[
-              @{
-                  @"target_id": @"comment"
-                  }
-              ],
-      @"field_name": @[
-              @{
-                  @"value": @"comment"
-                  }
-              ],
-      @"comment_body": @[
-              @{
-                  @"value":[self.bodyTextView text],@"format":@"full_html"
-                  }
-              ]
-      };
-    
-    MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    [self.navigationController.view addSubview:hud];
-    
-    hud.delegate = self;
-    hud.labelText = @"Posting comment...";
-    [hud show:YES];
-    [DIOSComment createCommentWithParams:params relationID:self.nid type:@"comment" success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        UIImageView *imageView;
-        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-        imageView = [[UIImageView alloc] initWithImage:image];
-        
-        hud.customView = imageView;
-        hud.mode = MBProgressHUDModeCustomView;
-        
-        hud.labelText = @"Completed";
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 1 seconds
-            sleep(1);
-            [hud hide:YES];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            
-        });
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [hud hide:YES];
-        
-        NSInteger statusCode  = operation.response.statusCode;
-        
-        if ( statusCode == 403 ) {
-            
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for this operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-            
-            alert.tag = 2; // For error related alerts tag is 2
-            [alert show];
-            
-        }
-        else if ( statusCode == 401 ) {
-            User *user = [User sharedInstance];
-            [user clearUserDetails];
-            DIOSSession *sharedSession = [DIOSSession sharedSession];
-            sharedSession.signRequests = NO;
-            
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify login credentials first." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-            alert.tag = 2; // For error related alerts tag is 2
-            [alert show];
-            
-        }
-        else if ( statusCode == 0 ) {
-            
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-            alert.tag = 2; // For error related alerts tag is 2
-            [alert show];
-            
-        }
-        
-        else {
-            
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                           message:[NSString stringWithFormat:@"Error while posting the comment with error code %@",error.localizedDescription]
-                                                          delegate:nil
-                                                 cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-            alert.tag = 2; // For error related alerts tag is 2
-            [alert show];
-        }
-    }];
+              }];
 }
 
 - (IBAction)switchEditor:(id)sender {
@@ -231,7 +97,7 @@
     if ( index == 0 ) {
         self.bodyWebView.hidden = NO;
         self.bodyTextView.hidden = YES;
-       
+        
         [self.bodyWebView loadHTMLString:self.bodyTextView.textStorage.mutableString baseURL:nil];
     }
     if ( index == 1 ) {
@@ -250,8 +116,10 @@
     NSRange selectedRange = [_bodyTextView selectedRange];
     if ( selectedRange.location != NSNotFound && selectedRange.length != 0 ) {
         
-        [_bodyTextView.textStorage.mutableString insertString:startTag atIndex:selectedRange.location];
-        [_bodyTextView.textStorage.mutableString insertString:endTag atIndex:(selectedRange.location + selectedRange.length + [startTag length])];
+        [_bodyTextView.textStorage.mutableString insertString:startTag
+                                                      atIndex:selectedRange.location];
+        [_bodyTextView.textStorage.mutableString insertString:endTag
+                                                      atIndex:(selectedRange.location + selectedRange.length + [startTag length])];
         _bodyTextView.selectedRange = NSMakeRange([_bodyTextView.textStorage.mutableString length], 0);
         
     }
@@ -259,11 +127,13 @@
         
         if ( sender.selected ) {
             
-            [_bodyTextView.textStorage.mutableString insertString:endTag atIndex:selectedRange.location];
+            [_bodyTextView.textStorage.mutableString insertString:endTag
+                                                          atIndex:selectedRange.location];
             _bodyTextView.selectedRange = NSMakeRange((selectedRange.location + [endTag length]), 0);
         }
         else {
-            [_bodyTextView.textStorage.mutableString insertString:startTag atIndex:selectedRange.location];
+            [_bodyTextView.textStorage.mutableString insertString:startTag
+                                                          atIndex:selectedRange.location];
             _bodyTextView.selectedRange = NSMakeRange((selectedRange.location + [startTag length]), 0);
         }
         sender.selected = !sender.selected;
@@ -272,53 +142,61 @@
 
 -(void)paragraphText:(UIButton *)sender{
     
-
-    [self insertHtmlTag:@"p" sender:sender];
+    
+    [self insertHtmlTag:@"p"
+                 sender:sender];
     
 }
 -(void)hideKeyBoard{
-
+    
     [_bodyTextView resignFirstResponder];
 }
 
 -(void)boldText:(UIButton *)sender{
-    [self insertHtmlTag:@"b" sender:sender];
-
+    [self insertHtmlTag:@"b"
+                 sender:sender];
+    
 }
 
 -(void)italicText:(UIButton *)sender {
-    [self insertHtmlTag:@"em" sender:sender];
-
+    [self insertHtmlTag:@"em"
+                 sender:sender];
+    
 }
 
 -(void)underLineText:(UIButton *)sender {
-    [self insertHtmlTag:@"u" sender:sender];
-
+    [self insertHtmlTag:@"u"
+                 sender:sender];
+    
 }
 -(void)strikeText:(UIButton *)sender {
-    [self insertHtmlTag:@"strike" sender:sender];
+    [self insertHtmlTag:@"strike"
+                 sender:sender];
 }
 -(void)blockquoteText:(UIButton *)sender {
-
-    [self insertHtmlTag:@"blockquote" sender:sender];
+    
+    [self insertHtmlTag:@"blockquote"
+                 sender:sender];
 }
 
 -(void)addLink {
-
-    UIAlertView *addLinkAlert = [[UIAlertView alloc]initWithTitle:@"Enter URL for link here" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add", nil];
+    
+    UIAlertView *addLinkAlert = [[UIAlertView alloc]initWithTitle:@"Enter URL for link here"
+                                                          message:nil
+                                                         delegate:self
+                                                cancelButtonTitle:@"Cancel"
+                                                otherButtonTitles:@"Add", nil];
     [addLinkAlert setAlertViewStyle:UIAlertViewStylePlainTextInput];
     
     addLinkAlert.tag = 1;
     [addLinkAlert show];
-
+    
 }
 
 #pragma mark UIAlertView Delegate
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     if ( alertView.tag == 1 ) {
-        D8D(@"here");
-        
         // cancel button will have index 0
         if ( buttonIndex == 1 ) {
             
@@ -328,8 +206,10 @@
                 
                 NSString *linkString = [NSString stringWithFormat:@"<a href='%@'>",[alertView textFieldAtIndex:0].text];
                 
-                [_bodyTextView.textStorage.mutableString insertString:linkString atIndex:selectedRange.location];
-                [_bodyTextView.textStorage.mutableString insertString:@"</a>" atIndex:(selectedRange.location + selectedRange.length + [linkString length])];
+                [_bodyTextView.textStorage.mutableString insertString:linkString
+                                                              atIndex:selectedRange.location];
+                [_bodyTextView.textStorage.mutableString insertString:@"</a>"
+                                                              atIndex:(selectedRange.location + selectedRange.length + [linkString length])];
                 _bodyTextView.selectedRange = NSMakeRange([_bodyTextView.textStorage.mutableString length], 0);
                 
             }
@@ -337,15 +217,16 @@
                 
                 NSString *linkString = [NSString stringWithFormat:@"<a href='%@'>%@</a>",[alertView textFieldAtIndex:0].text ,[alertView textFieldAtIndex:0].text ];
                 
-                [_bodyTextView.textStorage.mutableString insertString:linkString atIndex:selectedRange.location];
+                [_bodyTextView.textStorage.mutableString insertString:linkString
+                                                              atIndex:selectedRange.location];
                 
             }
             
         }
     }
     else if ( alertView.tag == 2 ) {
-        D8D(@"It reaches here");
-        [self dismissViewControllerAnimated:YES completion:nil];  // Hide modal view if user press "Dismiss" button on error alertView
+        [self dismissViewControllerAnimated:YES
+                                 completion:nil];  // Hide modal view if user press "Dismiss" button on error alertView
     }
 }
 
@@ -363,9 +244,10 @@
     }
 }
 
-#pragma mark UIWebView Delegate method 
+#pragma mark UIWebView Delegate method
 // this method make links to be opened in Safari
--(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
+navigationType:(UIWebViewNavigationType)navigationType {
     
     if ( navigationType == UIWebViewNavigationTypeLinkClicked ) {
         [[UIApplication sharedApplication] openURL:[request URL]];
@@ -383,60 +265,87 @@
     
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     doneButton.frame = CGRectMake(0.0,0.0,50.0,40.0);
-    [doneButton setTitle:@"Done" forState:UIControlStateNormal];
-    [doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [doneButton setTitle:@"Done"
+                forState:UIControlStateNormal];
+    [doneButton setTitleColor:[UIColor whiteColor]
+                     forState:UIControlStateNormal];
     
-    [doneButton addTarget:self action:@selector(hideKeyBoard) forControlEvents:UIControlEventTouchUpInside];
+    [doneButton addTarget:self action:@selector(hideKeyBoard)
+         forControlEvents:UIControlEventTouchUpInside];
     [inputAccessoryView addSubview:doneButton];
     UIButton *boldButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     boldButton.frame = CGRectMake(50.0, 0.0,30.0, 40.0);
     
     [boldButton setTitle:@"B" forState:UIControlStateNormal];
-    [boldButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [boldButton setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
-    [boldButton addTarget:self action:@selector(boldText:) forControlEvents:UIControlEventTouchUpInside];
+    [boldButton setTitleColor:[UIColor whiteColor]
+                     forState:UIControlStateNormal];
+    [boldButton setTitleColor:[UIColor blueColor]
+                     forState:UIControlStateSelected];
+    [boldButton addTarget:self
+                   action:@selector(boldText:)
+         forControlEvents:UIControlEventTouchUpInside];
     [inputAccessoryView addSubview:boldButton];
     
     UIButton *italicButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     italicButton.frame = CGRectMake(80.0, 0.0, 30.0, 40.0);
-    [italicButton setTitle:@"I" forState:UIControlStateNormal];
-    [italicButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [italicButton addTarget:self action:@selector(italicText:) forControlEvents:UIControlEventTouchUpInside];
+    [italicButton setTitle:@"I"
+                  forState:UIControlStateNormal];
+    [italicButton setTitleColor:[UIColor whiteColor]
+                       forState:UIControlStateNormal];
+    [italicButton addTarget:self
+                     action:@selector(italicText:)
+           forControlEvents:UIControlEventTouchUpInside];
     [inputAccessoryView addSubview:italicButton];
     
     UIButton *underlineButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     underlineButton.frame = CGRectMake(110.0, 0.0, 30.0, 40.0);
     [underlineButton setTitle:@"U" forState:UIControlStateNormal];
-    [underlineButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [underlineButton addTarget:self action:@selector(underLineText:) forControlEvents:UIControlEventTouchUpInside];
+    [underlineButton setTitleColor:[UIColor whiteColor]
+                          forState:UIControlStateNormal];
+    [underlineButton addTarget:self
+                        action:@selector(underLineText:)
+              forControlEvents:UIControlEventTouchUpInside];
     [inputAccessoryView addSubview:underlineButton];
     
     UIButton *strikeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     strikeButton.frame = CGRectMake(140.0, 0.0, 30.0, 40.0);
     [strikeButton setTitle:@"≁" forState:UIControlStateNormal];
-    [strikeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [strikeButton addTarget:self action:@selector(strikeText:) forControlEvents:UIControlEventTouchUpInside];
+    [strikeButton setTitleColor:[UIColor whiteColor]
+                       forState:UIControlStateNormal];
+    [strikeButton addTarget:self
+                     action:@selector(strikeText:)
+           forControlEvents:UIControlEventTouchUpInside];
     [inputAccessoryView addSubview:strikeButton];
     
     UIButton *blockquoteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     blockquoteButton.frame = CGRectMake(170.0, 0.0, 30.0, 40.0);
-    [blockquoteButton setTitle:@"❝" forState:UIControlStateNormal];
-    [blockquoteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [blockquoteButton addTarget:self action:@selector(blockquoteText:) forControlEvents:UIControlEventTouchUpInside];
+    [blockquoteButton setTitle:@"❝"
+                      forState:UIControlStateNormal];
+    [blockquoteButton setTitleColor:[UIColor whiteColor]
+                           forState:UIControlStateNormal];
+    [blockquoteButton addTarget:self
+                         action:@selector(blockquoteText:)
+               forControlEvents:UIControlEventTouchUpInside];
     [inputAccessoryView addSubview:blockquoteButton];
     
     UIButton *paragraphButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     paragraphButton.frame = CGRectMake(200.0, 0.0, 30.0, 40.0);
     [paragraphButton setTitle:@"¶" forState:UIControlStateNormal];
-    [paragraphButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [paragraphButton addTarget:self action:@selector(paragraphText:) forControlEvents:UIControlEventTouchUpInside];
+    [paragraphButton setTitleColor:[UIColor whiteColor]
+                          forState:UIControlStateNormal];
+    [paragraphButton addTarget:self
+                        action:@selector(paragraphText:)
+              forControlEvents:UIControlEventTouchUpInside];
     [inputAccessoryView addSubview:paragraphButton];
     
     UIButton *linkButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     linkButton.frame = CGRectMake(230.0, 0.0, 30.0, 40.0);
     [linkButton setTitle:@"🔗" forState:UIControlStateNormal];
-    [linkButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [linkButton addTarget:self action:@selector(addLink) forControlEvents:UIControlEventTouchUpInside];
+    [linkButton setTitleColor:[UIColor whiteColor]
+                     forState:UIControlStateNormal];
+    [linkButton addTarget:self
+                   action:@selector(addLink)
+         forControlEvents:UIControlEventTouchUpInside];
     [inputAccessoryView addSubview:linkButton];
     
     return inputAccessoryView;

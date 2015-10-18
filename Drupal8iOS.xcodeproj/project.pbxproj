@@ -42,7 +42,6 @@
 		CF46F3BC1B9B460200E5D9AC /* NJOPasswordStrengthEvaluator.m in Sources */ = {isa = PBXBuildFile; fileRef = CF46F3BB1B9B460100E5D9AC /* NJOPasswordStrengthEvaluator.m */; };
 		CF47B1E01B69F6ED00B7BDF3 /* SGKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CF47B1DF1B69F6ED00B7BDF3 /* SGKeychain.m */; };
 		CF553CB51B695A2E00B2D6D8 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = CF553CB41B695A2E00B2D6D8 /* User.m */; };
-		CF553CB81B695A5700B2D6D8 /* D8iOSHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */; };
 		CF56A0681B86F33D00B45A83 /* DownloadFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF56A0671B86F33D00B45A83 /* DownloadFilesViewController.m */; };
 		CF56A06B1B86F3A100B45A83 /* DownloadFileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF56A06A1B86F3A100B45A83 /* DownloadFileTableViewCell.m */; };
 		CF65993B1B5BA536000AC0D7 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = CF65993A1B5BA536000AC0D7 /* Article.m */; };
@@ -142,8 +141,6 @@
 		CF47B1DF1B69F6ED00B7BDF3 /* SGKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGKeychain.m; sourceTree = "<group>"; };
 		CF553CB31B695A2E00B2D6D8 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		CF553CB41B695A2E00B2D6D8 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
-		CF553CB61B695A5700B2D6D8 /* D8iOSHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = D8iOSHelper.h; sourceTree = "<group>"; };
-		CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = D8iOSHelper.m; sourceTree = "<group>"; };
 		CF56A0661B86F33D00B45A83 /* DownloadFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFilesViewController.h; sourceTree = "<group>"; };
 		CF56A0671B86F33D00B45A83 /* DownloadFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadFilesViewController.m; sourceTree = "<group>"; };
 		CF56A0691B86F3A100B45A83 /* DownloadFileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadFileTableViewCell.h; sourceTree = "<group>"; };
@@ -219,8 +216,6 @@
 			children = (
 				44CF1DF21B51D97C00FC66EE /* Main.storyboard */,
 				44511BDA1B56E8440002A3CF /* Developer.h */,
-				CF553CB61B695A5700B2D6D8 /* D8iOSHelper.h */,
-				CF553CB71B695A5700B2D6D8 /* D8iOSHelper.m */,
 				44CF1DE91B51D97C00FC66EE /* AppDelegate.h */,
 				44CF1DEA1B51D97C00FC66EE /* AppDelegate.m */,
 				44CF1DEC1B51D97C00FC66EE /* MasterViewController.h */,
@@ -558,7 +553,6 @@
 				CF38A2181BB051550035D321 /* CommentsTableViewController.m in Sources */,
 				44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */,
 				CFA9E7A61B7D1C8900390843 /* MBProgressHUD.m in Sources */,
-				CF553CB81B695A5700B2D6D8 /* D8iOSHelper.m in Sources */,
 				CF65993B1B5BA536000AC0D7 /* Article.m in Sources */,
 				444511BF1B5417EB008B7E13 /* AAPLRootListViewController.m in Sources */,
 				44E22EDC1BD1D53E00B4BC69 /* D8iOS.m in Sources */,
