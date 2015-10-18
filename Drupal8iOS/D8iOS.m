@@ -16,6 +16,7 @@
 #import "DIOSEntity.h"
 #import "DIOSUser.h"
 #import "DIOSNode.h"
+#import "DIOSComment.h"
 #import "User.h"
 #import "SGKeychain.h"
 
@@ -209,55 +210,55 @@
                                params:nil
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   NSMutableArray *listOfFiles = [[NSMutableArray alloc]init];
-                for ( NSMutableDictionary *fileJSONDict in responseObject )
-                {
-                    FileJSON *fileJSONObj = [[FileJSON alloc]initWithDictionary:fileJSONDict];
-                    [listOfFiles addObject:fileJSONObj];
-                }
-                [hud hide:YES];
+                                  for ( NSMutableDictionary *fileJSONDict in responseObject )
+                                  {
+                                      FileJSON *fileJSONObj = [[FileJSON alloc]initWithDictionary:fileJSONDict];
+                                      [listOfFiles addObject:fileJSONObj];
+                                  }
+                                  [hud hide:YES];
                                   if (completion) {
                                       completion(listOfFiles);
                                   }
-                
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                [hud hide:YES];
-                
-                long statusCode = operation.response.statusCode;
-                // This can happen when GET is with out Authorization details
-                if ( statusCode == 401 ) {
-                    sharedSession.signRequests = NO;
-                    
-                    User *sharedUser = [User sharedInstance];
-                    [sharedUser clearUserDetails];
-                    
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                                   message:@"Please verify the login credentials"
-                                                                  delegate:nil
-                                                         cancelButtonTitle:@"Dismiss"
-                                                         otherButtonTitles: nil];
-                    [alert show];
-                }
-                
-                // Credentials are valid but user is not authorised to perform this operation.
-                else if( statusCode == 403 ) {
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                                   message:@"User is not authorised for this operation."
-                                                                  delegate:nil
-                                                         cancelButtonTitle:@"Dismiss"
-                                                         otherButtonTitles: nil];
-                    [alert show];
-                }
-                else {
-                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                                   message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription]
-                                                                  delegate:nil
-                                                         cancelButtonTitle:@"Dismiss"
-                                                         otherButtonTitles: nil];
-                    [alert show];
-                    
-                }
-                completion(nil);
-            }];
+                                  
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  [hud hide:YES];
+                                  
+                                  long statusCode = operation.response.statusCode;
+                                  // This can happen when GET is with out Authorization details
+                                  if ( statusCode == 401 ) {
+                                      sharedSession.signRequests = NO;
+                                      
+                                      User *sharedUser = [User sharedInstance];
+                                      [sharedUser clearUserDetails];
+                                      
+                                      UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                     message:@"Please verify the login credentials"
+                                                                                    delegate:nil
+                                                                           cancelButtonTitle:@"Dismiss"
+                                                                           otherButtonTitles: nil];
+                                      [alert show];
+                                  }
+                                  
+                                  // Credentials are valid but user is not authorised to perform this operation.
+                                  else if( statusCode == 403 ) {
+                                      UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                     message:@"User is not authorised for this operation."
+                                                                                    delegate:nil
+                                                                           cancelButtonTitle:@"Dismiss"
+                                                                           otherButtonTitles: nil];
+                                      [alert show];
+                                  }
+                                  else {
+                                      UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                     message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription]
+                                                                                    delegate:nil
+                                                                           cancelButtonTitle:@"Dismiss"
+                                                                           otherButtonTitles: nil];
+                                      [alert show];
+                                      
+                                  }
+                                  completion(nil);
+                              }];
         }
         else {
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
@@ -276,7 +277,7 @@
                                              otherButtonTitles: nil];
         [alert show];
     }
-
+    
 }
 
 +(void)getArticleDatawithView:(UIView *)view
@@ -355,7 +356,7 @@
                                              otherButtonTitles: nil];
         [alert show];
     }
-
+    
 }
 
 +(void)uploadFilewithFileName:(NSString *)fileName
@@ -481,61 +482,61 @@
     [sharedSession GET:[drupalSiteURL absoluteString]
             parameters:nil
                success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        // Currently this storage per user
-        // storing a validated D8 site to user preferences
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:[drupalSiteURL absoluteString] forKey:DRUPAL8SITE];
-        sharedSession.signRequests = YES;
-        UIImageView *imageView;
-        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-        imageView = [[UIImageView alloc] initWithImage:image];
-        
-        hud.customView = imageView;
-        hud.mode = MBProgressHUDModeCustomView;
-        
-        hud.labelText = @"Completed";
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
-            sleep(1);
-            [hud hide:YES];
-            if (completion) {
-                completion(YES);
-            }
-        });
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        [hud hide:YES];
-        // Display alert on faliure
-        long statusCode = operation.response.statusCode;
-        
-        if ( statusCode == 403 ) {
-            
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS"
-                                                           message:[NSString stringWithFormat:@"Error with %@ . It seems that you are already logged in to other site.",error.localizedDescription]
-                                                          delegate:self
-                                                 cancelButtonTitle:@"Dismiss"
-                                                 otherButtonTitles: nil];
-            [alert show];
-            
-        }
-        else {
-            
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS"
-                                                           message:[NSString stringWithFormat:@"An error occured while connecting to the URL with %@",error.localizedDescription]
-                                                          delegate:self
-                                                 cancelButtonTitle:@"Dismiss"
-                                                 otherButtonTitles: nil];
-            [alert show];
-        }
-        completion(NO);
-        
-    }];
+                   
+                   // Currently this storage per user
+                   // storing a validated D8 site to user preferences
+                   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                   [defaults setObject:[drupalSiteURL absoluteString] forKey:DRUPAL8SITE];
+                   sharedSession.signRequests = YES;
+                   UIImageView *imageView;
+                   UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+                   imageView = [[UIImageView alloc] initWithImage:image];
+                   
+                   hud.customView = imageView;
+                   hud.mode = MBProgressHUDModeCustomView;
+                   
+                   hud.labelText = @"Completed";
+                   dispatch_async(dispatch_get_main_queue(), ^{
+                       // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
+                       sleep(1);
+                       [hud hide:YES];
+                       if (completion) {
+                           completion(YES);
+                       }
+                   });
+                   
+               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                   
+                   [hud hide:YES];
+                   // Display alert on faliure
+                   long statusCode = operation.response.statusCode;
+                   
+                   if ( statusCode == 403 ) {
+                       
+                       UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS"
+                                                                      message:[NSString stringWithFormat:@"Error with %@ . It seems that you are already logged in to other site.",error.localizedDescription]
+                                                                     delegate:self
+                                                            cancelButtonTitle:@"Dismiss"
+                                                            otherButtonTitles: nil];
+                       [alert show];
+                       
+                   }
+                   else {
+                       
+                       UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Drupal8iOS"
+                                                                      message:[NSString stringWithFormat:@"An error occured while connecting to the URL with %@",error.localizedDescription]
+                                                                     delegate:self
+                                                            cancelButtonTitle:@"Dismiss"
+                                                            otherButtonTitles: nil];
+                       [alert show];
+                   }
+                   completion(NO);
+                   
+               }];
     
     // Restore the ResponseSerializer to JSONSerializer
     [sharedSession setResponseSerializer:[AFJSONResponseSerializer serializer]];
-
+    
     
 }
 
@@ -586,54 +587,54 @@
         
         [DIOSUser createUserWithParams:JSONBody
                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Congratulations!"
-                                                           message:@"Your account has been created. Further details will be mailed by application server."
-                                                          delegate:nil
-                                                 cancelButtonTitle:@"OK"
-                                                 otherButtonTitles:nil];
-            [alert show];
-            [hud hide:YES];
-        }
+                                   
+                                   UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Congratulations!"
+                                                                                  message:@"Your account has been created. Further details will be mailed by application server."
+                                                                                 delegate:nil
+                                                                        cancelButtonTitle:@"OK"
+                                                                        otherButtonTitles:nil];
+                                   [alert show];
+                                   [hud hide:YES];
+                               }
                                failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-            [hud hide:YES];
-            
-            NSInteger statusCode  = operation.response.statusCode;
-            
-            if ( statusCode == 403 ) {
-                
-                // After https://www.drupal.org/node/2291055 is solved we do not need this block of code
-                
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials"
-                                                               message:@"User is not authorised for this operation."
-                                                              delegate:nil
-                                                     cancelButtonTitle:@"Dismiss"
-                                                     otherButtonTitles:nil];
-                [alert show];
-            }
-            else if( statusCode == 0 ) {
-                
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"]
-                                                               message:@"Plese specify a Drupal 8 site first \n"
-                                                              delegate:nil
-                                                     cancelButtonTitle:@"Dismiss"
-                                                     otherButtonTitles:nil];
-                [alert show];
-                
-            }
-            else {
-                // Email and Password change requires existing password to be specified.
-                // The code above tries to capture those requirements.  If it is missed then
-                // Drupal REST will provide propper error and that will be reflected by this alert
-                
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                               message:[NSString stringWithFormat:@"Error while creating user with %@",error.localizedDescription]
-                                                              delegate:nil
-                                                     cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                [alert show];
-            }
-        }];
+                                   
+                                   [hud hide:YES];
+                                   
+                                   NSInteger statusCode  = operation.response.statusCode;
+                                   
+                                   if ( statusCode == 403 ) {
+                                       
+                                       // After https://www.drupal.org/node/2291055 is solved we do not need this block of code
+                                       
+                                       UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials"
+                                                                                      message:@"User is not authorised for this operation."
+                                                                                     delegate:nil
+                                                                            cancelButtonTitle:@"Dismiss"
+                                                                            otherButtonTitles:nil];
+                                       [alert show];
+                                   }
+                                   else if( statusCode == 0 ) {
+                                       
+                                       UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"]
+                                                                                      message:@"Plese specify a Drupal 8 site first \n"
+                                                                                     delegate:nil
+                                                                            cancelButtonTitle:@"Dismiss"
+                                                                            otherButtonTitles:nil];
+                                       [alert show];
+                                       
+                                   }
+                                   else {
+                                       // Email and Password change requires existing password to be specified.
+                                       // The code above tries to capture those requirements.  If it is missed then
+                                       // Drupal REST will provide propper error and that will be reflected by this alert
+                                       
+                                       UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                      message:[NSString stringWithFormat:@"Error while creating user with %@",error.localizedDescription]
+                                                                                     delegate:nil
+                                                                            cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                       [alert show];
+                                   }
+                               }];
     }
     
 }
@@ -756,115 +757,115 @@
                     [DIOSUser patchUserWithID:sharedUser.uid params:params
                                          type:@"user"
                                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        
-                        /* Vivek: If PATCH is successfull then we may have changed any combinations of
-                         *  username, password, email. So, we need to update sharedUser and credentials on
-                         *  sharedSession accordingly.
-                         */
-                        
-                        [SGKeychain deletePasswordandUserNameForServiceName:@"Drupal 8"
-                                                                accessGroup:nil
-                                                                      error:&sgKeyChainError];
-                        
-                        sharedUser.email = (email != nil && ![email isEqualToString:@""]) ? email : sharedUser.email ;
-                        
-                        if ( userName != nil && ![userName isEqualToString:@""] ) {
-                            
-                            credentials[0] = userName;
-                            sharedUser.name = userName;
-                            
-                        }
-                        
-                        /* uncomment this portion when bug 2552099 is solved
-                         if (revisedUserPassword != nil && ![revisedUserPassword isEqualToString:@""]) {
-                         
-                         credentials[1] = revisedUserPassword;
-                         
-                         }
-                         
-                         */
-                        
-                        [SGKeychain setPassword:credentials[1]
-                                       username:credentials[0]
-                                    serviceName:@"Drupal 8"
-                                    accessGroup:nil
-                                 updateExisting:NO
-                                          error:&sgKeyChainError];
-                        
-                        [sharedSession setBasicAuthCredsWithUsername:credentials[0]
-                                                         andPassword:credentials[1]];
-                        
-                        UIImageView *imageView;
-                        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-                        imageView = [[UIImageView alloc] initWithImage:image];
-                        
-                        hud.customView = imageView;
-                        hud.mode = MBProgressHUDModeCustomView;
-                        /* Vivek: This can be changed.  I tried 1 - 3 secs and I found 2 sufficient.
-                         *  And this will show "Completed" label for 1 sec after the operation completes.
-                         *  If user's attention is specifically required than it would be better to
-                         *  use UIAlertView, so that user will have to respond to it.
-                         */
-                        hud.labelText = @"Completed";
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
-                            sleep(1);
-                            [hud hide:YES];
-                        });
-                        
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        [hud hide:YES];
-                        
-                        NSInteger statusCode  = operation.response.statusCode;
-                        
-                        if ( statusCode == 403 ) {
-                            
-                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                                           message:@"User is not authorised for this operation."
-                                                                          delegate:nil
-                                                                 cancelButtonTitle:@"Dismiss"
-                                                                 otherButtonTitles:nil];
-                            [alert show];
-                        }
-                        else if (statusCode == 401) {
-                            User *user = [User sharedInstance];
-                            [user clearUserDetails];
-                            DIOSSession *sharedSession = [DIOSSession sharedSession];
-                            sharedSession.signRequests = NO;
-                            
-                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                                           message:@"Please verify login credentials first."
-                                                                          delegate:nil
-                                                                 cancelButtonTitle:@"Dismiss"
-                                                                 otherButtonTitles:nil];
-                            [alert show];
-                            
-                        }
-                        else if ( statusCode == 0 ) {
-                            
-                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"]
-                                                                           message:@"Plese specify a Drupal 8 site first \n"
-                                                                          delegate:nil
-                                                                 cancelButtonTitle:@"Dismiss"
-                                                                 otherButtonTitles:nil];
-                            [alert show];
-                            
-                        }
-                        
-                        else {
-                            /* Vivek: Email and Password change requires existing password to be specified.
-                             *  The code above tries to capture those requirements, but if some how it is
-                             *  missed then Drupal REST will provide propper error, reflected by this alert.
-                             */
-                            
-                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                                           message:[NSString stringWithFormat:@"Error while updating user with %@",error.localizedDescription]
-                                                                          delegate:nil
-                                                                 cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                            
-                            [alert show];
-                        }
-                    }];
+                                          
+                                          /* Vivek: If PATCH is successfull then we may have changed any combinations of
+                                           *  username, password, email. So, we need to update sharedUser and credentials on
+                                           *  sharedSession accordingly.
+                                           */
+                                          
+                                          [SGKeychain deletePasswordandUserNameForServiceName:@"Drupal 8"
+                                                                                  accessGroup:nil
+                                                                                        error:&sgKeyChainError];
+                                          
+                                          sharedUser.email = (email != nil && ![email isEqualToString:@""]) ? email : sharedUser.email ;
+                                          
+                                          if ( userName != nil && ![userName isEqualToString:@""] ) {
+                                              
+                                              credentials[0] = userName;
+                                              sharedUser.name = userName;
+                                              
+                                          }
+                                          
+                                          /* uncomment this portion when bug 2552099 is solved
+                                           if (revisedUserPassword != nil && ![revisedUserPassword isEqualToString:@""]) {
+                                           
+                                           credentials[1] = revisedUserPassword;
+                                           
+                                           }
+                                           
+                                           */
+                                          
+                                          [SGKeychain setPassword:credentials[1]
+                                                         username:credentials[0]
+                                                      serviceName:@"Drupal 8"
+                                                      accessGroup:nil
+                                                   updateExisting:NO
+                                                            error:&sgKeyChainError];
+                                          
+                                          [sharedSession setBasicAuthCredsWithUsername:credentials[0]
+                                                                           andPassword:credentials[1]];
+                                          
+                                          UIImageView *imageView;
+                                          UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+                                          imageView = [[UIImageView alloc] initWithImage:image];
+                                          
+                                          hud.customView = imageView;
+                                          hud.mode = MBProgressHUDModeCustomView;
+                                          /* Vivek: This can be changed.  I tried 1 - 3 secs and I found 2 sufficient.
+                                           *  And this will show "Completed" label for 1 sec after the operation completes.
+                                           *  If user's attention is specifically required than it would be better to
+                                           *  use UIAlertView, so that user will have to respond to it.
+                                           */
+                                          hud.labelText = @"Completed";
+                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                              // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
+                                              sleep(1);
+                                              [hud hide:YES];
+                                          });
+                                          
+                                      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                          [hud hide:YES];
+                                          
+                                          NSInteger statusCode  = operation.response.statusCode;
+                                          
+                                          if ( statusCode == 403 ) {
+                                              
+                                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                             message:@"User is not authorised for this operation."
+                                                                                            delegate:nil
+                                                                                   cancelButtonTitle:@"Dismiss"
+                                                                                   otherButtonTitles:nil];
+                                              [alert show];
+                                          }
+                                          else if (statusCode == 401) {
+                                              User *user = [User sharedInstance];
+                                              [user clearUserDetails];
+                                              DIOSSession *sharedSession = [DIOSSession sharedSession];
+                                              sharedSession.signRequests = NO;
+                                              
+                                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                             message:@"Please verify login credentials first."
+                                                                                            delegate:nil
+                                                                                   cancelButtonTitle:@"Dismiss"
+                                                                                   otherButtonTitles:nil];
+                                              [alert show];
+                                              
+                                          }
+                                          else if ( statusCode == 0 ) {
+                                              
+                                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"]
+                                                                                             message:@"Plese specify a Drupal 8 site first \n"
+                                                                                            delegate:nil
+                                                                                   cancelButtonTitle:@"Dismiss"
+                                                                                   otherButtonTitles:nil];
+                                              [alert show];
+                                              
+                                          }
+                                          
+                                          else {
+                                              /* Vivek: Email and Password change requires existing password to be specified.
+                                               *  The code above tries to capture those requirements, but if some how it is
+                                               *  missed then Drupal REST will provide propper error, reflected by this alert.
+                                               */
+                                              
+                                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                             message:[NSString stringWithFormat:@"Error while updating user with %@",error.localizedDescription]
+                                                                                            delegate:nil
+                                                                                   cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                              
+                                              [alert show];
+                                          }
+                                      }];
                 }
                 
                 else {
@@ -898,8 +899,8 @@
             
         }
     }
-
-
+    
+    
 }
 
 +(void)loginwithUserName:(NSString *)userName
@@ -925,68 +926,68 @@
     [DIOSView getViewWithPath:@"user/details"
                        params:nil
                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSMutableDictionary *userDictionary = [responseObject mutableCopy];
-        [userDictionary addEntriesFromDictionary:@{@"basicAuthString":basicAuthString}];
-        NSError *setPasswordError = nil;
-        [SGKeychain setPassword:password
-                       username:userName
-                    serviceName:@"Drupal 8"
-                    accessGroup:nil
-                 updateExisting:YES
-                          error:&setPasswordError];
-        
-        DIOSSession * session =  [DIOSSession sharedSession];
-        [session setBasicAuthCredsWithUsername:userName
-                                   andPassword:password];
-        [hud hide:YES];
-        
-        if ( userDictionary != nil ) {
-            D8D(@"userDictionary %@", userDictionary );
-            }
+                          NSMutableDictionary *userDictionary = [responseObject mutableCopy];
+                          [userDictionary addEntriesFromDictionary:@{@"basicAuthString":basicAuthString}];
+                          NSError *setPasswordError = nil;
+                          [SGKeychain setPassword:password
+                                         username:userName
+                                      serviceName:@"Drupal 8"
+                                      accessGroup:nil
+                                   updateExisting:YES
+                                            error:&setPasswordError];
+                          
+                          DIOSSession * session =  [DIOSSession sharedSession];
+                          [session setBasicAuthCredsWithUsername:userName
+                                                     andPassword:password];
+                          [hud hide:YES];
+                          
+                          if ( userDictionary != nil ) {
+                              D8D(@"userDictionary %@", userDictionary );
+                          }
                           if (completion) {
                               completion(userDictionary);
                           }
-    }
+                      }
                       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        NSInteger statusCode  = operation.response.statusCode;
-        [hud hide:YES];
-        
-        if ( statusCode == 403 ) {
-            
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials"
-                                                           message:@"Please check username and password."
-                                                          delegate:nil
-                                                 cancelButtonTitle:@"Dismiss"
-                                                 otherButtonTitles:nil];
-            [alert show];
-            
-        }
-        else if ( statusCode == 0 ) {
-            
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"]
-                                                           message:@"Plese specify a Drupal 8 site first \n"
-                                                          delegate:nil
-                                                 cancelButtonTitle:@"Dismiss"
-                                                 otherButtonTitles:nil];
-            [alert show];
-        }
-        else {
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"Error with code %ld",(long)statusCode]
-                                                           message:@"Please contact website admin."
-                                                          delegate:nil
-                                                 cancelButtonTitle:@"Dismiss"
-                                                 otherButtonTitles:nil];
-            [alert show];
-        }
-        
+                          
+                          NSInteger statusCode  = operation.response.statusCode;
+                          [hud hide:YES];
+                          
+                          if ( statusCode == 403 ) {
+                              
+                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials"
+                                                                             message:@"Please check username and password."
+                                                                            delegate:nil
+                                                                   cancelButtonTitle:@"Dismiss"
+                                                                   otherButtonTitles:nil];
+                              [alert show];
+                              
+                          }
+                          else if ( statusCode == 0 ) {
+                              
+                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"]
+                                                                             message:@"Plese specify a Drupal 8 site first \n"
+                                                                            delegate:nil
+                                                                   cancelButtonTitle:@"Dismiss"
+                                                                   otherButtonTitles:nil];
+                              [alert show];
+                          }
+                          else {
+                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"Error with code %ld",(long)statusCode]
+                                                                             message:@"Please contact website admin."
+                                                                            delegate:nil
+                                                                   cancelButtonTitle:@"Dismiss"
+                                                                   otherButtonTitles:nil];
+                              [alert show];
+                          }
+                          
                           if (completion) {
                               completion(nil);
                           }
-                
-    }];
-
-
+                          
+                      }];
+    
+    
 }
 
 +(NSString *)basicAuthStringforUsername:(NSString *)username Password:(NSString *)password{
@@ -1074,11 +1075,11 @@
                                            
                                        }
                                        if (completion) {
-                                            completion(NO);
+                                           completion(NO);
                                        }
                                        
                                    }];
-
+    
 }
 
 +(void)getArticlewithNodeID:(NSString *)nodeID
@@ -1097,38 +1098,176 @@
     sharedSession.baseURL = baseURL;
     
     if ( sharedSession.baseURL != nil ) {
-        
         MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:view];
         [view addSubview:hud];
-        
         hud.delegate = nil;
         hud.labelText = @"Loading article";
         [hud show:YES];
         
         [DIOSNode getNodeWithID:nodeID
                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSMutableDictionary *articleDict = (NSMutableDictionary *)responseObject;
-            [hud hide:YES];
-            if (completion) {
-                completion(articleDict);
-            }
-            
-        }
+                            NSMutableDictionary *articleDict = (NSMutableDictionary *)responseObject;
+                            [hud hide:YES];
+                            if (completion) {
+                                completion(articleDict);
+                            }
+                            
+                        }
                         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [hud hide:YES];
-            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                           message:[NSString stringWithFormat:@"Error while loading article with %@ ",error.localizedDescription]
-                                                          delegate:nil
-                                                 cancelButtonTitle:@"Dismiss"
-                                                 otherButtonTitles: nil];
-            [alert show];
-            if (completion) {
-                completion(nil);
-            }
-        }];
+                            [hud hide:YES];
+                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                           message:[NSString stringWithFormat:@"Error while loading article with %@ ",error.localizedDescription]
+                                                                          delegate:nil
+                                                                 cancelButtonTitle:@"Dismiss"
+                                                                 otherButtonTitles: nil];
+                            [alert show];
+                            if (completion) {
+                                completion(nil);
+                            }
+                        }];
     }
+    
+    
+}
 
-
++(void)postComment:(NSString *)comment
+         withTitle:(NSString *)title
+          onNodeID:(NSString *)nodeID
+          withView:(UIView *)view
+        completion:(void (^)(BOOL success))completion{
+    
+    User *user = [User sharedInstance];
+    
+    NSDictionary *params =
+    @{
+      
+      @"entity_id": @[
+              @{
+                  @"target_id": nodeID
+                  }
+              ],
+      @"subject": @[
+              @{
+                  @"value": title
+                  }],
+      
+      @"uid":@[
+              @{
+                  
+                  @"target_id":user.uid
+                  }
+              ],
+      @"status": @[
+              @{
+                  @"value": @"1"
+                  }
+              ],
+      @"entity_type": @[
+              @{
+                  @"value": @"node"
+                  }
+              ],
+      @"comment_type": @[
+              @{
+                  @"target_id": @"comment"
+                  }
+              ],
+      @"field_name": @[
+              @{
+                  @"value": @"comment"
+                  }
+              ],
+      @"comment_body": @[
+              @{
+                  @"value":comment,@"format":@"full_html"
+                  }
+              ]
+      };
+    
+    MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:hud];
+    
+    hud.delegate = nil;
+    hud.labelText = @"Posting comment...";
+    [hud show:YES];
+    [DIOSComment createCommentWithParams:params
+                              relationID:nodeID
+                                    type:@"comment"
+                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                     
+                                     UIImageView *imageView;
+                                     UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+                                     imageView = [[UIImageView alloc] initWithImage:image];
+                                     
+                                     hud.customView = imageView;
+                                     hud.mode = MBProgressHUDModeCustomView;
+                                     
+                                     hud.labelText = @"Completed";
+                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                         // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 1 seconds
+                                         sleep(1);
+                                         [hud hide:YES];
+                                     });
+                                     if (completion) {
+                                         completion(YES);
+                                     }
+                                     
+                                 }
+                                 failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                     [hud hide:YES];
+                                     NSInteger statusCode  = operation.response.statusCode;
+                                     if ( statusCode == 403 ) {
+                                         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                        message:@"User is not authorised for this operation."
+                                                                                       delegate:nil
+                                                                              cancelButtonTitle:@"Dismiss"
+                                                                              otherButtonTitles:nil];
+                                         
+                                         alert.tag = 2; // For error related alerts tag is 2
+                                         [alert show];
+                                         
+                                     }
+                                     else if ( statusCode == 401 ) {
+                                         User *user = [User sharedInstance];
+                                         [user clearUserDetails];
+                                         DIOSSession *sharedSession = [DIOSSession sharedSession];
+                                         sharedSession.signRequests = NO;
+                                         
+                                         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                        message:@"Please verify login credentials first."
+                                                                                       delegate:nil
+                                                                              cancelButtonTitle:@"Dismiss"
+                                                                              otherButtonTitles:nil];
+                                         alert.tag = 2; // For error related alerts tag is 2
+                                         [alert show];
+                                         
+                                     }
+                                     else if ( statusCode == 0 ) {
+                                         
+                                         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"]
+                                                                                        message:@"Plese specify a Drupal 8 site first \n"
+                                                                                       delegate:nil
+                                                                              cancelButtonTitle:@"Dismiss"
+                                                                              otherButtonTitles:nil];
+                                         alert.tag = 2; // For error related alerts tag is 2
+                                         [alert show];
+                                         
+                                     }
+                                     
+                                     else {
+                                         
+                                         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                        message:[NSString stringWithFormat:@"Error while posting the comment with error code %@",error.localizedDescription]
+                                                                                       delegate:nil
+                                                                              cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                                         alert.tag = 2; // For error related alerts tag is 2
+                                         [alert show];
+                                     }
+                                     if (completion) {
+                                         completion(NO);
+                                     }
+                                 }];
+    
 }
 
 
