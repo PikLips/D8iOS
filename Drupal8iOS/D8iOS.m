@@ -44,9 +44,10 @@
                              @"filename":@[@{@"value":[asset valueForKey:@"filename"]}],
                              @"data":@[@{@"value":[self encodeToBase64String:assetImage.image]
                                          }]};
-    
+    // call to create Entity on drupal
     [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
                                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                       // success block
                                        UIImageView *imageView;
                                        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
                                        imageView = [[UIImageView alloc] initWithImage:image];
@@ -62,8 +63,7 @@
                                        });
                                    }
                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                       
-                                       
+                                       // Faliure block
                                        
                                        long statusCode = operation.response.statusCode;
                                        // This can happen when POST is with out Authorization details or login fails
@@ -156,9 +156,11 @@
     sharedSession.baseURL = baseURL;
     sharedSession.signRequests = YES;
     if ( sharedSession.baseURL != nil ) {
+        // GET on view
         [DIOSView getViewWithPath:[NSString stringWithFormat:@"comments/%@",nodeID]
                            params:nil
                           success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                              // success block
                               NSMutableArray *commentList = [[NSMutableArray alloc]init];
                               for (NSMutableDictionary *comment in responseObject)
                               {
@@ -173,6 +175,7 @@
                               
                           }
                           failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                              // faliure block
                               [hud hide:YES];
                               sharedSession.signRequests =YES;
                               
@@ -182,6 +185,7 @@
                                   sharedSession.signRequests = NO;
                                   
                                   User *sharedUser = [User sharedInstance];
+                                  // Credentials are not valid so remove it
                                   [sharedUser clearUserDetails];
                                   
                                   UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
@@ -246,9 +250,11 @@
         DIOSSession *sharedSession = [DIOSSession sharedSession];
         sharedSession.baseURL = baseURL;
         if ( sharedSession.baseURL != nil ) {
+            // Get on view
             [DIOSView getViewWithPath:[NSString stringWithFormat:@"%@/%@",path,sharedUser.uid]
                                params:nil
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  // success block
                                   NSMutableArray *listOfFiles = [[NSMutableArray alloc]init];
                                   for ( NSMutableDictionary *fileJSONDict in responseObject )
                                   {
@@ -261,6 +267,7 @@
                                   }
                                   
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  // faliure block
                                   [hud hide:YES];
                                   
                                   long statusCode = operation.response.statusCode;
@@ -269,6 +276,7 @@
                                       sharedSession.signRequests = NO;
                                       
                                       User *sharedUser = [User sharedInstance];
+                                      // Credentials are not valid so remove it
                                       [sharedUser clearUserDetails];
                                       
                                       UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
@@ -332,61 +340,68 @@
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     sharedSession.baseURL = baseURL;
     if ( sharedSession.baseURL != nil ) {
-        [DIOSView getViewWithPath:@"articles" params:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSMutableArray * articleList = [[NSMutableArray alloc]init];
-            for ( NSMutableDictionary *article in responseObject )
-            {
-                Article *newTip = [[Article alloc]initWithDictionary:article];
-                [articleList addObject:newTip];
-                
-            }
-            [hud hide:YES];
-            if (completion) {
-                completion(articleList);
-            }
-            
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [hud hide:YES];
-            long statusCode = operation.response.statusCode;
-            // This can happen when GET is with out Authorization details or credentials are wrong
-            if ( statusCode == 401 ) {
-                
-                sharedSession.signRequests = NO;
-                
-                User *sharedUser = [User sharedInstance];
-                [sharedUser clearUserDetails];
-                
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                               message:@"Please verify login credentials. "
-                                                              delegate:nil
-                                                     cancelButtonTitle:@"Dismiss"
-                                                     otherButtonTitles: nil];
-                [alert show];
-            }
-            
-            // Credentials are valid but user is not authorised to perform this operation.
-            else if ( statusCode == 403 ) {
-                
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                               message:@"User is not authorised for this operation."
-                                                              delegate:nil
-                                                     cancelButtonTitle:@"Dismiss"
-                                                     otherButtonTitles: nil];
-                [alert show];
-                
-            }
-            else {
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                               message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription]
-                                                              delegate:nil
-                                                     cancelButtonTitle:@"Dismiss"
-                                                     otherButtonTitles: nil];
-                [alert show];
-                
-            }
-            completion(nil);
-        }];
+        // GET on view
+        [DIOSView getViewWithPath:@"articles"
+                           params:nil
+                          success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                              // success block
+                              NSMutableArray * articleList = [[NSMutableArray alloc]init];
+                              for ( NSMutableDictionary *article in responseObject )
+                              {
+                                  Article *newTip = [[Article alloc]initWithDictionary:article];
+                                  [articleList addObject:newTip];
+                                  
+                              }
+                              [hud hide:YES];
+                              if (completion) {
+                                  completion(articleList);
+                              }
+                              
+                              
+                          }
+                          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                              // faliure block
+                              [hud hide:YES];
+                              long statusCode = operation.response.statusCode;
+                              // This can happen when GET is with out Authorization details or credentials are wrong
+                              if ( statusCode == 401 ) {
+                                  
+                                  sharedSession.signRequests = NO;
+                                  
+                                  User *sharedUser = [User sharedInstance];
+                                  // Credentials are not valid so remove it
+                                  [sharedUser clearUserDetails];
+                                  
+                                  UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                 message:@"Please verify login credentials. "
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"Dismiss"
+                                                                       otherButtonTitles: nil];
+                                  [alert show];
+                              }
+                              
+                              // Credentials are valid but user is not authorised to perform this operation.
+                              else if ( statusCode == 403 ) {
+                                  
+                                  UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                 message:@"User is not authorised for this operation."
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"Dismiss"
+                                                                       otherButtonTitles: nil];
+                                  [alert show];
+                                  
+                              }
+                              else {
+                                  UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+                                                                                 message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription]
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"Dismiss"
+                                                                       otherButtonTitles: nil];
+                                  [alert show];
+                                  
+                              }
+                              completion(nil);
+                          }];
     }
     else {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
@@ -408,14 +423,17 @@
     hud.labelText = @"Uploading file ...";
     hud.delegate = nil;
     [hud show:YES];
+    // Request JSON
     NSDictionary *params = @{
                              @"filename":@[@{@"value":fileName}],
                              @"data":@[@{@"value":base64EncodedString}]};
     // This is temporary work around for 200 response code instead of 201 , the drupal responds with text/html format here we explicitly ask for JSON so that AFNwteorking will not report error
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     [sharedSession.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    // Create file entity
     [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
                                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                       // Success block
                                        // This is temporary work around for 200 response code instead of 201
                                        [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
                                        
@@ -434,7 +452,7 @@
                                        });
                                    }
                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                       
+                                       // faliure block
                                        // This is temporary work around for 200 response code instead of 201
                                        [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
                                        
@@ -448,7 +466,9 @@
                                            sharedSession.signRequests = NO;
                                            
                                            User *sharedUser = [User sharedInstance];
+                                           // Credentials are not valid so remove it
                                            [sharedUser clearUserDetails];
+                                           
                                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
                                                                                           message:@"Please verify login credentials." delegate:nil
                                                                                 cancelButtonTitle:@"Dismiss"
@@ -522,7 +542,7 @@
     [sharedSession GET:[drupalSiteURL absoluteString]
             parameters:nil
                success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                   
+                   // Success block
                    // Currently this storage per user
                    // storing a validated D8 site to user preferences
                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -546,7 +566,7 @@
                    });
                    
                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                   
+                   // Faliure block
                    [hud hide:YES];
                    // Display alert on faliure
                    long statusCode = operation.response.statusCode;
@@ -627,6 +647,7 @@
         
         [DIOSUser createUserWithParams:JSONBody
                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                   // Success block
                                    
                                    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Congratulations!"
                                                                                   message:@"Your account has been created. Further details will be mailed by application server."
@@ -637,7 +658,7 @@
                                    [hud hide:YES];
                                }
                                failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                   
+                                   // faliure block
                                    [hud hide:YES];
                                    
                                    NSInteger statusCode  = operation.response.statusCode;
@@ -816,14 +837,14 @@
                                               
                                           }
                                           
-                                          /* uncomment this portion when bug 2552099 is solved
-                                           if (revisedUserPassword != nil && ![revisedUserPassword isEqualToString:@""]) {
-                                           
-                                           credentials[1] = revisedUserPassword;
-                                           
-                                           }
-                                           
-                                           */
+                                          
+                                          if (revisedUserPassword != nil && ![revisedUserPassword isEqualToString:@""]) {
+                                              
+                                              credentials[1] = revisedUserPassword;
+                                              
+                                          }
+                                          
+                                          
                                           
                                           [SGKeychain setPassword:credentials[1]
                                                          username:credentials[0]
@@ -869,6 +890,7 @@
                                           }
                                           else if (statusCode == 401) {
                                               User *user = [User sharedInstance];
+                                              // Credentials are not valid so remove it
                                               [user clearUserDetails];
                                               DIOSSession *sharedSession = [DIOSSession sharedSession];
                                               sharedSession.signRequests = NO;
@@ -962,10 +984,11 @@
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     [sharedSession setBasicAuthCredsWithUsername:userName andPassword:password];
     NSString *basicAuthString = [self basicAuthStringforUsername:userName Password:password];
-    
+    // GET on view
     [DIOSView getViewWithPath:@"user/details"
                        params:nil
                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                          // success block
                           NSMutableDictionary *userDictionary = [responseObject mutableCopy];
                           [userDictionary addEntriesFromDictionary:@{@"basicAuthString":basicAuthString}];
                           NSError *setPasswordError = nil;
@@ -989,7 +1012,7 @@
                           }
                       }
                       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                          
+                          // faliure block
                           NSInteger statusCode  = operation.response.statusCode;
                           [hud hide:YES];
                           
@@ -1053,9 +1076,10 @@
     hud.labelText = @"Deleting file ...";
     hud.delegate = nil;
     [hud show:YES];
+    // DELETE on file entity
     [DIOSEntity deleteEntityWithEntityName:@"file" andID:fileID
                                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                       
+                                       // success block
                                        UIImageView *imageView;
                                        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
                                        imageView = [[UIImageView alloc] initWithImage:image];
@@ -1074,7 +1098,7 @@
                                        }
                                    }
                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                       
+                                       // Faliure block
                                        [hud hide:YES];
                                        
                                        long statusCode = operation.response.statusCode;
@@ -1083,7 +1107,7 @@
                                            DIOSSession *sharedSession = [DIOSSession sharedSession];
                                            
                                            sharedSession.signRequests = NO;
-                                           
+                                           // Credentials are not valid so remove it
                                            User *sharedUser = [User sharedInstance];
                                            [sharedUser clearUserDetails];
                                            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
@@ -1143,9 +1167,10 @@
         hud.delegate = nil;
         hud.labelText = @"Loading article";
         [hud show:YES];
-        
+        // GET on node
         [DIOSNode getNodeWithID:nodeID
                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                            // Success block
                             NSMutableDictionary *articleDict = (NSMutableDictionary *)responseObject;
                             [hud hide:YES];
                             if (completion) {
@@ -1154,6 +1179,7 @@
                             
                         }
                         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                            // Faliure block
                             [hud hide:YES];
                             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
                                                                            message:[NSString stringWithFormat:@"Error while loading article with %@ ",error.localizedDescription]
@@ -1178,6 +1204,7 @@
     
     User *user = [User sharedInstance];
     
+    // JSON for POST on commnet resource
     NSDictionary *params =
     @{
       
@@ -1230,11 +1257,12 @@
     hud.delegate = nil;
     hud.labelText = @"Posting comment...";
     [hud show:YES];
+    // POST on comment
     [DIOSComment createCommentWithParams:params
                               relationID:nodeID
                                     type:@"comment"
                                  success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                     
+                                     // Success block
                                      UIImageView *imageView;
                                      UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
                                      imageView = [[UIImageView alloc] initWithImage:image];
@@ -1254,6 +1282,7 @@
                                      
                                  }
                                  failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                     // faliure block
                                      [hud hide:YES];
                                      NSInteger statusCode  = operation.response.statusCode;
                                      if ( statusCode == 403 ) {
@@ -1269,6 +1298,7 @@
                                      }
                                      else if ( statusCode == 401 ) {
                                          User *user = [User sharedInstance];
+                                         // Credentials are not valid so remove it
                                          [user clearUserDetails];
                                          DIOSSession *sharedSession = [DIOSSession sharedSession];
                                          sharedSession.signRequests = NO;
