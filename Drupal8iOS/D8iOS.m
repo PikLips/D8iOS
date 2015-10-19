@@ -6,6 +6,11 @@
 //  Copyright © 2015 PikLips. All rights reserved.
 //  Written by Vivek Pandya
 //
+/*  MAS: This class isolates much of the DIOS Session activity into easily
+ *  copyable methods.  Note that NSAppTransportSecurity / NSAllowsArbitraryLoads
+ *  is set to 'YES' in the info.plist for development.  You will need a secure
+ *  connection for production.
+ */
 #import "Developer.h"
 #import "D8iOS.h"
 #import "Comment.h"
