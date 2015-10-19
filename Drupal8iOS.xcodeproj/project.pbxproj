@@ -18,6 +18,7 @@
 		44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BD71B56D8380002A3CF /* D8iOSUISplitViewController.m */; };
 		44511BDD1B56FF7B0002A3CF /* ViewArticlesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BDC1B56FF7B0002A3CF /* ViewArticlesTableViewController.m */; };
 		44511BE01B56FFE20002A3CF /* DownloadPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BDF1B56FFE20002A3CF /* DownloadPictureViewController.m */; };
+		44B8AF921BD4A4CA00CB17CE /* SetUpForDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B8AF911BD4A4CA00CB17CE /* SetUpForDemo.m */; settings = {ASSET_TAGS = (); }; };
 		44CF1DE81B51D97C00FC66EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1DE71B51D97C00FC66EE /* main.m */; };
 		44CF1DEB1B51D97C00FC66EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1DEA1B51D97C00FC66EE /* AppDelegate.m */; };
 		44CF1DEE1B51D97C00FC66EE /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1DED1B51D97C00FC66EE /* MasterViewController.m */; };
@@ -91,6 +92,8 @@
 		44511BDC1B56FF7B0002A3CF /* ViewArticlesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewArticlesTableViewController.m; sourceTree = "<group>"; };
 		44511BDE1B56FFE20002A3CF /* DownloadPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadPictureViewController.h; sourceTree = "<group>"; };
 		44511BDF1B56FFE20002A3CF /* DownloadPictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadPictureViewController.m; sourceTree = "<group>"; };
+		44B8AF901BD4A4CA00CB17CE /* SetUpForDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetUpForDemo.h; sourceTree = "<group>"; };
+		44B8AF911BD4A4CA00CB17CE /* SetUpForDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetUpForDemo.m; sourceTree = "<group>"; };
 		44CF1DE21B51D97B00FC66EE /* Drupal8iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drupal8iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44CF1DE61B51D97B00FC66EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44CF1DE71B51D97C00FC66EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -218,6 +221,8 @@
 				44511BDA1B56E8440002A3CF /* Developer.h */,
 				44CF1DE91B51D97C00FC66EE /* AppDelegate.h */,
 				44CF1DEA1B51D97C00FC66EE /* AppDelegate.m */,
+				44B8AF901BD4A4CA00CB17CE /* SetUpForDemo.h */,
+				44B8AF911BD4A4CA00CB17CE /* SetUpForDemo.m */,
 				44CF1DEC1B51D97C00FC66EE /* MasterViewController.h */,
 				44CF1DED1B51D97C00FC66EE /* MasterViewController.m */,
 				44CF1DEF1B51D97C00FC66EE /* DetailViewController.h */,
@@ -442,7 +447,7 @@
 				TargetAttributes = {
 					44CF1DE11B51D97B00FC66EE = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = M95772M2QV;
+						DevelopmentTeam = 8J8REM2WXT;
 					};
 					44CF1DFD1B51D97C00FC66EE = {
 						CreatedOnToolsVersion = 6.4;
@@ -553,6 +558,7 @@
 				CF38A2181BB051550035D321 /* CommentsTableViewController.m in Sources */,
 				44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */,
 				CFA9E7A61B7D1C8900390843 /* MBProgressHUD.m in Sources */,
+				44B8AF921BD4A4CA00CB17CE /* SetUpForDemo.m in Sources */,
 				CF65993B1B5BA536000AC0D7 /* Article.m in Sources */,
 				444511BF1B5417EB008B7E13 /* AAPLRootListViewController.m in Sources */,
 				44E22EDC1BD1D53E00B4BC69 /* D8iOS.m in Sources */,

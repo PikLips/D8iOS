@@ -353,11 +353,9 @@
                                   
                               }
                               [hud hide:YES];
-                              if (completion) {
+                              if ( completion ) {
                                   completion(articleList);
                               }
-                              
-                              
                           }
                           failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                               // faliure block
