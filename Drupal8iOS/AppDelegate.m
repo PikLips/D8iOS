@@ -31,19 +31,6 @@ int d8FlagLevel = D8FLAGDEBUG; // MAS: highest level
     
     [sharedSession setBaseURL:[NSURL URLWithString:[defaults objectForKey:@"drupal8site"]?:@""]];
     
-    NSError *error = nil;
-    
-    NSArray *credentials  = [SGKeychain usernamePasswordForServiceName:@"Drupal 8" accessGroup:nil error:&error];
-    // First element of the array is user name
-    // Second element is the password
-    
-    if (credentials !=nil && credentials[0] != nil) {
-        
-        // Here we perform a network call and verify the credentials --
-        [sharedSession setBasicAuthCredsWithUsername:credentials[0] andPassword:credentials[1]];
-        
-    }
-    
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
