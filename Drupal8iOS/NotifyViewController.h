@@ -9,5 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface NotifyViewController : UIViewController
-
++(UIAlertController *)noURLNotify;
++(UIAlertController *)invalidURLNotify;
++(UIAlertController *)otherURLNotifyError:(NSString *)errmsg;
++(UIAlertController *)alreadySignedInNotifyError:(NSString *)errmsg;
 @end
