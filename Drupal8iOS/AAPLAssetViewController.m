@@ -308,13 +308,13 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
     
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     [sharedSession.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [self toggleSpinner:YES];
+    [self toggleSpinner:YES isSuccess:NO];
     
     [D8iOS uploadImageToServer:self.asset
                      withImage:self.imageView
                        success:^(AFHTTPRequestOperation *operation, id responseObject) {
                          [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
-                           [self toggleSpinner:NO];
+                           [self toggleSpinner:NO isSuccess:YES];
                      }
                        failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                            [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
@@ -322,7 +322,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                            long statusCode = operation.response.statusCode;
                            // This can happen when POST is without Authorization details or login fails
                            if ( statusCode == 401 ) {
-                               [_hud hide:YES];
+                               [self toggleSpinner:NO isSuccess:NO];
                                DIOSSession *sharedSession = [DIOSSession sharedSession];
                                
                                sharedSession.signRequests = NO;
@@ -335,7 +335,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                            }
                            
                            else if ( statusCode == 0 ) {
-                               [_hud hide:YES];
+                               [self toggleSpinner:NO isSuccess:NO];
                                [self presentViewController:[NotifyViewController zeroStatusCodeNotifyError:error.localizedDescription]
                                                   animated:YES
                                                 completion:nil];
@@ -344,7 +344,7 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                            
                            // Credentials are valid but user is not authorised for the operation.
                            else if ( statusCode == 403 ) {
-                               [_hud hide:YES];
+                               [self toggleSpinner:NO isSuccess:NO];
                                [self presentViewController:[NotifyViewController notAuthorisedNotifyError]
                                                   animated:YES
                                                 completion:nil];
@@ -352,10 +352,10 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
                            // This to handle unacceptable content-type: text/html error
                            // This is very bad fix, but we have to keep this as long as drupal patch is not updated to address this issue
                            else if (statusCode == 200){
-                               [self toggleSpinner:NO];
+                               [self toggleSpinner:NO isSuccess:YES];
                            }
                            else {
-                               [_hud hide:YES];
+                               [self toggleSpinner:NO isSuccess:NO];
                                NSMutableDictionary *errorRes = (NSMutableDictionary *) operation.responseObject;
                                [self presentViewController:[NotifyViewController genericNotifyError:[errorRes objectForKey:@"error"]]
                                                   animated:YES
@@ -368,8 +368,9 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
    
 }
 
-/** @function toggleSpinner: (bool) on
+/** @function toggleSpinner: (bool) on isSuccess:(bool)flag
  *  @param on A bool indicating whether the activity indicator should be on or off.
+ *  @param flag A bool indication whether the operation is successful or not. This param will be ignored if on is YES
  *  @abstract This implements MBProgressHUB as an alternative to UIActivityIndicatorView .
  *  @seealso https://github.com/jdg/MBProgressHUD
  *  @discussion This needs to be a Cocoapod and abstracted into its own class with specific objects
@@ -379,33 +380,33 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
  *  @updated
  *
  */
-
--(void)toggleSpinner:(bool) on {
+-(void)toggleSpinner:(bool) on isSuccess:(bool)flag{
     if ( on ) {
         _hud = [[MBProgressHUD alloc ] initWithView:super.view];
         [super.view addSubview:_hud];
         _hud.delegate = nil;
-        _hud.labelText = @"Uploading image ...";
+        _hud.labelText = @"Uploading the image ...";
         [_hud show:YES];
     }
     else {
-        UIImageView *imageView;
-        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-        imageView = [[UIImageView alloc] initWithImage:image];
-        
-        _hud.customView = imageView;
-        _hud.mode = MBProgressHUDModeCustomView;
-        
-        _hud.labelText = @"Completed";
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
-            sleep(1);
+        if(flag){
+            UIImageView *imageView;
+            UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+            imageView = [[UIImageView alloc] initWithImage:image];
+            _hud.customView = imageView;
+            _hud.mode = MBProgressHUDModeCustomView;
+            _hud.labelText = @"Completed";
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Put main thread to sleep so that "Completed" HUD stays on for a second
+                sleep(1);
+                [_hud hide:YES];
+            });
+        }
+        else{
             [_hud hide:YES];
-        });
-
+        }
     }
 }
-
 
 @end
 

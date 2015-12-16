@@ -90,12 +90,7 @@
                 
                 if ( [credentials[1] isEqualToString:self.currentUserPassword.text] ) {
                     
-                    [self toggleSpinner:YES];
-                    [D8iOS updateUserAccoutwithUserName:self.userName.text
-                                        currentPassword:self.currentUserPassword.text
-                                                  email:self.userEmailAddress.text
-                                    revisedUserPassword:self.revisedUserPassword.text
-                                               withView:self.view];
+                    [self toggleSpinner:YES isSuccess:NO];
                     
                     [D8iOS updateUserAccoutwithUserName:self.userName.text
                                         currentPassword:self.currentUserPassword.text
@@ -138,11 +133,11 @@
                         
                         [sharedSession setBasicAuthCredsWithUsername:credentials[0]
                                                          andPassword:credentials[1]];
-                        [self toggleSpinner:NO];
+                        [self toggleSpinner:NO isSuccess:YES];
                         
                     }
                                                 failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        [self toggleSpinner:NO];
+                        [self toggleSpinner:NO isSuccess:NO];
                         
                         NSInteger statusCode  = operation.response.statusCode;
                         
@@ -210,8 +205,9 @@
     
 }
 
-/** @function toggleSpinner: (bool) on
+/** @function toggleSpinner: (bool) on isSuccess:(bool)flag
  *  @param on A bool indicating whether the activity indicator should be on or off.
+ *  @param flag A bool indication whether the operation is successful or not. This param will be ignored if on is YES
  *  @abstract This implements MBProgressHUB as an alternative to UIActivityIndicatorView .
  *  @seealso https://github.com/jdg/MBProgressHUD
  *  @discussion This needs to be a Cocoapod and abstracted into its own class with specific objects
@@ -221,28 +217,32 @@
  *  @updated
  *
  */
--(void)toggleSpinner:(bool) on {
+-(void)toggleSpinner:(bool) on isSuccess:(bool)flag{
     if ( on ) {
         _hud = [[MBProgressHUD alloc ] initWithView:super.view];
         [super.view addSubview:_hud];
         _hud.delegate = nil;
-        _hud.labelText = @"Updating user details";
+        _hud.labelText = @"Updating the details ...";
         [_hud show:YES];
     }
     else {
-        UIImageView *imageView;
-        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-        imageView = [[UIImageView alloc] initWithImage:image];
-        _hud.customView = imageView;
-        _hud.mode = MBProgressHUDModeCustomView;
-        _hud.labelText = @"Completed";
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Put main thread to sleep so that "Completed" HUD stays on for a second
-            sleep(1);
+        if(flag){
+            UIImageView *imageView;
+            UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+            imageView = [[UIImageView alloc] initWithImage:image];
+            _hud.customView = imageView;
+            _hud.mode = MBProgressHUDModeCustomView;
+            _hud.labelText = @"Completed";
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Put main thread to sleep so that "Completed" HUD stays on for a second
+                sleep(1);
+                [_hud hide:YES];
+            });
+        }
+        else{
             [_hud hide:YES];
-        });
+        }
     }
 }
-
 
 @end

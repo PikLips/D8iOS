@@ -161,16 +161,16 @@
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if ( editingStyle == UITableViewCellEditingStyleDelete ) {
         FileJSON *fileJSONObj = [self.listOfFiles objectAtIndex:indexPath.row];
-        [self toggleSpinner:YES];
+        [self toggleSpinner:YES isSuccess:NO];
         [D8iOS deleteFilewithFileID:fileJSONObj.fid
                             success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                 [self.listOfFiles removeObjectAtIndex:indexPath.row];
                                 [tableView deleteRowsAtIndexPaths:@[indexPath]
                                                  withRowAnimation:UITableViewRowAnimationFade];
-                                [self toggleSpinner:NO];
+                                [self toggleSpinner:NO isSuccess:YES];
                             }
                             failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                [self toggleSpinner:NO];
+                                [self toggleSpinner:NO isSuccess:NO];
                                 NSInteger statusCode = operation.response.statusCode;
                                 switch (statusCode) {
                                     case 401:
@@ -198,8 +198,9 @@
     }
 }
 
-/** @function toggleSpinner: (bool) on
+/** @function toggleSpinner: (bool) on isSuccess:(bool)flag
  *  @param on A bool indicating whether the activity indicator should be on or off.
+ *  @param flag A bool indication whether the operation is successful or not. This param will be ignored if on is YES
  *  @abstract This implements MBProgressHUB as an alternative to UIActivityIndicatorView .
  *  @seealso https://github.com/jdg/MBProgressHUD
  *  @discussion This needs to be a Cocoapod and abstracted into its own class with specific objects
@@ -209,7 +210,7 @@
  *  @updated
  *
  */
--(void)toggleSpinner:(bool) on {
+-(void)toggleSpinner:(bool) on isSuccess:(bool)flag{
     if ( on ) {
         _hud = [[MBProgressHUD alloc ] initWithView:super.view];
         [super.view addSubview:_hud];
@@ -218,6 +219,7 @@
         [_hud show:YES];
     }
     else {
+        if(flag){
         UIImageView *imageView;
         UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
         imageView = [[UIImageView alloc] initWithImage:image];
@@ -230,6 +232,10 @@
             [_hud hide:YES];
         });
     }
+        else{
+            [_hud hide:YES];
+        }
+}
 }
 
 -(void)toggleSpinner2:(bool) on {
