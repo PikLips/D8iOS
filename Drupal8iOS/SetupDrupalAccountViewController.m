@@ -32,6 +32,8 @@
 #import "DIOSSession.h"
 #import "DIOSUser.h"
 #import "D8iOS.h"
+#import "MBProgressHUD.h"
+#import "NotifyViewController.h"
 
 @interface SetupDrupalAccountViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *drupalUserName;
@@ -44,6 +46,7 @@
 @property (nonatomic, strong) NJOPasswordValidator *strictValidator;
 @property (weak, nonatomic) IBOutlet UITextView *emailValidationTextView;
 @property (weak, nonatomic) IBOutlet UITextView *userNameValidationTextView;
+@property (nonatomic,strong) MBProgressHUD *hud;
 
 @end
 
@@ -61,11 +64,55 @@ bool emailStatus = NO;
 }
 
 -(IBAction)createUserAccount:(id)sender {
+    User *sharedUser = [User sharedInstance];
+    if ( sharedUser.name !=nil && ![sharedUser.name isEqualToString:@""] ) {
+        // A user is already logged in
+       [self presentViewController:[NotifyViewController informationNotifywithMsg:@"You are already logged in."]
+                          animated:YES
+                        completion:nil];
+    }
+    else {
+        [self toggleSpinner:YES];
+        [D8iOS createUserAccountwithUserName:self.drupalUserName.text
+                                    password:self.drupalUserPassword.text
+                                    andEmail:self.drupalUserEmail.text
+                                     success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                         [self presentViewController:[NotifyViewController informationNotifywithMsg:@"Your account has been created. Further details will be mailed by application server."]
+                                                            animated:YES
+                                                          completion:nil];
+                                     }
+                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                         NSInteger statusCode  = operation.response.statusCode;
+                                         
+                                         if ( statusCode == 403 ) {
+                                             
+                                             // After https://www.drupal.org/node/2291055 is solved we do not need this block of code
+                                             
+                                            [self presentViewController:[NotifyViewController notAuthorisedNotifyError]
+                                                               animated:YES
+                                                             completion:nil];
+                                         }
+                                         else if( statusCode == 0 ) {
+                                             
+                                             [self presentViewController:[NotifyViewController zeroStatusCodeNotifyError:error.localizedDescription]
+                                                                animated:YES
+                                                              completion:nil];
+                                             
+                                         }
+                                         else {
+                                             // Email and Password change requires existing password to be specified.
+                                             // The code above tries to capture those requirements.  If it is missed then
+                                             // Drupal REST will provide propper error and that will be reflected by this alert
+                                             
+                                             NSMutableDictionary *responseDict  = (NSMutableDictionary *)operation.responseObject;
+                                             [self presentViewController:[NotifyViewController genericNotifyError:[responseDict objectForKey:@"error"]]
+                                                                animated:YES
+                                                              completion:nil];
+                                         }
+
+                                     }];
+    }
     
-    [D8iOS createUserAccountwithUserName:self.drupalUserName.text
-                                password:self.drupalUserPassword.text
-                                andEmail:self.drupalUserEmail.text
-                                withView:self.view];
 }
 
 -(void)viewDidLoad {
@@ -275,5 +322,19 @@ bool emailStatus = NO;
     
     self.addAccBtn.enabled = emailStatus && userNameStatus && passwordStatus;
 }
+
+-(void)toggleSpinner:(bool) on {
+    if ( on ) {
+        _hud = [[MBProgressHUD alloc ] initWithView:super.view];
+        [super.view addSubview:_hud];
+        _hud.delegate = nil;
+        _hud.labelText = @"Creating account ...";
+        [_hud show:YES];
+    }
+    else {
+        [_hud hide:YES];
+    }
+}
+
 
 @end

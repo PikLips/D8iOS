@@ -11,9 +11,15 @@
 #import "Developer.h"
 #import "Comment.h"
 #import "CommentTableViewCell.h"
+#import "NotifyViewController.h"
+#import "DIOSSession.h"
+#import "User.h"
+
+
 
 @interface CommentsTableViewController ()
 @property (nonatomic,strong) NSMutableArray * commentList;
+@property (nonatomic,strong) MBProgressHUD *hud;
 @end
 
 @implementation CommentsTableViewController
@@ -27,12 +33,49 @@
 }
 
 -(IBAction)getData{
-    [D8iOS getCommentDataforNodeID:self.nid withView:self.view completion:^(NSMutableArray *commentList) {
-        if (commentList != nil) {
-            self.commentList = commentList;
-            [self.tableView reloadData];
-        }
-    }];
+    DIOSSession *sharedSession = [DIOSSession sharedSession];
+    [self toggleSpinner:YES];
+    [D8iOS getCommentDataforNodeID:self.nid
+                           success:^(NSMutableArray *commentList) {
+                               [self toggleSpinner:NO];
+                               if (commentList != nil) {
+                                   self.commentList = commentList;
+                                   [self.tableView reloadData];
+                               }
+                           }
+                           failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                               [self toggleSpinner:NO];
+                               long statusCode = operation.response.statusCode;
+                               // This can happen when GET is with out Authorization details
+                               if ( statusCode == 401 ) {
+                                   sharedSession.signRequests = NO;
+                                   
+                                   User *sharedUser = [User sharedInstance];
+                                   // Credentials are not valid so remove it
+                                   [sharedUser clearUserDetails];
+                                   
+                                   [self presentViewController:[NotifyViewController invalidCredentialNotify]
+                                                      animated:YES
+                                                    completion:nil];
+                               }
+                               
+                               // Credentials is correct but user is not authorised to do certain operation.
+                               else if( statusCode == 403 ) {
+                                   [self presentViewController:[NotifyViewController notAuthorisedNotifyError]
+                                                      animated:YES
+                                                    completion:nil];
+                                   
+                               }
+                               else{
+                                   NSMutableDictionary *errorRes = (NSMutableDictionary *) operation.responseObject;
+                                   [self presentViewController:[NotifyViewController genericNotifyError:[errorRes objectForKey:@"error"]]
+                                                      animated:YES
+                                                    completion:nil];
+                               }
+
+        
+                           }];
+   
 }
 
 
@@ -89,4 +132,16 @@
     }
 }
 
+-(void)toggleSpinner:(bool) on {
+    if ( on ) {
+        _hud = [[MBProgressHUD alloc ] initWithView:super.view];
+        [super.view addSubview:_hud];
+        _hud.delegate = nil;
+        _hud.labelText = @"Loading the comments ...";
+        [_hud show:YES];
+    }
+    else {
+        [_hud hide:YES];
+    }
+}
 @end

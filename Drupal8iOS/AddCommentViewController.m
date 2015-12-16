@@ -12,6 +12,7 @@
 #import "D8iOS.h"
 #import "DIOSComment.h"
 #import "DIOSSession.h"
+#import "NotifyViewController.h"
 
 @interface AddCommentViewController ()
 
@@ -19,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *editorSwitch;
 @property (weak, nonatomic) IBOutlet UIWebView *bodyWebView;
 @property (weak, nonatomic) IBOutlet UITextView *bodyTextView;
+@property (nonatomic,strong) MBProgressHUD *hud;
 
 - (IBAction)switchEditor:(id)sender;
 @end
@@ -77,15 +79,45 @@
 }
 
 - (IBAction)done:(id)sender {
-    [D8iOS postComment:[self.bodyTextView text]
-             withTitle:[self.tipTitle text]
-              onNodeID:self.nid
-              withView:self.view completion:^(BOOL success) {
-                  if (success) {
-                      [self dismissViewControllerAnimated:YES
-                                               completion:nil];
-                  }
-              }];
+    [self toggleSpinner:YES isSuccess:NO];
+    [D8iOS postComment:[self.bodyTextView text] withTitle:[self.tipTitle text] onNodeID:self.nid success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self toggleSpinner:NO isSuccess:YES];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSInteger statusCode  = operation.response.statusCode;
+        if ( statusCode == 403 ) {
+            [self presentViewController:[NotifyViewController notAuthorisedNotifyError]
+                               animated:YES
+                             completion:nil];
+            
+        }
+        else if ( statusCode == 401 ) {
+            User *user = [User sharedInstance];
+            // Credentials are not valid so remove it
+            [user clearUserDetails];
+            DIOSSession *sharedSession = [DIOSSession sharedSession];
+            sharedSession.signRequests = NO;
+            
+            [self presentViewController:[NotifyViewController invalidCredentialNotify]
+                               animated:YES
+                             completion:nil];
+            
+        }
+        else if ( statusCode == 0 ) {
+            [self presentViewController:[NotifyViewController zeroStatusCodeNotifyError:error.localizedDescription]
+                               animated:YES
+                             completion:nil];
+        }
+        
+        else {
+            
+            NSMutableDictionary *errorRes = (NSMutableDictionary *) operation.responseObject;
+            [self presentViewController:[NotifyViewController genericNotifyError:[errorRes objectForKey:@"error"]]
+                               animated:YES
+                             completion:nil];
+        }
+
+    }];
+    
 }
 
 - (IBAction)switchEditor:(id)sender {
@@ -374,5 +406,52 @@ navigationType:(UIWebViewNavigationType)navigationType {
     [UIView commitAnimations];
     
 }
+
+/** @function toggleSpinner: (bool) on isSuccess:(bool)flag
+ *  @param on A bool indicating whether the activity indicator should be on or off.
+ *  @param flag A bool indication whether the operation is successful or not. This param will be ignored if on is YES
+ *  @abstract This implements MBProgressHUB as an alternative to UIActivityIndicatorView .
+ *  @seealso https://github.com/jdg/MBProgressHUD
+ *  @discussion This needs to be a Cocoapod and abstracted into its own class with specific objects
+ *              for each use (more illustrative).
+ *  @return N/A
+ *  @throws N/A
+ *  @updated
+ *
+ */
+
+-(void)toggleSpinner:(bool) on isSuccess:(bool)flag{
+    if ( on ) {
+        _hud = [[MBProgressHUD alloc ] initWithView:super.view];
+        [super.view addSubview:_hud];
+        _hud.delegate = nil;
+        _hud.labelText = @"Posting the comment ...";
+        [_hud show:YES];
+    }
+    else {
+        if (!flag) {
+            [_hud hide:YES];
+        }
+        else{
+            UIImageView *imageView;
+            UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+            imageView = [[UIImageView alloc] initWithImage:image];
+            
+            _hud.customView = imageView;
+            _hud.mode = MBProgressHUDModeCustomView;
+            
+            _hud.labelText = @"Completed";
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
+                sleep(1);
+                [_hud hide:YES];
+                [self dismissViewControllerAnimated:YES
+                                         completion:nil];
+            });
+        }
+        
+    }
+}
+
 
 @end
