@@ -19,9 +19,11 @@
 #import "FileJSON.h"
 #import "FileDetailsTableViewCell.h"
 #import "DownloadPictureViewController.h"
+#import "NotifyViewController.h"
 
 @interface DownloadPicturesViewController ()
 @property (nonatomic,strong) NSMutableArray * listOfFiles;
+@property (nonatomic,strong) MBProgressHUD *hud;
 @end
 
 @implementation DownloadPicturesViewController
@@ -35,12 +37,67 @@
 }
 
 -(IBAction)getData {
-    [D8iOS getFileDatafromPath:@"images" withView:self.view completion:^(NSMutableArray *fileList) {
-        if (fileList != nil) {
-            self.listOfFiles = fileList;
-            [self.tableView reloadData];
+    
+    User *sharedUser = [User sharedInstance];
+    
+    if ( sharedUser.uid != nil && ![sharedUser.uid isEqualToString:@""] ) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSURL *baseURL = [NSURL URLWithString:[defaults objectForKey:DRUPAL8SITE]];
+        DIOSSession *sharedSession = [DIOSSession sharedSession];
+        sharedSession.baseURL = baseURL;
+        if ( sharedSession.baseURL != nil ) {
+            [self toggleSpinner:YES];
+            [D8iOS getFileDatafromPath:@"images"
+                               success:^(NSMutableArray *fileList) {
+                                   [self toggleSpinner:NO];
+                                   if (fileList != nil) {
+                                       self.listOfFiles = fileList;
+                                       [self.tableView reloadData];
+                                   }
+                               }
+                               failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                   NSInteger statusCode = operation.response.statusCode;
+                                   [self toggleSpinner:NO];
+                                   switch (statusCode) {
+                                       case 401:{
+                                           sharedSession.signRequests = NO;
+                                           
+                                           User *sharedUser = [User sharedInstance];
+                                           // Credentials are not valid so remove it
+                                           [sharedUser clearUserDetails];
+                                           [self presentViewController:[NotifyViewController invalidCredentialNotify]
+                                                              animated:YES
+                                                            completion:nil];
+                                           break;
+                                       }
+                                       case 403:{
+                                           [self presentViewController:[NotifyViewController notAuthorisedNotifyError]
+                                                              animated:YES
+                                                            completion:nil];
+                                           break;
+                                       }
+                                       default:{
+                                           [self presentViewController:[NotifyViewController zeroStatusCodeNotifyError:error.localizedDescription]
+                                                              animated:YES
+                                                            completion:nil];
+                                           break;
+                                       }
+                                   }
+                                   
+                               }];
+            
         }
-    }];
+        else{
+            [self presentViewController:[NotifyViewController noURLNotify]
+                               animated:YES
+                             completion:nil];
+        }
+    }
+    else{
+        [self presentViewController:[NotifyViewController loginRequiredNotify]
+                           animated:YES
+                         completion:nil];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -113,5 +170,19 @@
         }
     }
 }
+
+-(void)toggleSpinner:(bool) on {
+    if ( on ) {
+        _hud = [[MBProgressHUD alloc ] initWithView:super.view];
+        [super.view addSubview:_hud];
+        _hud.delegate = nil;
+        _hud.labelText = @"Loading the files ...";
+        [_hud show:YES];
+    }
+    else {
+        [_hud hide:YES];
+    }
+}
+
 
 @end

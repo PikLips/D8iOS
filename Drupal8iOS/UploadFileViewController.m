@@ -12,6 +12,7 @@
 #import "DIOSSession.h"
 #import "User.h"
 #import "D8iOS.h"
+#import "NotifyViewController.h"
 
 @interface UploadFileViewController ()
 {
@@ -19,10 +20,12 @@
     NSInteger selectedRow; // MAS: this is the row selected
     NSString *selectedFilename; // MAS: this is the filename selected to be uploaded to Drupal
 }
+@property(nonatomic,strong) MBProgressHUD *hud;
 @end
 
 @implementation UploadFileViewController
 @synthesize uploadFilePicker;  // MAS:
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -128,13 +131,105 @@
     {
         NSData *data = [[NSFileManager defaultManager] contentsAtPath:filePath]; //NSData is required to get base64 encoding string of file
         NSString *base64EncodedFile = [data base64EncodedStringWithOptions:0];
-        [D8iOS uploadFilewithFileName:selectedFilename andDataString:base64EncodedFile withView:self.view];
+        [self toggleSpinner:YES isSuccess:NO];
+        DIOSSession *sharedSession = [DIOSSession sharedSession];
+        [sharedSession.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [D8iOS uploadFilewithFileName:selectedFilename
+                        andDataString:base64EncodedFile
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  [self toggleSpinner:NO isSuccess:YES];
+                                  [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
+                        }
+                              failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  [self toggleSpinner:NO isSuccess:NO];
+                                  [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
+                                  long statusCode = operation.response.statusCode;
+                                  // This can happen when POST is with out Authorization details
+                                  if (statusCode == 401) {
+                                      DIOSSession *sharedSession = [DIOSSession sharedSession];
+                                      
+                                      sharedSession.signRequests = NO;
+                                      
+                                      User *sharedUser = [User sharedInstance];
+                                      // Credentials are not valid so remove it
+                                      [sharedUser clearUserDetails];
+                                      [self presentViewController:[NotifyViewController invalidCredentialNotify]
+                                                         animated:YES
+                                                       completion:nil];
+                                  }
+                                  
+                                  else if( statusCode == 0 ) {
+                                      [self presentViewController:[NotifyViewController zeroStatusCodeNotifyError:error.localizedDescription]
+                                                         animated:YES
+                                                       completion:nil];
+                                      
+                                  }
+                                  
+                                  // Credentials are valid but user is not permitted to certain operation.
+                                  else if(statusCode == 403){
+                                      [self presentViewController:[NotifyViewController notAuthorisedNotifyError]
+                                                         animated:YES
+                                                       completion:nil];
+                                  }
+                                  else{
+                                      NSMutableDictionary *errorRes = (NSMutableDictionary *) operation.responseObject;
+                                      [self presentViewController:[NotifyViewController genericNotifyError:[errorRes objectForKey:@"error"]]
+                                                         animated:YES
+                                                       completion:nil];
+
+                                  }
+
+                              }];
     }
     else {
         
         D8D(@"File to be uploaded does not exit");
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"File does not exist on device" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
         [alert show];
+        
+    }
+}
+
+/** @function toggleSpinner: (bool) on isSuccess:(bool)flag
+ *  @param on A bool indicating whether the activity indicator should be on or off.
+ *  @param flag A bool indication whether the operation is successful or not. This param will be ignored if on is YES
+ *  @abstract This implements MBProgressHUB as an alternative to UIActivityIndicatorView .
+ *  @seealso https://github.com/jdg/MBProgressHUD
+ *  @discussion This needs to be a Cocoapod and abstracted into its own class with specific objects
+ *              for each use (more illustrative).
+ *  @return N/A
+ *  @throws N/A
+ *  @updated
+ *
+ */
+
+-(void)toggleSpinner:(bool) on isSuccess:(bool)flag{
+    if ( on ) {
+        _hud = [[MBProgressHUD alloc ] initWithView:super.view];
+        [super.view addSubview:_hud];
+        _hud.delegate = nil;
+        _hud.labelText = @"Uploading image ...";
+        [_hud show:YES];
+    }
+    else {
+        if (!flag) {
+            [_hud hide:YES];
+        }
+        else{
+        UIImageView *imageView;
+        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+        imageView = [[UIImageView alloc] initWithImage:image];
+        
+        _hud.customView = imageView;
+        _hud.mode = MBProgressHUDModeCustomView;
+        
+        _hud.labelText = @"Completed";
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
+            sleep(1);
+            [_hud hide:YES];
+        });
+        }
         
     }
 }

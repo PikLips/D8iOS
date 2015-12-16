@@ -43,12 +43,16 @@
     NSString *message = NSLocalizedString(@"Please enter the URL for your Drupal 8 host", nil);
     NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
     // Create the action.
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        D8D(@"noURLNotufy: The alert's cancel action occured.");
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"noURLNotufy: The alert's cancel action occured.");
+                                                         }];
     
     // Add the action.
     [alertController addAction:cancelAction];
@@ -69,12 +73,16 @@
     NSString *message = NSLocalizedString(@"Please check the URL for your Drupal 8 host", nil);
     NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
     // Create the action.
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        D8D(@"invalidURLNotify: The alert's cancel action occured.");
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"invalidURLNotify: The alert's cancel action occured.");
+                                                         }];
     
     // Add the action.
     [alertController addAction:cancelAction];
@@ -97,12 +105,16 @@
     message = [message stringByAppendingString:errmsg];
     NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
     // Create the action.
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        D8D(@"alreadySignedInNotifyError: The alert's cancel action occured.");
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"alreadySignedInNotifyError: The alert's cancel action occured.");
+                                                         }];
     
     // Add the action.
     [alertController addAction:cancelAction];
@@ -125,17 +137,172 @@
     message = [message stringByAppendingString:errmsg];
     NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
     // Create the action.
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        D8D(@"otherURLNotifyError: The alert's cancel action occured.");
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"otherURLNotifyError: The alert's cancel action occured.");
+                                                         }];
     
     // Add the action.
     [alertController addAction:cancelAction];
     return alertController;
     // [self presentViewController:alertController animated:YES completion:nil];
+}
+
++(UIAlertController *)invalidCredentialNotify{
+    NSString *title = NSLocalizedString(@"Invalid Credentials", nil);
+    NSString *message = NSLocalizedString(@"Please check username and password.", nil);
+    NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    // Create the action.
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"invalidCredentialNotifyError: The alert's cancel action occured.");
+                                                         }];
+    
+    // Add the action.
+    [alertController addAction:cancelAction];
+    return alertController;
+}
+
++(UIAlertController *)contactAdminNotifyError:(NSString *)errmsg{
+    NSString *title = NSLocalizedString(@"Error", nil);
+    NSString *message = NSLocalizedString(@"Please contact website admin. ", nil);
+    message = [message stringByAppendingString:errmsg];
+    NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    // Create the action.
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"contactAdminNotifyError: The alert's cancel action occured.");
+                                                         }];
+    
+    // Add the action.
+    [alertController addAction:cancelAction];
+    return alertController;
+}
+
++(UIAlertController *)zeroStatusCodeNotifyError:(NSString *)errmsg{
+    NSString *title = NSLocalizedString(@"Error", nil);
+    NSString *message = NSLocalizedString(@"Following error occurred: ", nil);
+    message = [message stringByAppendingString:errmsg];
+    NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    // Create the action.
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"zeroStatusCodeNotifyError: The alert's cancel action occured.");
+                                                         }];
+    
+    // Add the action.
+    [alertController addAction:cancelAction];
+    return alertController;
+}
+
++(UIAlertController *)genericNotifyError:(NSString *)errmsg{
+    NSString *title = NSLocalizedString(@"Error", nil);
+    NSString *message = NSLocalizedString(@"Following error occurred: ", nil);
+    message = [message stringByAppendingString:errmsg];
+    NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    // Create the action.
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"genericNotifyError: The alert's cancel action occured.");
+                                                         }];
+    
+    // Add the action.
+    [alertController addAction:cancelAction];
+    return alertController;
+}
+
++(UIAlertController *)informationNotifywithMsg:(NSString *)msg{
+    NSString *title = NSLocalizedString(@"Information", nil);
+
+    
+    NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:msg
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    // Create the action.
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"informationNotifywithMsg: The alert's cancel action occured.");
+                                                         }];
+    
+    // Add the action.
+    [alertController addAction:cancelAction];
+    return alertController;
+}
+
++(UIAlertController *)notAuthorisedNotifyError{
+    NSString *title = NSLocalizedString(@"User Not Authorised", nil);
+    NSString *message = NSLocalizedString(@" The user is not authorised to perform this operation. ", nil);
+        NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    // Create the action.
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"notAuthorisedNotifyError: The alert's cancel action occured.");
+                                                         }];
+    
+    // Add the action.
+    [alertController addAction:cancelAction];
+    return alertController;
+}
++(UIAlertController *)loginRequiredNotify{
+    NSString *title = NSLocalizedString(@"Login Required", nil);
+    NSString *message = NSLocalizedString(@" Please login to perform this operation. ", nil);
+    NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    
+    // Create the action.
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"loginRequired: The alert's cancel action occured.");
+                                                         }];
+    
+    // Add the action.
+    [alertController addAction:cancelAction];
+    return alertController;
+
 }
 
 #pragma mark - Example UIAlertControllerStyleAlert Style Alerts (templates: not actually used)
@@ -146,12 +313,16 @@
     NSString *message = NSLocalizedString(@"A message should be a short, complete sentence.", nil);
     NSString *cancelButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
     // Create the action.
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        NSLog(@"The simple alert's cancel action occured.");
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             NSLog(@"The simple alert's cancel action occured.");
+                                                         }];
     
     // Add the action.
     [alertController addAction:cancelAction];
@@ -166,16 +337,22 @@
     NSString *cancelButtonTitle = NSLocalizedString(@"Cancel", nil);
     NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
     // Create the actions.
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        D8D(@"The \"Okay/Cancel\" alert's cancel action occured.");
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"The \"Okay/Cancel\" alert's cancel action occured.");
+                                                         }];
     
-    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        D8D(@"The \"Okay/Cancel\" alert's other action occured.");
-    }];
+    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction *action) {
+                                                            D8D(@"The \"Okay/Cancel\" alert's other action occured.");
+                                                        }];
     
     // Add the actions.
     [alertController addAction:cancelAction];
@@ -192,20 +369,28 @@
     NSString *otherButtonTitleOne = NSLocalizedString(@"Choice One", nil);
     NSString *otherButtonTitleTwo = NSLocalizedString(@"Choice Two", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
     // Create the actions.
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        D8D(@"The \"Other\" alert's cancel action occured.");
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"The \"Other\" alert's cancel action occured.");
+                                                         }];
     
-    UIAlertAction *otherButtonOneAction = [UIAlertAction actionWithTitle:otherButtonTitleOne style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        D8D(@"The \"Other\" alert's other button one action occured.");
-    }];
+    UIAlertAction *otherButtonOneAction = [UIAlertAction actionWithTitle:otherButtonTitleOne
+                                                                   style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction *action) {
+                                                                     D8D(@"The \"Other\" alert's other button one action occured.");
+                                                                 }];
     
-    UIAlertAction *otherButtonTwoAction = [UIAlertAction actionWithTitle:otherButtonTitleTwo style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        D8D(@"The \"Other\" alert's other button two action occured.");
-    }];
+    UIAlertAction *otherButtonTwoAction = [UIAlertAction actionWithTitle:otherButtonTitleTwo
+                                                                   style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction *action) {
+                                                                     D8D(@"The \"Other\" alert's other button two action occured.");
+                                                                 }];
     
     // Add the actions.
     [alertController addAction:cancelAction];
@@ -222,7 +407,9 @@
     NSString *cancelButtonTitle = NSLocalizedString(@"Cancel", nil);
     NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
     // Add the text field for text entry.
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -230,13 +417,17 @@
     }];
     
     // Create the actions.
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        D8D(@"The \"Text Entry\" alert's cancel action occured.");
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"The \"Text Entry\" alert's cancel action occured.");
+                                                         }];
     
-    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        D8D(@"The \"Text Entry\" alert's other action occured.");
-    }];
+    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction *action) {
+                                                            D8D(@"The \"Text Entry\" alert's other action occured.");
+                                                        }];
     
     // Add the actions.
     [alertController addAction:cancelAction];
@@ -252,7 +443,9 @@
     NSString *cancelButtonTitle = NSLocalizedString(@"Cancel", nil);
     NSString *otherButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
     
     // Add the text field for the secure text entry.
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -261,25 +454,36 @@
          action's enabled property based on whether the user has entered a sufficiently
          secure entry.
          */
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTextFieldTextDidChangeNotification:) name:UITextFieldTextDidChangeNotification object:textField];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleTextFieldTextDidChangeNotification:)
+                                                     name:UITextFieldTextDidChangeNotification
+                                                   object:textField];
         
         textField.secureTextEntry = YES;
     }];
     
     // Create the actions.
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        D8D(@"The \"Secure Text Entry\" alert's cancel action occured.");
-        
-        // Stop listening for text changed notifications.
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:alertController.textFields.firstObject];
-    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+                                                             D8D(@"The \"Secure Text Entry\" alert's cancel action occured.");
+                                                             
+                                                             // Stop listening for text changed notifications.
+                                                             [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                                                                             name:UITextFieldTextDidChangeNotification
+                                                                                                           object:alertController.textFields.firstObject];
+                                                         }];
     
-    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        D8D(@"The \"Secure Text Entry\" alert's other action occured.");
-        
-        // Stop listening for text changed notifications.
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:alertController.textFields.firstObject];
-    }];
+    UIAlertAction *otherAction = [UIAlertAction actionWithTitle:otherButtonTitle
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction *action) {
+                                                            D8D(@"The \"Secure Text Entry\" alert's other action occured.");
+                                                            
+                                                            // Stop listening for text changed notifications.
+                                                            [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                                                                            name:UITextFieldTextDidChangeNotification
+                                                                                                          object:alertController.textFields.firstObject];
+                                                        }];
     
     // The text field initially has no text in the text field, so we'll disable it.
     otherAction.enabled = NO;

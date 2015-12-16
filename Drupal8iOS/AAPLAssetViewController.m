@@ -17,12 +17,14 @@
 
 #import "AAPLAssetViewController.h"
 #import "Developer.h"  // MAS: for development only, see which
-/*
+
 #import "DIOSSession.h"
+/*
 #import "DIOSEntity.h"
  */
 #import "User.h"
 #import "D8iOS.h"
+#import "NotifyViewController.h"
 
 @implementation CIImage (Convenience)
 - (NSData *)aapl_jpegRepresentationWithCompressionQuality:(CGFloat)compressionQuality {
@@ -53,6 +55,7 @@
 @property (assign) CGSize lastImageViewSize;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *space1;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *uploadButton;
+@property (strong,nonatomic) MBProgressHUD *hud;
 @end
 
 @implementation AAPLAssetViewController
@@ -303,116 +306,106 @@ static NSString * const AdjustmentFormatIdentifier = @"com.example.apple-samplec
  */
 - (IBAction)uploadImage:(id)sender {
     
-    [D8iOS uploadImageToServer: self.asset withImage: self.imageView withinView: self];
-
-    /*
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    [self.navigationController.view addSubview:hud];
-    
-    hud.dimBackground = YES;
-    hud.labelText = @"Uploading image ...";
-    // Regiser for HUD callbacks so we can remove it from the window at the right time
-    hud.delegate = self;
-    
-    [hud show:YES];
-    
-    // This is temporary work around for 200 response code instead of 201 , the drupal responds with text/html format here we explicitly ask for JSON so that AFNwteorking will not report error
     DIOSSession *sharedSession = [DIOSSession sharedSession];
     [sharedSession.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [self toggleSpinner:YES];
     
-    // This is the JSON body with required details to be sent
-   NSDictionary *params = @{
-        @"filename":@[@{@"value":[self.asset valueForKey:@"filename"]}],
-        @"data":@[@{@"value":[self encodeToBase64String:self.imageView.image]
-        }]};
-    
-    
-    [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
-                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                       
-                                       // This is temporary work around for 200 response code instead of 201
+    [D8iOS uploadImageToServer:self.asset
+                     withImage:self.imageView
+                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                         [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
+                           [self toggleSpinner:NO];
+                     }
+                       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                           [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
+                           
+                           long statusCode = operation.response.statusCode;
+                           // This can happen when POST is without Authorization details or login fails
+                           if ( statusCode == 401 ) {
+                               [_hud hide:YES];
+                               DIOSSession *sharedSession = [DIOSSession sharedSession];
+                               
+                               sharedSession.signRequests = NO;
+                               
+                               User *sharedUser = [User sharedInstance];
+                               [sharedUser clearUserDetails];
+                               [self presentViewController:[NotifyViewController invalidCredentialNotify]
+                                                  animated:YES
+                                                completion:nil];
+                           }
+                           
+                           else if ( statusCode == 0 ) {
+                               [_hud hide:YES];
+                               [self presentViewController:[NotifyViewController zeroStatusCodeNotifyError:error.localizedDescription]
+                                                  animated:YES
+                                                completion:nil];
+                               
+                           }
+                           
+                           // Credentials are valid but user is not authorised for the operation.
+                           else if ( statusCode == 403 ) {
+                               [_hud hide:YES];
+                               [self presentViewController:[NotifyViewController notAuthorisedNotifyError]
+                                                  animated:YES
+                                                completion:nil];
+                           }
+                           // This to handle unacceptable content-type: text/html error
+                           // This is very bad fix, but we have to keep this as long as drupal patch is not updated to address this issue
+                           else if (statusCode == 200){
+                               [self toggleSpinner:NO];
+                           }
+                           else {
+                               [_hud hide:YES];
+                               NSMutableDictionary *errorRes = (NSMutableDictionary *) operation.responseObject;
+                               [self presentViewController:[NotifyViewController genericNotifyError:[errorRes objectForKey:@"error"]]
+                                                  animated:YES
+                                                completion:nil];
+                               
+                           }
 
-                                       [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
-                                       
-                                       UIImageView *imageView;
-                                       UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-                                       imageView = [[UIImageView alloc] initWithImage:image];
-                                       
-                                       hud.customView = imageView;
-                                       hud.mode = MBProgressHUDModeCustomView;
-                                       
-                                       hud.labelText = @"Completed";
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
-                                           sleep(1);
-                                           [hud hide:YES];
-                                       });
-                                   }
-                                   failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                       
-                                       // This is temporary work around for 200 response code instead of 201
-                                       
-                                       [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
-                                       
-                                       [hud hide:YES];
-                                       
-                                       long statusCode = operation.response.statusCode;
-                                       // This can happen when POST is with out Authorization details or login fails
-                                       if (statusCode == 401) {
-                                           DIOSSession *sharedSession = [DIOSSession sharedSession];
-                                           
-                                           sharedSession.signRequests = NO;
-                                           
-                                           User *sharedUser = [User sharedInstance];
-                                           [sharedUser clearUserDetails];
-                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Please verify the login credentials." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                           [alert show];
-                                       }
-                                       
-                                       else if( statusCode == 0 ) {
-                                           
-                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"] message:@"Plese specify a Drupal 8 site first \n" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-                                           [alert show];
-                                           
-                                       }
-                                       
-                                       // Credentials are valid but user is not authorised for the operation.
-                                       else if(statusCode == 403){
-                                           
-                                           
-                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:@"User is not authorised for the operation." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                           [alert show];
-                                       }
-                                       
-                                       // This to handle unacceptable content-type: text/html error
-                                       // This is very bad fix , but we have to keep this untill drupal patch is not updated to address this issue
-                                       else if (statusCode == 200){
-                                           UIImageView *imageView;
-                                           UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
-                                           imageView = [[UIImageView alloc] initWithImage:image];
-                                           
-                                           hud.customView = imageView;
-                                           hud.mode = MBProgressHUDModeCustomView;
-                                           
-                                           hud.labelText = @"Completed";
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
-                                               sleep(2);
-                                               [hud hide:YES];
-                                           });
+                       }];
 
-                                           
-                                           
-                                       }
-                                       else{
-                                           
-                                           UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error" message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription] delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-                                           [alert show];
-                                       }
-                                   }];
-     */
-
+   
 }
+
+/** @function toggleSpinner: (bool) on
+ *  @param on A bool indicating whether the activity indicator should be on or off.
+ *  @abstract This implements MBProgressHUB as an alternative to UIActivityIndicatorView .
+ *  @seealso https://github.com/jdg/MBProgressHUD
+ *  @discussion This needs to be a Cocoapod and abstracted into its own class with specific objects
+ *              for each use (more illustrative).
+ *  @return N/A
+ *  @throws N/A
+ *  @updated
+ *
+ */
+
+-(void)toggleSpinner:(bool) on {
+    if ( on ) {
+        _hud = [[MBProgressHUD alloc ] initWithView:super.view];
+        [super.view addSubview:_hud];
+        _hud.delegate = nil;
+        _hud.labelText = @"Uploading image ...";
+        [_hud show:YES];
+    }
+    else {
+        UIImageView *imageView;
+        UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+        imageView = [[UIImageView alloc] initWithImage:image];
+        
+        _hud.customView = imageView;
+        _hud.mode = MBProgressHUDModeCustomView;
+        
+        _hud.labelText = @"Completed";
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
+            sleep(1);
+            [_hud hide:YES];
+        });
+
+    }
+}
+
 
 @end
 

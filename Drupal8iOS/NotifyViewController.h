@@ -13,4 +13,11 @@
 +(UIAlertController *)invalidURLNotify;
 +(UIAlertController *)otherURLNotifyError:(NSString *)errmsg;
 +(UIAlertController *)alreadySignedInNotifyError:(NSString *)errmsg;
++(UIAlertController *)invalidCredentialNotify;
++(UIAlertController *)contactAdminNotifyError:(NSString *)errmsg;
++(UIAlertController *)zeroStatusCodeNotifyError:(NSString *)errmsg;
++(UIAlertController *)notAuthorisedNotifyError;
++(UIAlertController *)loginRequiredNotify;
++(UIAlertController *)genericNotifyError:(NSString *)errmsg;
++(UIAlertController *)informationNotifywithMsg:(NSString *)msg;
 @end

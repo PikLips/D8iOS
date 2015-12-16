@@ -121,10 +121,11 @@
                                            sleep(1);
                                            [hud hide:YES];
                                        });
+                                       [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
                                    }
                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                        // Faliure block
-                                       
+                                       [sharedSession.requestSerializer setValue:nil forHTTPHeaderField:@"Accept"];
                                        long statusCode = operation.response.statusCode;
                                        // This can happen when POST is without Authorization details or login fails
                                        if ( statusCode == 401 ) {
@@ -196,6 +197,34 @@
                                        
                                    }];
 }
+
++(void)uploadImageToServer:(PHAsset *)asset
+                 withImage:(UIImageView *)assetImage
+                   success:(void (^)(AFHTTPRequestOperation *, id))success
+                   failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
+    // This is the JSON body with required details to be sent
+    NSDictionary *params = @{
+                             @"filename":@[@{@"value":[asset valueForKey:@"filename"]}],
+                             @"data":@[@{@"value":[self encodeToBase64String:assetImage.image]
+                                         }]};
+    // call to create Entity on drupal
+    [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
+                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                       // success block
+                                       if(success){
+                                           success(operation,responseObject);
+                                       }
+                                   }
+                                   failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                       // Faliure block
+                                       if (failure) {
+                                           failure(operation,error);
+                                       }
+                                   }];
+
+    
+}
+
 +(NSString *)encodeToBase64String:(UIImage *)image {
     return [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
@@ -290,6 +319,33 @@
                                              otherButtonTitles: nil];
         [alert show];
     }
+}
+
++(void)getCommentDataforNodeID:(NSString *)nodeID
+                       success:(void (^)(NSMutableArray *))success
+                       failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
+    [DIOSView getViewWithPath:[NSString stringWithFormat:@"comments/%@",nodeID]
+                       params:nil
+                      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                          // success block
+                          NSMutableArray *commentList = [[NSMutableArray alloc]init];
+                          for (NSMutableDictionary *comment in responseObject)
+                          {
+                              Comment *newComment = [[Comment alloc]initWithDictionary:comment];
+                              [commentList addObject:newComment];
+                          }
+                          if (success) {
+                              success(commentList);
+                          }
+                      }
+                      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                          // faliure block
+                          if (failure) {
+                              failure(operation,error);
+                          }
+                      }];
+
+
 }
 
 /**
@@ -393,6 +449,72 @@
     
 }
 
++(void)getFileDatafromPath:(NSString *)path
+                   success:(void (^)(NSMutableArray *))success
+                   failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure {
+    User *sharedUser = [User sharedInstance];
+
+    [DIOSView getViewWithPath:[NSString stringWithFormat:@"%@/%@",path,sharedUser.uid]
+                       params:nil
+                      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                          // success block
+                          NSMutableArray *listOfFiles = [[NSMutableArray alloc]init];
+                          for ( NSMutableDictionary *fileJSONDict in responseObject )
+                          {
+                              FileJSON *fileJSONObj = [[FileJSON alloc]initWithDictionary:fileJSONDict];
+                              [listOfFiles addObject:fileJSONObj];
+                          }
+                          if (success) {
+                              success(listOfFiles);
+                          }
+                          
+                      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                          // faliure block
+                          
+//                          
+//                          long statusCode = operation.response.statusCode;
+//                          // This can happen when GET is with out Authorization details
+//                          if ( statusCode == 401 ) {
+//                              sharedSession.signRequests = NO;
+//                              
+//                              User *sharedUser = [User sharedInstance];
+//                              // Credentials are not valid so remove it
+//                              [sharedUser clearUserDetails];
+//                              
+//                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+//                                                                             message:@"Please verify the login credentials"
+//                                                                            delegate:nil
+//                                                                   cancelButtonTitle:@"Dismiss"
+//                                                                   otherButtonTitles: nil];
+//                              [alert show];
+//                          }
+//                          
+//                          // Credentials are valid but user is not authorised to perform this operation.
+//                          else if( statusCode == 403 ) {
+//                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+//                                                                             message:@"User is not authorised for this operation."
+//                                                                            delegate:nil
+//                                                                   cancelButtonTitle:@"Dismiss"
+//                                                                   otherButtonTitles: nil];
+//                              [alert show];
+//                          }
+//                          else {
+//                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+//                                                                             message:[NSString stringWithFormat:@"Error with %@",error.localizedDescription]
+//                                                                            delegate:nil
+//                                                                   cancelButtonTitle:@"Dismiss"
+//                                                                   otherButtonTitles: nil];
+//                              [alert show];
+//                              
+//                          }
+                          if (failure) {
+                              failure(operation,error);
+                          }
+                      }];
+
+
+}
+
 /**
  *
  *
@@ -478,6 +600,36 @@
                                              otherButtonTitles: nil];
         [alert show];
     }
+    
+}
+
++(void)getarticleData_success:(void (^)(NSMutableArray *))success
+                      failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
+    
+    // GET on view
+    [DIOSView getViewWithPath:@"articles"
+                       params:nil
+                      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                          // success block
+                          NSMutableArray * articleList = [[NSMutableArray alloc]init];
+                          for ( NSMutableDictionary *article in responseObject )
+                          {
+                              Article *newTip = [[Article alloc]initWithDictionary:article];
+                              [articleList addObject:newTip];
+                              
+                          }
+                          if ( success ) {
+                              success(articleList);
+                          }
+                      }
+                      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                          // faliure block
+                          if (failure) {
+                              failure(operation,error);
+                          }
+                          
+                      }];
+
     
 }
 
@@ -581,6 +733,31 @@
                                    }];
 }
 
++(void)uploadFilewithFileName:(NSString *)fileName
+                andDataString:(NSString *)base64EncodedString
+                      success:(void (^)(AFHTTPRequestOperation *, id))success
+                      failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
+    // Request JSON
+    NSDictionary *params = @{
+                             @"filename":@[@{@"value":fileName}],
+                             @"data":@[@{@"value":base64EncodedString}]};
+    // Create file entity
+    [DIOSEntity createEntityWithEntityName:@"file" type:@"file" andParams:params
+                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                       // Success block
+                                       if (success) {
+                                           success(operation,responseObject);
+                                       }
+                                   }
+                                   failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                       // faliure block
+                                       if (failure) {
+                                           failure(operation,error);
+                                       }
+                                   }];
+
+
+}
 
 /**
  *
@@ -686,6 +863,52 @@
     
 }
 
++(void)createUserAccountwithUserName:(NSString *)userName
+                            password:(NSString *)password
+                            andEmail:(NSString *)email
+                             success:(void (^)(AFHTTPRequestOperation *, id))success
+                             failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
+    // Creating NSDictionary for JSON body on the fly
+    NSDictionary *JSONBody =  @{
+                                @"langcode": @[
+                                        @{
+                                            @"value": @"en"}
+                                        ],
+                                @"name": @[
+                                        @{
+                                            @"value": userName
+                                            }
+                                        ],
+                                @"mail": @[
+                                        @{
+                                            @"value": email
+                                            }
+                                        ],
+                                @"pass": @[
+                                        @{
+                                            @"value": password
+                                            }
+                                        ]
+                                };
+    
+    [DIOSUser createUserWithParams:JSONBody
+                           success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                               // Success block
+                               if (success) {
+                                   success(operation,responseObject);
+                               }
+                           }
+                           failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                               // faliure block
+                               if (failure) {
+                                   failure(operation,error);
+                               }
+                               
+                           }];
+
+
+}
+
 /**
  *
  *
@@ -762,6 +985,7 @@
                     NSArray *mailArray;
                     NSMutableDictionary *valueForPass = [[NSMutableDictionary alloc]initWithObjects: @[currentPass]
                                                                                             forKeys:@[@"existing"]];
+                    
                     NSArray *passArray;
                     
                     
@@ -910,8 +1134,10 @@
                                                *  missed then Drupal REST will provide propper error, reflected by this alert.
                                                */
                                               
+                                              NSMutableDictionary *errorResponse = (NSMutableDictionary *)operation.responseObject;
+                                              
                                               UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
-                                                                                             message:[NSString stringWithFormat:@"Error while updating user with %@",error.localizedDescription]
+                                                                                             message:[NSString stringWithFormat:@"Error while updating user with %@",[errorResponse objectForKey:@"error"]]
                                                                                             delegate:nil
                                                                                    cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
                                               
@@ -955,29 +1181,246 @@
     
 }
 
++(void)updateUserAccoutwithUserName:(NSString *)userName
+                    currentPassword:(NSString *)currentPass
+                              email:(NSString *)email
+                revisedUserPassword:(NSString *)revisedUserPassword
+                            success:(void (^)(AFHTTPRequestOperation *, id))success
+                            failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
+    User *sharedUser = [User sharedInstance];
+    NSDictionary *valueForName;
+    NSArray *nameArray;
+    NSDictionary *valueForMail;
+    NSArray *mailArray;
+    NSMutableDictionary *valueForPass = [[NSMutableDictionary alloc]initWithObjects: @[currentPass]
+                                                                            forKeys:@[@"existing"]];
+    NSArray *passArray;
+    
+    if ( userName !=nil && ![userName isEqualToString:@""] ) {
+        // create dictionary   {"value":"somevalue"}
+        valueForName = [[NSDictionary alloc]initWithObjects:@[userName] forKeys:@[@"value"]];
+        // create array [{"value":"somevalue"}]
+        nameArray = [[NSArray alloc]initWithObjects:valueForName, nil];
+        
+    }
+    
+    if ( email !=nil && ![email isEqualToString:@""] ) {
+        
+        //create dictionary {"value":"marthinal@drupalisawesome.com"}
+        valueForMail = [[NSDictionary alloc]initWithObjects:@[email]
+                                                    forKeys:@[@"value"]];
+        
+        // create mail array [{"value":"marthinal@drupalisawesome.com"}]
+        mailArray = [[NSArray alloc]initWithObjects:valueForMail, nil];
+        
+    }
+    
+    if ( revisedUserPassword != nil && ![revisedUserPassword isEqualToString:@""] ) {
+        // create dictionary {"existing":"existingSecretPass", "value": "myNewSuperSecretPass"}
+        [valueForPass setObject:revisedUserPassword
+                         forKey:@"value"];
+        
+        // create password array [{"existing":"existingSecretPass", "value": "myNewSuperSecretPass"}]
+        passArray = [[NSArray alloc]initWithObjects:valueForPass, nil];
+        
+    }
+    
+    /* create dictionay {"name":[{"value":"somevalue"}],
+     "mail":[{"value":"marthinal@drupalisawesome.com"}],
+     "pass":[{"existing":"existingSecretPass", "value": "myNewSuperSecretPass"}]
+     } */
+    
+    NSMutableDictionary *params = [[NSMutableDictionary alloc]init];
+    
+    [params setObject:nameArray forKey:@"name"];
+    [params setObject:mailArray forKey:@"mail"];
+    [params setObject:passArray forKey:@"pass"];
+    
+    [DIOSUser patchUserWithID:sharedUser.uid params:params
+                         type:@"user"
+                      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                          if (success) {
+                              success(operation,responseObject);
+                          }
+//                          
+//                          /* Vivek: If PATCH is successfull then we may have changed any combinations of
+//                           *  username, password, email. So, we need to update sharedUser and credentials on
+//                           *  sharedSession accordingly.
+//                           */
+//                          
+//                          [SGKeychain deletePasswordandUserNameForServiceName:@"Drupal 8"
+//                                                                  accessGroup:nil
+//                                                                        error:&sgKeyChainError];
+//                          
+//                          sharedUser.email = (email != nil && ![email isEqualToString:@""]) ? email : sharedUser.email ;
+//                          
+//                          if ( userName != nil && ![userName isEqualToString:@""] ) {
+//                              
+//                              credentials[0] = userName;
+//                              sharedUser.name = userName;
+//                              
+//                          }
+//                          
+//                          
+//                          if (revisedUserPassword != nil && ![revisedUserPassword isEqualToString:@""]) {
+//                              
+//                              credentials[1] = revisedUserPassword;
+//                              
+//                          }
+//                          
+//                          
+//                          
+//                          [SGKeychain setPassword:credentials[1]
+//                                         username:credentials[0]
+//                                      serviceName:@"Drupal 8"
+//                                      accessGroup:nil
+//                                   updateExisting:NO
+//                                            error:&sgKeyChainError];
+//                          
+//                          [sharedSession setBasicAuthCredsWithUsername:credentials[0]
+//                                                           andPassword:credentials[1]];
+//                          
+//                          UIImageView *imageView;
+//                          UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
+//                          imageView = [[UIImageView alloc] initWithImage:image];
+//                          
+//                          hud.customView = imageView;
+//                          hud.mode = MBProgressHUDModeCustomView;
+//                          /* Vivek: This can be changed.  I tried 1 - 3 secs and I found 2 sufficient.
+//                           *  And this will show "Completed" label for 1 sec after the operation completes.
+//                           *  If user's attention is specifically required than it would be better to
+//                           *  use UIAlertView, so that user will have to respond to it.
+//                           */
+//                          hud.labelText = @"Completed";
+//                          dispatch_async(dispatch_get_main_queue(), ^{
+//                              // need to put main theread on sleep for 2 second so that "Completed" HUD stays on for 2 seconds
+//                              sleep(1);
+//                              [hud hide:YES];
+//                          });
+                          
+                      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                          if (failure) {
+                              failure(operation,error);
+                          }
+//                          [hud hide:YES];
+//                          
+//                          NSInteger statusCode  = operation.response.statusCode;
+//                          
+//                          if ( statusCode == 403 ) {
+//                              
+//                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+//                                                                             message:@"User is not authorised for this operation."
+//                                                                            delegate:nil
+//                                                                   cancelButtonTitle:@"Dismiss"
+//                                                                   otherButtonTitles:nil];
+//                              [alert show];
+//                          }
+//                          else if (statusCode == 401) {
+//                              User *user = [User sharedInstance];
+//                              // Credentials are not valid so remove it
+//                              [user clearUserDetails];
+//                              DIOSSession *sharedSession = [DIOSSession sharedSession];
+//                              sharedSession.signRequests = NO;
+//                              
+//                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+//                                                                             message:@"Please verify login credentials first."
+//                                                                            delegate:nil
+//                                                                   cancelButtonTitle:@"Dismiss"
+//                                                                   otherButtonTitles:nil];
+//                              [alert show];
+//                              
+//                          }
+//                          else if ( statusCode == 0 ) {
+//                              
+//                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No URL to connect"]
+//                                                                             message:@"Plese specify a Drupal 8 site first \n"
+//                                                                            delegate:nil
+//                                                                   cancelButtonTitle:@"Dismiss"
+//                                                                   otherButtonTitles:nil];
+//                              [alert show];
+//                              
+//                          }
+//                          
+//                          else {
+//                              /** Vivek: Email and Password change requires existing password to be specified.
+//                               *  The code above tries to capture those requirements, but if some how it is
+//                               *  missed then Drupal REST will provide propper error, reflected by this alert.
+//                               */
+//                              
+//                              NSMutableDictionary *errorResponse = (NSMutableDictionary *)operation.responseObject;
+//                              
+//                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+//                                                                             message:[NSString stringWithFormat:@"Error while updating user with %@",[errorResponse objectForKey:@"error"]]
+//                                                                            delegate:nil
+//                                                                   cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+//                              
+//                              [alert show];
+//                          }
+                      }];
+
+
+//else {
+//    
+//    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Error"
+//                                                   message:@"Entered current password didn't matched with one stored in application!"
+//                                                  delegate:nil
+//                                         cancelButtonTitle:@"Dissmiss"
+//                                         otherButtonTitles:nil];
+//    [alert show];
+//}
+//}
+//else {
+//    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Information"
+//                                                   message:@"Please provide your current password."
+//                                                  delegate:nil
+//                                         cancelButtonTitle:@"Dissmiss"
+//                                         otherButtonTitles:nil];
+//    [alert show];
+//    
+//}
+//}
+//else {
+//    
+//    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Information"
+//                                                   message:@"Please first login to your account."
+//                                                  delegate:nil
+//                                         cancelButtonTitle:@"Dissmiss"
+//                                         otherButtonTitles:nil];
+//    [alert show];
+//    
+//}
+//}
+
+
+}
+
 /**
- *
- *
+ *  @function loginwithUserName
+ *  @param userName a string
+ *  @param password a string
+ *  @param success a block to be executed on successful completion of operation
+ *  @param failure a failure block to be executed on unsuccessful completion of operation
+ *  @abstract this performs a login on drupal site with given username and password
+ *  and on successful login saves the credentilas in DIOSSession for future requests.
+ *  @see drupal-ios-sdk, AFNetworking
+ *  @discussion
+ *  @return N/A
+ *  @throws N/A
+ *  @updated
  */
 +(void)loginwithUserName:(NSString *)userName
                 password:(NSString *)password
-                withView:(UIView *)view
-              completion:(void (^)(NSMutableDictionary *))completion{
-    
-    MBProgressHUD  *hud = [[MBProgressHUD alloc] initWithView:view];
-    [view addSubview:hud];
-    
-    hud.delegate = nil;
-    hud.labelText = @"Logging in";
-    [hud show:YES];
-    
+                 success:(void (^)(NSMutableDictionary *))success
+                 failure:(void (^)(AFHTTPRequestOperation *operation,NSError *error))failure {
     /**
      *  Login with Kyle's iOS-SDK
      */
     
     DIOSSession *sharedSession = [DIOSSession sharedSession];
-    [sharedSession setBasicAuthCredsWithUsername:userName andPassword:password];
-    NSString *basicAuthString = [self basicAuthStringforUsername:userName Password:password];
+    [sharedSession setBasicAuthCredsWithUsername:userName
+                                     andPassword:password];
+    NSString *basicAuthString = [self basicAuthStringforUsername:userName
+                                                        Password:password];
     // GET on view
     [DIOSView getViewWithPath:@"user/details"
                        params:nil
@@ -996,55 +1439,24 @@
                           DIOSSession * session =  [DIOSSession sharedSession];
                           [session setBasicAuthCredsWithUsername:userName
                                                      andPassword:password];
-                          [hud hide:YES];
+                          
                           
                           if ( userDictionary != nil ) {
                               D8D(@"userDictionary %@", userDictionary );
                           }
-                          if (completion) {
-                              completion(userDictionary);
+                          if (success) {
+                              success(userDictionary);
                           }
                       }
                       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                           // faliure block
-                          NSInteger statusCode  = operation.response.statusCode;
-                          [hud hide:YES];
                           
-                          if ( statusCode == 403 ) {
-                              
-                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Invalid Credentials"
-                                                                             message:@"Please check username and password."
-                                                                            delegate:nil
-                                                                   cancelButtonTitle:@"Dismiss"
-                                                                   otherButtonTitles:nil];
-                              [alert show];
-                              
-                          }
-                          else if ( statusCode == 0 ) {
-                              
-                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"No Drupal Host to connect"]
-                                                                             message:@"Please specify a Drupal 8 site first \n"
-                                                                            delegate:nil
-                                                                   cancelButtonTitle:@"Dismiss"
-                                                                   otherButtonTitles:nil];
-                              [alert show];
-                          }
-                          else {
-                              UIAlertView *alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"Error with code %ld",(long)statusCode]
-                                                                             message:@"Please contact website admin."
-                                                                            delegate:nil
-                                                                   cancelButtonTitle:@"Dismiss"
-                                                                   otherButtonTitles:nil];
-                              [alert show];
-                          }
-                          
-                          if (completion) {
-                              completion(nil);
+                          if (failure) {
+                              failure(operation,error);
                           }
                           
                       }];
-    
-    
+
 }
 
 /**
@@ -1147,6 +1559,26 @@
     
 }
 
++(void)deleteFilewithFileID:(NSString *)fileID
+                    success:(void (^)(AFHTTPRequestOperation *, id))success
+                    failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
+    // DELETE on file entity
+    [DIOSEntity deleteEntityWithEntityName:@"file" andID:fileID
+                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//                                       // success block
+                                       if (success) {
+                                           success(operation,responseObject);
+                                       }
+                                   }
+                                   failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                       // Faliure block
+                                       if (failure) {
+                                           failure(operation,error);
+                                       }
+                                       
+                                   }];
+}
+
 /**
  *
  *
@@ -1199,6 +1631,26 @@
     }
     
     
+}
+
++(void)getArticlewithNodeID:(NSString *)nodeID
+                    success:(void (^)(NSMutableDictionary *))success
+                    failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
+    [DIOSNode getNodeWithID:nodeID
+                    success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                        // Success block
+                        NSMutableDictionary *articleDict = (NSMutableDictionary *)responseObject;
+                        if (success) {
+                            success(articleDict);
+                        }
+                    }
+                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                        // Faliure block
+                        if (failure) {
+                            failure(operation,error);
+                        }
+                    }];
+
 }
 
 +(void)postComment:(NSString *)comment
@@ -1344,6 +1796,83 @@
                                  }];
     
 }
+
++(void)postComment:(NSString *)comment
+         withTitle:(NSString *)title
+          onNodeID:(NSString *)nodeID
+           success:(void (^)(AFHTTPRequestOperation *, id))success
+           failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
+    
+    User *user = [User sharedInstance];
+    
+    // JSON for POST on comment resource
+    NSDictionary *params =
+    @{
+      
+      @"entity_id": @[
+              @{
+                  @"target_id": nodeID
+                  }
+              ],
+      @"subject": @[
+              @{
+                  @"value": title
+                  }],
+      
+      @"uid":@[
+              @{
+                  
+                  @"target_id":user.uid
+                  }
+              ],
+      @"status": @[
+              @{
+                  @"value": @"1"
+                  }
+              ],
+      @"entity_type": @[
+              @{
+                  @"value": @"node"
+                  }
+              ],
+      @"comment_type": @[
+              @{
+                  @"target_id": @"comment"
+                  }
+              ],
+      @"field_name": @[
+              @{
+                  @"value": @"comment"
+                  }
+              ],
+      @"comment_body": @[
+              @{
+                  @"value":comment,@"format":@"full_html"
+                  }
+              ]
+      };
+    
+   
+    // POST on comment
+    [DIOSComment createCommentWithParams:params
+                              relationID:nodeID
+                                    type:@"comment"
+                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                     // Success block
+                                     if (success) {
+                                         success(operation,responseObject);
+                                     }
+                                 }
+                                 failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                     // faliure block
+                                     if (failure) {
+                                         failure(operation,error);
+                                     }
+                                 }];
+    
+
+}
+
 
 /** Notify User Title with Notification, Response Text, and error (if applicable)
  *  This provides a warning to the user.
