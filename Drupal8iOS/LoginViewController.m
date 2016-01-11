@@ -65,7 +65,7 @@
                          [self.username_status setText:@"..."];
                          [self.roles_status setText:@"..."];
                          
-                         NSInteger statusCode  = operation.response.statusCode ;
+                         long statusCode  = operation.response.statusCode ;
                          
                          if ( statusCode == 403 ) {
                              [self presentViewController:[NotifyViewController invalidCredentialNotify]
@@ -79,7 +79,7 @@
                                               completion:nil];
                                                       }
                          else {
-                             NSString *errmsg  = [NSString stringWithFormat:@"Error with status code %ld",(long)statusCode];
+                             NSString *errmsg  = [NSString stringWithFormat:@"Error with status code %ld", statusCode];
 
                              [self presentViewController:[NotifyViewController contactAdminNotifyError:errmsg]
                                                 animated:YES

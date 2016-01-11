@@ -44,7 +44,7 @@ This module, written by Juampy NR (https://www.drupal.org/u/juampynr), provides 
 
 uauth-master - https://github.com/vivekvpandya/uauth 
 
-Vivek has written a auth helper, uauth-master that creates a response from the host to authorize a user. 
+Vivek has written a auth helper, uauth-master that creates a response from the host to authorize a user. This project uses basic auth and retains credentials internally instead of maintaining a session on the host.  If a session needs to be maintained on the host, perhaps with a cookie, it will depend upon the type of authentication (e.g. oAuth) used, which is beyond the scope of this version.  
 
 
 Add These Patches
