@@ -10,6 +10,7 @@
 		4417362D1B570BD500C984B5 /* LICENSE.TXT in Resources */ = {isa = PBXBuildFile; fileRef = 4417362C1B570BD500C984B5 /* LICENSE.TXT */; };
 		441736301B579EB700C984B5 /* DeleteFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4417362F1B579EB700C984B5 /* DeleteFileViewController.m */; };
 		441736331B579EDA00C984B5 /* ViewArticleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 441736321B579EDA00C984B5 /* ViewArticleViewController.m */; };
+		442BFDA61BFA4784009A2AA4 /* NotifyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 442BFDA51BFA4784009A2AA4 /* NotifyViewController.m */; };
 		444511BF1B5417EB008B7E13 /* AAPLRootListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444511BE1B5417EB008B7E13 /* AAPLRootListViewController.m */; };
 		444511C21B541935008B7E13 /* AAPLAssetGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444511C11B541935008B7E13 /* AAPLAssetGridViewController.m */; };
 		444511C51B541A7C008B7E13 /* AAPLAssetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444511C41B541A7C008B7E13 /* AAPLAssetViewController.m */; };
@@ -18,7 +19,7 @@
 		44511BD81B56D8380002A3CF /* D8iOSUISplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BD71B56D8380002A3CF /* D8iOSUISplitViewController.m */; };
 		44511BDD1B56FF7B0002A3CF /* ViewArticlesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BDC1B56FF7B0002A3CF /* ViewArticlesTableViewController.m */; };
 		44511BE01B56FFE20002A3CF /* DownloadPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44511BDF1B56FFE20002A3CF /* DownloadPictureViewController.m */; };
-		44B8AF921BD4A4CA00CB17CE /* SetUpForDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B8AF911BD4A4CA00CB17CE /* SetUpForDemo.m */; settings = {ASSET_TAGS = (); }; };
+		44B8AF921BD4A4CA00CB17CE /* SetUpForDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B8AF911BD4A4CA00CB17CE /* SetUpForDemo.m */; };
 		44CF1DE81B51D97C00FC66EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1DE71B51D97C00FC66EE /* main.m */; };
 		44CF1DEB1B51D97C00FC66EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1DEA1B51D97C00FC66EE /* AppDelegate.m */; };
 		44CF1DEE1B51D97C00FC66EE /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1DED1B51D97C00FC66EE /* MasterViewController.m */; };
@@ -33,7 +34,7 @@
 		44CF1E191B524E2700FC66EE /* LogoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E181B524E2700FC66EE /* LogoutViewController.m */; };
 		44CF1E1C1B5251FB00FC66EE /* ManageUserAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E1B1B5251FB00FC66EE /* ManageUserAccountViewController.m */; };
 		44CF1E251B52619100FC66EE /* UploadFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CF1E241B52619100FC66EE /* UploadFileViewController.m */; };
-		44E22EDC1BD1D53E00B4BC69 /* D8iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E22EDB1BD1D53E00B4BC69 /* D8iOS.m */; settings = {ASSET_TAGS = (); }; };
+		44E22EDC1BD1D53E00B4BC69 /* D8iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E22EDB1BD1D53E00B4BC69 /* D8iOS.m */; };
 		CF0A72711BB809C400300569 /* AddCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF0A72701BB809C400300569 /* AddCommentViewController.m */; };
 		CF195B111B84778F00003A2B /* FileJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = CF195B101B84778F00003A2B /* FileJSON.m */; };
 		CF195B141B847AD400003A2B /* FileDetailsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CF195B131B847AD400003A2B /* FileDetailsTableViewCell.m */; };
@@ -75,6 +76,8 @@
 		4417362F1B579EB700C984B5 /* DeleteFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteFileViewController.m; sourceTree = "<group>"; };
 		441736311B579ECA00C984B5 /* ViewArticleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewArticleViewController.h; sourceTree = "<group>"; };
 		441736321B579EDA00C984B5 /* ViewArticleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewArticleViewController.m; sourceTree = "<group>"; };
+		442BFDA41BFA4784009A2AA4 /* NotifyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotifyViewController.h; sourceTree = "<group>"; };
+		442BFDA51BFA4784009A2AA4 /* NotifyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifyViewController.m; sourceTree = "<group>"; };
 		444511BD1B5417EB008B7E13 /* AAPLRootListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLRootListViewController.h; sourceTree = "<group>"; };
 		444511BE1B5417EB008B7E13 /* AAPLRootListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLRootListViewController.m; sourceTree = "<group>"; };
 		444511C01B541935008B7E13 /* AAPLAssetGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLAssetGridViewController.h; sourceTree = "<group>"; };
@@ -350,6 +353,8 @@
 				44CF1E121B523D5400FC66EE /* SetupDrupalAccountViewController.m */,
 				44CF1E0E1B51EAA700FC66EE /* SpecifyDrupalSiteViewController.h */,
 				44CF1E0F1B51EAA700FC66EE /* SpecifyDrupalSiteViewController.m */,
+				442BFDA41BFA4784009A2AA4 /* NotifyViewController.h */,
+				442BFDA51BFA4784009A2AA4 /* NotifyViewController.m */,
 				44CF1E231B52619100FC66EE /* UploadFileViewController.h */,
 				44CF1E241B52619100FC66EE /* UploadFileViewController.m */,
 				44511BDB1B56FF7B0002A3CF /* ViewArticlesTableViewController.h */,
@@ -569,6 +574,7 @@
 				CF195B111B84778F00003A2B /* FileJSON.m in Sources */,
 				444511C81B541D63008B7E13 /* AAPLGridViewCell.m in Sources */,
 				44CF1DF11B51D97C00FC66EE /* DetailViewController.m in Sources */,
+				442BFDA61BFA4784009A2AA4 /* NotifyViewController.m in Sources */,
 				CF46F3BC1B9B460200E5D9AC /* NJOPasswordStrengthEvaluator.m in Sources */,
 				CF65993E1B5BA5A7000AC0D7 /* JSONModel.m in Sources */,
 				44CF1E101B51EAA700FC66EE /* SpecifyDrupalSiteViewController.m in Sources */,

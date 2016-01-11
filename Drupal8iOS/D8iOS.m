@@ -10,6 +10,7 @@
  *  copyable methods.  Note that NSAppTransportSecurity / NSAllowsArbitraryLoads
  *  is set to 'YES' in the info.plist for development.  You will need a secure
  *  connection for production.
+ *  Methods use AppleDocs.
  */
 #import "Developer.h"
 #import "D8iOS.h"
@@ -77,10 +78,16 @@
     [sharedSession setResponseSerializer:[AFJSONResponseSerializer serializer]];
 }
 
-/**
- *
- *
- *
+/** @function uploadImageToServer
+ *  @param asset identifies image asset in PHPhotoLibrary
+ *  @param assetImage a UIImageView to be Base64 encoded before sent
+ *  @abstract This uploads an image file to the Drupal server
+ *  after encoding Base64.  Server must be set to receive file.
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success/failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
  */
 +(void)uploadImageToServer:(PHAsset *)asset
                  withImage:(UIImageView *)assetImage
@@ -112,9 +119,16 @@
 +(NSString *)encodeToBase64String:(UIImage *)image {
     return [UIImagePNGRepresentation(image) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
-/**
- *
- *
+/** @function getCommentDataforNodeID
+ *  @param nodeID Drupal node containing comments
+ *  @abstract This retrieves comments from a node on the Drupal server.
+ *  Node must be identified .
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success returns array of comments
+ *  @return failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
  */
 +(void)getCommentDataforNodeID:(NSString *)nodeID
                        success:(void (^)(NSMutableArray *))success
@@ -143,9 +157,16 @@
 
 }
 
-/**
- *
- *
+/** @function getFileDatafromPath
+ *  @param path location of directory on Drupal server
+ *  @param success list for file in directory
+ *  @abstract This downloads directory listing from the Drupal server
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success  an array of filenames
+ *  @return failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
  */
 +(void)getFileDatafromPath:(NSString *)path
                    success:(void (^)(NSMutableArray *))success
@@ -176,9 +197,16 @@
 
 }
 
-/**
- *
- *
+/** @function getarticleData_success
+ *  @param success array for articles
+ *  @param failure response object
+ *  @abstract This retrieves articles from a View on the Drupal server.
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success returns array of articles
+ *  @return failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
  */
 +(void)getarticleData_success:(void (^)(NSMutableArray *))success
                       failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure{
@@ -210,9 +238,18 @@
     
 }
 
-/**
- *
- *
+/** @function uploadFilewithFileName
+ *  @param fileName identifies image asset in PHPhotoLibrary
+ *  @param base64EncodedString a file to be Base64 encoded before sent
+ *  @param success see return
+ *  @param failure see return
+ *  @abstract This uploads a file to the Drupal server
+ *  after encoding Base64.  Server must be set to receive file.
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success/failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
  */
 +(void)uploadFilewithFileName:(NSString *)fileName
                 andDataString:(NSString *)base64EncodedString
@@ -240,9 +277,19 @@
 
 }
 
-/**
- *
- *
+/** @function createUserAccountwithUserName
+ *  @param userName  name of user to be added
+ *  @param password  user's password
+ *  @param email  user's email address
+ *  @param success see return
+ *  @param failure see return
+ *  @abstract This uploads data to the Drupal server to create a new user account.
+ *  Response depends upon security setting.  Server must be set to allow annonymous creation.
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success/failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
  */
 +(void)createUserAccountwithUserName:(NSString *)userName
                             password:(NSString *)password
@@ -290,9 +337,20 @@
 
 }
 
-/**
- *
- *
+/** @function updateUserAccoutwithUserName
+ *  @param userName  name of user to be added
+ *  @param currentPass  user's current password
+ *  @param email  user's email address
+ *  @param currentPass  user's new password
+ *  @param success see return
+ *  @param failure see return
+ *  @abstract This changes the passwork of a user's account.
+ *  Response depends upon security setting.
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success/failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
  */
 +(void)updateUserAccoutwithUserName:(NSString *)userName
                     currentPassword:(NSString *)currentPass
@@ -430,24 +488,38 @@
 }
 
 /**
- *
- *
+ *  @function basicAuthStringforUsername
+ *  @param userName a string
+ *  @param password a string
+ *  @abstract this performs a Base64 encoding for a given username and password
+ *  @see drupal-ios-sdk, AFNetworking
+ *  @discussion
+ *  @return string username/password in Base64 encoding
+ *  @throws N/A
+ *  @updated
  */
-+(NSString *)basicAuthStringforUsername:(NSString *)username Password:(NSString *)password{
++(NSString *)basicAuthStringforUsername:(NSString *)userName Password:(NSString *)password{
     
-    NSString * userNamePasswordString = [NSString stringWithFormat:@"%@:%@",username,password]; // "username:password"
+    NSString * userNamePasswordString = [NSString stringWithFormat:@"%@:%@",userName,password]; // "username:password"
     NSData *userNamePasswordData = [userNamePasswordString dataUsingEncoding:NSUTF8StringEncoding]; // NSData object for base64encoding
     NSString *base64encodedDataString = [userNamePasswordData base64EncodedStringWithOptions:0]; // this will be something like "3n42hbwer34+="
-    
-    
     NSString * basicAuthString = [NSString stringWithFormat:@"Basic %@",base64encodedDataString]; // example set "Authorization header "Basic 3cv%54F0-34="
     
     return  basicAuthString;
     
 }
-/**
- *
- *
+
+/** @function deleteFilewithFileID
+ *  @param fileID  identifies the path/file on the Drupal server
+ *  @param success see return
+ *  @param failure see return
+ *  @abstract This deletes a file on the Drupal server
+ *  after encoding Base64.  Server must be set to permit file deletion.
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success/failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
  */
 +(void)deleteFilewithFileID:(NSString *)fileID
                     success:(void (^)(AFHTTPRequestOperation *, id))success
@@ -469,9 +541,18 @@
                                    }];
 }
 
-/**
- *
- *
+/** @function getArticlewithNodeID
+ *  @param nodeID Drupal node containing article
+ *  @param success object for article, see return
+ *  @param failure see return
+ *  @abstract This retrieves article from a node on the Drupal server.
+ *  Node must be identified .
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success returns object containign article
+ *  @return failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
  */
 +(void)getArticlewithNodeID:(NSString *)nodeID
                     success:(void (^)(NSMutableDictionary *))success
@@ -493,6 +574,20 @@
 
 }
 
+/** @function postComment
+ *  @param comment string with comment data
+ *  @param title  short string with title of comment
+ *  @param nodeID  node ID on Drupal server
+ *  @param success see return
+ *  @param failure see return
+ *  @abstract This uploads data to the Drupal server to create a new user account.
+ *  Response depends upon security setting.  Server must be set to allow annonymous creation.
+ *  @seealso drupal-ios-sdk, AFNetworking
+ *  @discussion needs to validate the Drupal host, too (TBD)
+ *  @return success/failure  see AFHTTPRequestOperation for details
+ *  @throws N/A
+ *  @updated
+ */
 +(void)postComment:(NSString *)comment
          withTitle:(NSString *)title
           onNodeID:(NSString *)nodeID

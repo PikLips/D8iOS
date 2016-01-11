@@ -79,7 +79,7 @@
                                               completion:nil];
                                                       }
                          else {
-                             NSString *errmsg  = [NSString stringWithFormat:@"Error with status code %d",statusCode];
+                             NSString *errmsg  = [NSString stringWithFormat:@"Error with status code %ld",(long)statusCode];
 
                              [self presentViewController:[NotifyViewController contactAdminNotifyError:errmsg]
                                                 animated:YES
